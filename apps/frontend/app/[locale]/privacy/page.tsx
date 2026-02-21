@@ -1,0 +1,1 @@
+export default function Page() { return <div className="container py-12"><h1 className="text-3xl font-bold">Privacy Policy</h1><p>Placeholder privacy policy text.</p><a href="/en/donate" className="underline">Donate</a></div>; }

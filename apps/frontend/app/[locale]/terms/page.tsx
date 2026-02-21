@@ -1,0 +1,1 @@
+export default function Page() { return <div className="container py-12"><h1 className="text-3xl font-bold">Terms</h1><p>Placeholder terms text.</p><a href="/en/get-involved" className="underline">Volunteer</a></div>; }

@@ -1,0 +1,4 @@
+import Image from "next/image";
+import { endorsements } from "@/lib/content";
+import { Locale } from "@/lib/i18n";
+export default function Page({ params }: { params: { locale: Locale } }) { const groups = ["major", "community", "grassroots"]; return <div className="container py-12"><h1 className="text-3xl font-bold">Endorsements</h1>{groups.map(g=><section key={g} className="mt-8"><h2 className="text-xl capitalize">{g}</h2><div className="grid md:grid-cols-3 gap-4 mt-3">{endorsements.filter(e=>e.category===g).map(e=><div key={e.name} className="border p-4"><Image src={e.logo} alt={e.name} width={220} height={100} /><p>{e.name}</p><p className="text-sm">Quote placeholder</p></div>)}</div></section>)}<div className="mt-8 flex gap-3"><a href={`/${params.locale}/donate`} className="bg-red text-white px-4 py-2">Donate</a><a href={`/${params.locale}/get-involved`} className="border px-4 py-2">Volunteer</a></div></div>; }
