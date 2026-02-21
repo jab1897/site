@@ -1,4 +1,12 @@
 "use client";
+
+const getDonateHref = (apiUrl: string, locale: string) => {
+  const base = apiUrl?.replace(/\/$/, "") || "";
+  const loc = locale || "en";
+  const path = loc === "es" ? "/es" : "/en";
+  return `${base}/api/public/donate?locale=${encodeURIComponent(loc)}&path=${encodeURIComponent(path)}`;
+};
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { labels, Locale } from "@/lib/i18n";
@@ -29,14 +37,14 @@ export function SiteShell({ locale, children }: { locale: Locale; children: Reac
           </nav>
           <div className="flex gap-2">
             <Link href={pathname?.startsWith("/es") ? pathname.replace("/es", "/en") : pathname?.replace("/en", "/es") || "/es"} className="text-sm border px-2 py-1">{locale === "en" ? "ES" : "EN"}</Link>
-            <Link href={`/${locale}/donate`} className="bg-red text-white px-3 py-1 rounded">{t.donate}</Link>
+            <Link href={getDonateHref(process.env.NEXT_PUBLIC_API_URL as string, locale)} className="bg-red text-white px-3 py-1 rounded">{t.donate}</Link>
           </div>
         </div>
       </header>
       <main>{children}</main>
-      <a className="fixed right-4 bottom-20 hidden md:block bg-red text-white px-4 py-2 rounded-full" href={`/${locale}/donate`}>{t.donate}</a>
+      <a className="fixed right-4 bottom-20 hidden md:block bg-red text-white px-4 py-2 rounded-full" href={getDonateHref(process.env.NEXT_PUBLIC_API_URL as string, locale)}>{t.donate}</a>
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-navy text-white flex">
-        <a href={`/${locale}/donate`} className="w-1/2 text-center py-3 bg-red">{t.donate}</a>
+        <a href={getDonateHref(process.env.NEXT_PUBLIC_API_URL as string, locale)} className="w-1/2 text-center py-3 bg-red">{t.donate}</a>
         <a href={`/${locale}/get-involved`} className="w-1/2 text-center py-3">{t.volunteer}</a>
       </div>
       <footer className="border-t mt-16 mb-14 md:mb-0">
