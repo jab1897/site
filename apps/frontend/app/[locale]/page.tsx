@@ -10,7 +10,7 @@ export default function Home({ params }: { params: { locale: Locale } }) {
   return <div>
     <section className="container py-12 grid md:grid-cols-2 gap-8 items-center">
       <div><h1 className="text-4xl font-bold text-navy">South San Antonio Deserves a Fighter</h1><p className="mt-3 text-xl">A conservative fighter for San Antonio</p><div className="mt-6 flex gap-3"><a href={`/${locale}/donate`} className="bg-red text-white px-4 py-2">{t.donate}</a><a href={`/${locale}/get-involved`} className="border px-4 py-2">{t.join}</a></div></div>
-      <Image src="/images/hero-placeholder.jpg" alt="Jorge Borrego hero" width={900} height={700} className="w-full h-auto rounded" />
+      <Image src="/images/hero.jpg" alt="Jorge Borrego hero" width={900} height={700} className="w-full h-auto rounded" />
     </section>
     <section className="container py-8"><h2 className="text-2xl font-semibold">Why I am running</h2><p className="mt-3">Raised without stability. Father incarcerated. First in family to graduate college. Built a career in Texas policy. Now running to fight for families like mine in South San Antonio.</p></section>
     <section className="container py-8"><h2 className="text-2xl font-semibold">Campaign Video</h2><video controls preload="metadata" poster="/images/video-poster-placeholder.jpg" className="w-full mt-4"><source src="/video/primary-commercial.mov" /></video></section>
