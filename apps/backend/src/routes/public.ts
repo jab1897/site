@@ -29,4 +29,33 @@ export async function publicRoutes(app: FastifyInstance) {
     );
     return reply.redirect(WINRED_URL);
   });
+
+  // Alias route for WinRed tracking + redirect (frontend expects this path)
+  app.get("/api/public/donate", async (req, reply) => {
+    const q = (req.query as Record<string, string | undefined>) || {};
+    const amountRaw = q.amount || "";
+    const amount = Number(amountRaw);
+    const locale = String(q.locale || "en");
+    const path = String(q.path || "/");
+
+    const referrer = String((req.headers["referer"] || req.headers["referrer"] || "") as string);
+    const userAgent = String((req.headers["user-agent"] || "") as string);
+
+    // Log click. Amount may be NaN; store null in that case.
+    await pool.query(
+      "INSERT INTO donation_clicks (amount, locale, path, referrer, user_agent) VALUES ($1, $2, $3, $4, $5)",
+      [Number.isFinite(amount) ? amount : null, locale, path, referrer, userAgent]
+    ).catch(async () => {
+      // If DB insert fails for any reason, still redirect (do not block donations)
+    });
+
+    // Redirect to WinRed (include amount if valid)
+    const base = "https://secure.winred.com/jorge-borrego-campaign/donate-today";
+    if (Number.isFinite(amount) && amount > 0) {
+      // WinRed commonly accepts amount as a query param; if not, WinRed will ignore it.
+      return reply.redirect(`${base}?amount=${encodeURIComponent(String(amount))}`);
+    }
+    return reply.redirect(base);
+  });
+
 }
