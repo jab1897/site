@@ -12,6 +12,8 @@ export default function Home({ params }: { params: { locale: Locale } }) {
     <div>
       <Hero locale={locale} />
 
+      <DonateButtons locale={locale} path="home" />
+
       <section className="container py-10">
         <div className="mb-6 h-1 w-20 bg-gradient-to-r from-red via-red to-navy" />
         <h2 className="text-2xl font-semibold text-navy">Why I am running</h2>
@@ -52,10 +54,6 @@ export default function Home({ params }: { params: { locale: Locale } }) {
 
       <section className="container py-8">
         <LeadForm locale={locale} />
-      </section>
-      <section className="container py-8">
-        <h2 className="text-2xl font-semibold text-navy">Support the Campaign</h2>
-        <DonateButtons locale={locale} path="home" />
       </section>
     </div>
   );
