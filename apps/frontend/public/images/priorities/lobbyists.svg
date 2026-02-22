@@ -1,0 +1,10 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 675'>
+  <defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop stop-color='#0d1b3d'/><stop offset='1' stop-color='#1d3f7a'/></linearGradient></defs>
+  <rect width='1200' height='675' fill='url(#g)'/>
+  <circle cx='600' cy='300' r='180' fill='#ffffff22'/>
+  <path d='M420 420h360v120H420zM460 320h280v100H460zM500 240h200v80H500z' fill='#fff'/>
+  <rect x='260' y='120' width='200' height='260' rx='12' fill='#b3192d'/>
+  <line x1='290' y1='170' x2='430' y2='170' stroke='#fff' stroke-width='10'/>
+  <line x1='290' y1='210' x2='410' y2='210' stroke='#fff' stroke-width='10'/>
+  <line x1='290' y1='250' x2='390' y2='250' stroke='#fff' stroke-width='10'/>
+</svg>

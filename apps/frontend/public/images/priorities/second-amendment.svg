@@ -1,0 +1,8 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 675'>
+  <rect width='1200' height='675' fill='#0d1b3d'/>
+  <rect y='450' width='1200' height='225' fill='#b3192d'/>
+  <path d='M180 130h840v330H180z' fill='#f9f5e9'/>
+  <text x='220' y='220' font-size='52' font-family='serif' fill='#1f2937'>WE THE PEOPLE</text>
+  <text x='220' y='285' font-size='34' font-family='serif' fill='#374151'>Rights and Freedoms</text>
+  <polygon points='960,110 980,160 1035,165 993,198 1006,252 960,220 914,252 927,198 885,165 940,160' fill='#fff'/>
+</svg>

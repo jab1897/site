@@ -1,0 +1,9 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 675'>
+  <rect width='1200' height='675' fill='#0f172a'/>
+  <circle cx='320' cy='320' r='190' fill='#1d4ed8'/>
+  <path d='M320 180l130 50v115c0 105-85 180-130 205-45-25-130-100-130-205V230z' fill='#fff'/>
+  <rect x='300' y='250' width='40' height='150' fill='#1d4ed8'/>
+  <rect x='245' y='305' width='150' height='40' fill='#1d4ed8'/>
+  <text x='560' y='300' font-size='74' font-family='Arial' font-weight='800' fill='#fff'>BACK THE BLUE</text>
+  <text x='560' y='380' font-size='46' font-family='Arial' fill='#93c5fd'>Safe Streets. Strong Communities.</text>
+</svg>
