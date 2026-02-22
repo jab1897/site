@@ -3,6 +3,27 @@ import Image from "next/image";
 export default function EndorsementsPage({ params }: { params: { locale: string } }) {
   const locale = params.locale || "en";
   const isEs = locale === "es";
+  const electedOfficials = [
+    { name: "Helen Kerwin", title: "State Representative", descriptor: "Texas House District 58" },
+    { name: "Briscoe Cain", title: "State Representative", descriptor: "Texas House District 128" },
+    { name: "Carrie Isaac", title: "State Representative", descriptor: "Texas House District 73" },
+    { name: "Shelley Luther", title: "State Representative", descriptor: "Texas House District 62" },
+    { name: "Joanne Shofner", title: "State Representative", descriptor: "Texas House District 11" },
+    { name: "Cody Vasut", title: "State Representative", descriptor: "Texas House District 25" },
+    { name: "Wes Virdell", title: "State Representative", descriptor: "Texas House District 53" },
+    { name: "Brent Money", title: "State Representative", descriptor: "Texas House District 2" },
+    { name: "Mike Olcott", title: "State Representative", descriptor: "Texas House District 60" },
+    { name: "J.M. Lozano", title: "State Representative", descriptor: "Texas House District 43" },
+    { name: "Hillary Hickland", title: "State Representative", descriptor: "Texas House District 55" },
+    { name: "Don McLaughlin", title: "State Representative", descriptor: "Texas House District 80" },
+    { name: "Alan Schoolcraft", title: "State Representative", descriptor: "Texas House District 44" },
+    { name: "Valoree Swanson", title: "State Representative", descriptor: "Texas House District 123" },
+    { name: "Terri Leo-Wilson", title: "State Representative", descriptor: "Texas House District 23" },
+    { name: "Daniel Alders", title: "State Representative", descriptor: "Texas House District 6" },
+    { name: "Walter West", title: "SREC Member", descriptor: "Senate District 19" },
+    { name: "Kelly Perry", title: "SREC Member", descriptor: "Senate District 19" },
+    { name: "James Dickey", title: "Former RPT Chairman", descriptor: "Republican Party of Texas" }
+  ];
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10">
@@ -17,18 +38,22 @@ export default function EndorsementsPage({ params }: { params: { locale: string 
 
       <section className="rounded-2xl border bg-white p-6 shadow-sm">
         <h2 className="text-xl font-extrabold text-navy">{isEs ? "Gobernador Abbott" : "Governor Abbott"}</h2>
-        <p className="mt-1 text-neutral-700">{isEs ? "Respaldo destacado" : "Featured endorsement"}</p>
+        <p className="mt-1 text-neutral-700">{isEs ? "Respaldo destacado" : `Governor Abbott proudly endorsed Jorge Borrego for House District 118! "Jorge Borrego is a determined conservative who will work to make South San Antonio safer and more affordable."`}</p>
         <div className="mt-5 relative aspect-[16/8] overflow-hidden rounded-xl border">
           <Image src="/assets/endorsements/abbott.jpg" alt="Governor Greg Abbott endorses Jorge Borrego" fill className="object-cover" priority />
         </div>
       </section>
 
       <section className="mt-10">
-        <h2 className="text-lg font-extrabold text-navy">{isEs ? "Funcionarios electos" : "Elected officials"}</h2>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="rounded-xl border bg-white p-5 text-sm text-neutral-700">Governor Greg Abbott</div>
-          <div className="rounded-xl border bg-white p-5 text-sm text-neutral-600">{isEs ? "Más respaldos pronto" : "More endorsements soon"}</div>
-          <div className="rounded-xl border bg-white p-5 text-sm text-neutral-600">{isEs ? "Más respaldos pronto" : "More endorsements soon"}</div>
+        <h2 className="text-xl font-extrabold text-navy">{isEs ? "Funcionarios electos" : "Elected Officials"}</h2>
+        <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {electedOfficials.map((official) => (
+            <div key={official.name} className="space-y-0.5 leading-tight">
+              <p className="text-sm font-extrabold uppercase tracking-wide text-red">{official.name}</p>
+              <p className="text-sm font-bold text-navy">{official.title}</p>
+              {official.descriptor ? <p className="text-xs text-neutral-500">{official.descriptor}</p> : null}
+            </div>
+          ))}
         </div>
       </section>
 
