@@ -1,0 +1,13 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 675'>
+  <rect width='1200' height='675' fill='#eef2ff'/>
+  <rect y='500' width='1200' height='175' fill='#c7d2fe'/>
+  <rect x='220' y='300' width='360' height='230' fill='#fff'/>
+  <polygon points='200,320 400,180 600,320' fill='#b3192d'/>
+  <rect x='280' y='360' width='80' height='80' fill='#bfdbfe'/>
+  <rect x='410' y='360' width='80' height='80' fill='#bfdbfe'/>
+  <rect x='360' y='430' width='90' height='100' fill='#0d1b3d'/>
+  <rect x='700' y='220' width='300' height='180' rx='24' fill='#0d1b3d'/>
+  <text x='760' y='320' font-size='86' font-family='Arial' font-weight='700' fill='#fff'>$</text>
+  <rect x='690' y='410' width='320' height='80' rx='18' fill='#b3192d'/>
+  <text x='740' y='465' font-size='44' font-family='Arial' font-weight='700' fill='#fff'>LOWER</text>
+</svg>

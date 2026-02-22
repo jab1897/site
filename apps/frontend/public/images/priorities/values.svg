@@ -1,0 +1,9 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 675'>
+  <rect width='1200' height='675' fill='#fff'/>
+  <rect width='450' height='675' fill='#0d1b3d'/>
+  <rect x='450' width='750' height='225' fill='#b3192d'/>
+  <rect x='450' y='225' width='750' height='225' fill='#fff'/>
+  <rect x='450' y='450' width='750' height='225' fill='#b3192d'/>
+  <polygon points='225,140 252,207 326,212 270,257 287,330 225,290 163,330 180,257 124,212 198,207' fill='#fff'/>
+  <text x='520' y='390' font-size='72' font-family='Arial' font-weight='800' fill='#0d1b3d'>TEXAS VALUES</text>
+</svg>

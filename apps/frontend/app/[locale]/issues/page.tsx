@@ -1,3 +1,36 @@
+import Image from "next/image";
 import { priorities } from "@/lib/content";
 import { Locale } from "@/lib/i18n";
-export default function Page({ params }: { params: { locale: Locale } }) { const items = priorities[params.locale]; return <div className="container py-12"><h1 className="text-3xl font-bold">Issues</h1><div className="mt-6 space-y-4">{items.map((item, i)=><details key={item} id={`issue-${i+1}`} className="border p-4"><summary className="font-semibold">{item}</summary><p className="mt-2">Promise paragraph placeholder.</p><ul className="list-disc pl-6"><li>Commitment 1</li><li>Commitment 2</li><li>Commitment 3</li></ul><p className="text-sm text-slate-500 mt-2">Facts area placeholder.</p>{i===5 && <div className="mt-3 p-3 bg-slate-50"><h3 className="font-semibold">Support our veterans</h3><p>Short subsection inside public safety and law enforcement.</p></div>}</details>)}</div><section id="veterans" className="border p-4 mt-6"><h2 className="font-semibold">Support our veterans</h2><p>Standalone anchor section near public safety.</p></section><div className="mt-6 flex gap-3"><a href={`/${params.locale}/donate`} className="bg-red text-white px-4 py-2">Donate</a><a href={`/${params.locale}/get-involved`} className="border px-4 py-2">Volunteer</a></div></div>; }
+
+export default function Page({ params }: { params: { locale: Locale } }) {
+  const items = priorities[params.locale];
+
+  return (
+    <div className="container py-12">
+      <h1 className="text-3xl font-bold">Issues</h1>
+      <div className="mt-6 space-y-5">
+        {items.map((item, i) => (
+          <details key={item.title} id={`issue-${i + 1}`} className="overflow-hidden rounded-2xl border border-navy/10 bg-white">
+            <summary className="cursor-pointer p-4 text-xl font-semibold text-navy">{item.title}</summary>
+            <Image src={item.image} alt={item.imageAlt} width={1200} height={675} className="h-60 w-full object-cover" />
+            <div className="p-4">
+              <ul className="list-disc space-y-2 pl-6 text-slate-700">
+                {item.bullets.map((bullet) => (
+                  <li key={bullet}>{bullet}</li>
+                ))}
+              </ul>
+            </div>
+          </details>
+        ))}
+      </div>
+      <div className="mt-6 flex gap-3">
+        <a href={`/${params.locale}/donate`} className="bg-red px-4 py-2 text-white">
+          Donate
+        </a>
+        <a href={`/${params.locale}/get-involved`} className="border px-4 py-2">
+          Volunteer
+        </a>
+      </div>
+    </div>
+  );
+}

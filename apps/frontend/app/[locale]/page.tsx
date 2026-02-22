@@ -18,7 +18,7 @@ export default function Home({ params }: { params: { locale: Locale } }) {
       <section className="texas-panel py-10">
         <div className="container grid items-start gap-8 lg:grid-cols-[1.25fr_1fr]">
           <div>
-            <h2 className="text-4xl font-black uppercase tracking-tight text-red">Meet George Borrego</h2>
+            <h2 className="text-4xl font-black uppercase tracking-tight text-red">Meet Jorge Borrego</h2>
             <p className="mt-3 text-2xl font-semibold uppercase text-navy">For Texas House District 118</p>
             <p className="mt-6 max-w-3xl text-lg leading-relaxed text-slate-700">
               Jorge Borrego is a conservative Republican running to represent Texas House District 118 in San Antonio.
@@ -54,11 +54,23 @@ export default function Home({ params }: { params: { locale: Locale } }) {
       </section>
 
       <section className="container py-10">
-        <h2 className="text-2xl font-semibold text-navy">Priorities</h2>
-        <div className="mt-4 grid gap-3 md:grid-cols-2">
-          {priorities[locale].map((p, idx) => (
-            <a key={p} href={`/${locale}/issues#issue-${idx + 1}`} className="rounded-xl border border-navy/10 bg-white p-4 hover:border-red/40 hover:shadow-sm">
-              {p}
+        <h2 className="text-4xl font-black uppercase tracking-tight text-navy">Priorities</h2>
+        <div className="mt-6 grid gap-6 lg:grid-cols-2">
+          {priorities[locale].map((priority, idx) => (
+            <a
+              key={priority.title}
+              href={`/${locale}/issues#issue-${idx + 1}`}
+              className="overflow-hidden rounded-3xl border border-navy/10 bg-white transition hover:-translate-y-1 hover:border-red/30 hover:shadow-lg"
+            >
+              <Image src={priority.image} alt={priority.imageAlt} width={1200} height={675} className="h-52 w-full object-cover" />
+              <div className="space-y-4 p-6">
+                <h3 className="text-2xl font-black uppercase leading-tight text-red">{priority.title}</h3>
+                <ul className="list-disc space-y-2 pl-6 text-lg text-slate-700">
+                  {priority.bullets.map((bullet) => (
+                    <li key={bullet}>{bullet}</li>
+                  ))}
+                </ul>
+              </div>
             </a>
           ))}
         </div>
@@ -69,7 +81,7 @@ export default function Home({ params }: { params: { locale: Locale } }) {
           <div className="relative overflow-hidden rounded-3xl border border-navy/10">
             <Image src="/images/family/walking-away.jpg" alt="Borrego family walking together" width={1500} height={700} className="h-auto w-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-navy/60 via-navy/10 to-transparent" />
-            <div className="absolute bottom-0 p-6 text-white text-lg font-medium">Faith, family, and work define our mission.</div>
+            <div className="absolute bottom-0 p-6 text-lg font-medium text-white">Faith, family, and work define our mission.</div>
           </div>
         </div>
       </section>
