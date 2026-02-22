@@ -1,16 +1,9 @@
 "use client";
 
-const getDonateHref = (apiUrl: string, locale: string) => {
-  const base = apiUrl?.replace(/\/$/, "") || "";
-  const loc = locale || "en";
-  const path = loc === "es" ? "/es" : "/en";
-  return `${base}/api/public/donate?locale=${encodeURIComponent(loc)}&path=${encodeURIComponent(path)}`;
-};
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { labels, Locale } from "@/lib/i18n";
-import { flags, getElectionBanner } from "@/lib/config";
+import { flags, getElectionBanner, WINRED_DONATE_URL } from "@/lib/config";
 
 export function SiteShell({ locale, children }: { locale: Locale; children: React.ReactNode }) {
   const t = labels[locale];
@@ -21,8 +14,7 @@ export function SiteShell({ locale, children }: { locale: Locale; children: Reac
     ["about", t.nav.about],
     ["issues", t.nav.issues],
     ["endorsements", t.nav.endorsements],
-    ["get-involved", t.nav.involved],
-    ["donate", t.nav.donate]
+    ["get-involved", t.nav.involved]
   ] as const;
 
   return (
@@ -31,20 +23,21 @@ export function SiteShell({ locale, children }: { locale: Locale; children: Reac
       <header className="border-b sticky top-0 bg-white z-40">
         <div className="container flex items-center justify-between py-4">
           <Link href={`/${locale}`} className="font-bold text-navy">Jorge Borrego</Link>
-          <nav className="hidden md:flex gap-4 text-sm">
+          <nav className="hidden md:flex gap-4 text-sm items-center">
             {links.map(([href, label]) => <Link key={href} href={`/${locale}/${href}`} className="hover:text-red">{label}</Link>)}
+            <a href={WINRED_DONATE_URL} target="_blank" rel="noopener noreferrer" className="hover:text-red">{t.nav.donate}</a>
             {flags.showGalleryInNav && <Link href={`/${locale}/gallery`}>Gallery</Link>}
           </nav>
           <div className="flex gap-2">
             <Link href={pathname?.startsWith("/es") ? pathname.replace("/es", "/en") : pathname?.replace("/en", "/es") || "/es"} className="text-sm border px-2 py-1">{locale === "en" ? "ES" : "EN"}</Link>
-            <Link href={getDonateHref(process.env.NEXT_PUBLIC_API_URL as string, locale)} className="bg-red text-white px-3 py-1 rounded">{t.donate}</Link>
+            <a href={WINRED_DONATE_URL} target="_blank" rel="noopener noreferrer" className="bg-red text-white px-3 py-1 rounded">{t.donate}</a>
           </div>
         </div>
       </header>
       <main>{children}</main>
-      <a className="fixed right-4 bottom-20 hidden md:block bg-red text-white px-4 py-2 rounded-full" href={getDonateHref(process.env.NEXT_PUBLIC_API_URL as string, locale)}>{t.donate}</a>
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-navy text-white flex">
-        <a href={getDonateHref(process.env.NEXT_PUBLIC_API_URL as string, locale)} className="w-1/2 text-center py-3 bg-red">{t.donate}</a>
+      <a className="fixed right-4 bottom-20 hidden md:block bg-red text-white px-4 py-2 rounded-full" href={WINRED_DONATE_URL} target="_blank" rel="noopener noreferrer">{t.donate}</a>
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-navy text-white flex z-50">
+        <a href={WINRED_DONATE_URL} target="_blank" rel="noopener noreferrer" className="w-1/2 text-center py-3 bg-red">{t.donate}</a>
         <a href={`/${locale}/get-involved`} className="w-1/2 text-center py-3">{t.volunteer}</a>
       </div>
       <footer className="border-t mt-16 mb-14 md:mb-0">

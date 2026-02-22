@@ -11,6 +11,8 @@ export const electionBanner = {
   generalDate: "November 3"
 };
 
+export const WINRED_DONATE_URL = "https://secure.winred.com/jorge-borrego-campaign/donate-today";
+
 export function getElectionBanner() {
   const now = new Date();
   const year = now.getFullYear();

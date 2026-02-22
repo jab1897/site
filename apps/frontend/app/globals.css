@@ -1,5 +1,61 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body { @apply bg-white text-slate-900; }
-.container { @apply max-w-6xl mx-auto px-4; }
+
+body {
+  @apply bg-white text-slate-900;
+}
+
+.container {
+  @apply mx-auto max-w-6xl px-4;
+}
+
+.hero-surface::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 42%, rgba(255, 255, 255, 0.84) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.hero-image-wrap::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background: radial-gradient(circle, transparent 55%, rgba(15, 23, 42, 0.22) 100%);
+  pointer-events: none;
+}
+
+.hero-copy-card::before {
+  content: "";
+  position: absolute;
+  inset: -16px;
+  border-radius: 1.75rem;
+  background: radial-gradient(circle at top left, rgba(179, 25, 45, 0.16), transparent 55%);
+  filter: blur(20px);
+  z-index: -1;
+}
+
+.hero-flag-stripe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, #b3192d 0 33%, #ffffff 33% 66%, #0d1b3d 66% 100%);
+  z-index: 3;
+}
+
+.hero-star-pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.09;
+  background-image: url("data:image/svg+xml,%3Csvg width='240' height='240' viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M120 22l12 36h38l-31 22 12 36-31-22-31 22 12-36-31-22h38z' fill='%230d1b3d'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+  background-position: center;
+}
+
+.texas-panel {
+  background: linear-gradient(180deg, rgba(13, 27, 61, 0.03) 0%, rgba(179, 25, 45, 0.06) 100%);
+}
