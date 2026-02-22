@@ -16,7 +16,7 @@ export default function Home({ params }: { params: { locale: Locale } }) {
         <div className="mb-6 h-1 w-20 bg-gradient-to-r from-red via-red to-navy" />
         <h2 className="text-2xl font-semibold text-navy">Why I am running</h2>
         <p className="mt-3 max-w-3xl text-slate-700">
-          Raised without stability. Father incarcerated. First in family to graduate college. Built a career in Texas policy. Now running to fight for families like mine in South San Antonio.
+          Raised without stability. Father incarcerated. First in family to graduate college. Built a career in Texas policy. Now running to fight for families like mine in San Antonio.
         </p>
       </section>
 

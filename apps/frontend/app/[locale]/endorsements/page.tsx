@@ -19,7 +19,7 @@ export default function EndorsementsPage({ params }: { params: { locale: string 
         <h2 className="text-xl font-extrabold text-navy">{isEs ? "Gobernador Abbott" : "Governor Abbott"}</h2>
         <p className="mt-1 text-neutral-700">{isEs ? "Respaldo destacado" : "Featured endorsement"}</p>
         <div className="mt-5 relative aspect-[16/8] overflow-hidden rounded-xl border">
-          <Image src="/images/endorsements/abbott.jpg" alt="Governor Greg Abbott endorses Jorge Borrego" fill className="object-cover" priority />
+          <Image src="/assets/endorsements/abbott.jpg" alt="Governor Greg Abbott endorses Jorge Borrego" fill className="object-cover" priority />
         </div>
       </section>
 
@@ -36,11 +36,11 @@ export default function EndorsementsPage({ params }: { params: { locale: string 
         <h2 className="text-lg font-extrabold text-navy">{isEs ? "Comités y organizaciones" : "PACs and organizations"}</h2>
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           {[
-            ["/images/endorsements/sa-voter-guide.png", "San Antonio Family Association PAC endorsement"],
-            ["/images/endorsements/trepac.png", "TREPAC endorsement"],
-            ["/images/endorsements/thsc.png", "Texas Home School Coalition endorsement"],
-            ["/images/endorsements/tlr.jpg", "Texans for Lawsuit Reform PAC endorsement"],
-            ["/images/endorsements/afc.jpg", "AFC Victory Fund endorsement"]
+            ["/assets/endorsements/sa-voter-guide.png", "San Antonio Family Association PAC endorsement"],
+            ["/assets/endorsements/trepac.png", "TREPAC endorsement"],
+            ["/assets/endorsements/thsc.png", "Texas Home School Coalition endorsement"],
+            ["/assets/endorsements/tlr.jpg", "Texans for Lawsuit Reform PAC endorsement"],
+            ["/assets/endorsements/afc.jpg", "AFC Victory Fund endorsement"]
           ].map(([src, alt]) => (
             <div key={src} className="overflow-hidden rounded-xl border bg-white">
               <div className="relative aspect-[1/1]">

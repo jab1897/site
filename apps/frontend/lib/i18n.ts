@@ -12,7 +12,7 @@ export const labels = {
       name: "Jorge Borrego",
       slogan: "A conservative fighter for San Antonio",
       summary:
-        "Jorge Borrego is fighting for safe neighborhoods, strong schools, and lower taxes for working families. He is rooted in faith, family, and service, and he is ready to lead with steady conservative values for South San Antonio.",
+        "Jorge Borrego is fighting for safe neighborhoods, strong schools, and lower taxes for working families. He is rooted in faith, family, and service, and he is ready to lead with steady conservative values for San Antonio.",
       primaryCta: "Donate",
       secondaryCta: "Join our team",
       imageAlt: "Jorge Borrego with his family"
@@ -28,7 +28,7 @@ export const labels = {
       name: "Jorge Borrego",
       slogan: "Un luchador conservador por San Antonio",
       summary:
-        "Jorge Borrego lucha por vecindarios seguros, escuelas fuertes y menos impuestos para las familias trabajadoras. Está guiado por la fe, la familia y el servicio, y está listo para liderar con valores conservadores firmes para el sur de San Antonio.",
+        "Jorge Borrego lucha por vecindarios seguros, escuelas fuertes y menos impuestos para las familias trabajadoras. Está guiado por la fe, la familia y el servicio, y está listo para liderar con valores conservadores firmes para San Antonio.",
       primaryCta: "Donar",
       secondaryCta: "Únete al equipo",
       imageAlt: "Jorge Borrego con su familia"

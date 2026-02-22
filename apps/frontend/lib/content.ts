@@ -22,9 +22,9 @@ export const priorities = {
 };
 
 export const endorsements = [
-  { name: "Governor Greg Abbott", logo: "/images/endorsements/greg-abbott-placeholder.png", category: "major" },
-  { name: "Texas Homeschool Coalition", logo: "/images/endorsements/tx-homeschool-placeholder.png", category: "community" },
-  { name: "San Antonio Voter Guide PAC", logo: "/images/endorsements/sa-voter-guide-placeholder.png", category: "grassroots" }
+  { name: "Governor Greg Abbott", logo: "/assets/endorsements/greg-abbott-placeholder.png", category: "major" },
+  { name: "Texas Homeschool Coalition", logo: "/assets/endorsements/tx-homeschool-placeholder.png", category: "community" },
+  { name: "San Antonio Voter Guide PAC", logo: "/assets/endorsements/sa-voter-guide-placeholder.png", category: "grassroots" }
 ];
 
 export const donateCopyPath = (locale: Locale) => `/content/${locale}/donate.mdx`;
