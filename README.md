@@ -85,7 +85,68 @@ Never commit secrets. Add values only in Vercel/Render dashboards:
 - [ ] Copy key.
 - [ ] Paste into Render env var `RESEND_API_KEY`.
 - [ ] Set `LEADS_NOTIFY_EMAIL=info@jorgefortexas.com`.
+- [ ] Set `VOLUNTEER_NOTIFY_EMAIL=info@jorgefortexas.com`.
 - [ ] Redeploy backend.
+
+## 12.1 Seamless volunteer-interest pipeline (recommended)
+Use this checklist to capture, notify, review, and export all volunteer-interest submissions with minimal manual work.
+
+1. **Frontend form wiring (already included in this repo)**
+   - Volunteer form posts to `POST /api/public/volunteer`.
+   - API base URL is set from `NEXT_PUBLIC_API_URL`.
+
+2. **Backend storage and notifications (already included in this repo)**
+   - Backend validates payload and stores rows in `volunteer_signups`.
+   - Backend emails your team using Resend when new submissions arrive.
+
+3. **Production environment variables**
+   - In **Vercel** (`apps/frontend`):
+     - `NEXT_PUBLIC_API_URL=https://YOUR_RENDER_BACKEND_URL`
+     - `NEXT_PUBLIC_SITE_URL=https://YOUR_DOMAIN`
+   - In **Render** (`apps/backend`):
+     - `DATABASE_URL=...` (already set if Render Postgres is connected)
+     - `RESEND_API_KEY=...`
+     - `VOLUNTEER_NOTIFY_EMAIL=info@jorgefortexas.com`
+     - `LEADS_NOTIFY_EMAIL=info@jorgefortexas.com`
+
+   If your Render API service and Render Postgres are already set up, you only need to add/update `RESEND_API_KEY`, `VOLUNTEER_NOTIFY_EMAIL`, and `LEADS_NOTIFY_EMAIL`, then redeploy.
+
+4. **Verification steps**
+   - Submit the volunteer form on your live site.
+   - Confirm a new row is created in `volunteer_signups`.
+   - Confirm the notification email is received.
+   - Confirm no CORS errors appear in browser devtools.
+
+5. **Daily operations**
+   - Use admin endpoint(s) to review lead volume and trends.
+   - Export and sync contacts into your CRM/email/SMS tool each day.
+   - Tag contacts by `interest`, `locale`, and `source_path` for segmentation.
+
+## 12.2 Copy/paste code-search prompt (for Codex/AI code audit)
+Use this prompt to quickly audit whether volunteer-interest capture is fully wired and where to fix gaps.
+
+```text
+You are auditing a monorepo for volunteer-interest lead capture.
+
+Goal: verify the complete flow from site form submission → backend validation → database insert → email notification → admin reporting.
+
+Search tasks:
+1) Find frontend files that submit volunteer forms. Report endpoint URL, HTTP method, payload fields, and env vars used.
+2) Find backend route handlers for volunteer/lead submission. Report validation schema, required/optional fields, and response codes.
+3) Find database schema/migrations for volunteer tables. Report table names + key columns used for outreach (email, phone, interest, locale, source_path, created_at).
+4) Find email notification service usage (Resend or equivalent). Report which env vars are required and fallback behavior when key is missing.
+5) Find admin/metrics/export routes that allow campaign staff to retrieve leads.
+6) List all env vars needed for local + production setup, grouped by frontend/backend.
+7) Identify likely failure points (CORS, missing env vars, wrong API URL, missing table, email provider disabled).
+8) Output a “Setup Fix Plan” with exact files to edit and a step-by-step validation checklist.
+
+Return results as:
+- Architecture summary
+- File-by-file evidence (with paths)
+- Missing pieces
+- Concrete fix plan
+- Final verification commands
+```
 
 ## 13 Step 11 Verify the WinRed redirect tracking works
 - [ ] Open live site.
