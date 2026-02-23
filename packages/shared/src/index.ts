@@ -20,5 +20,20 @@ export const donationClickSchema = z.object({
   userAgent: z.string().optional()
 });
 
+export const volunteerSignupSchema = z.object({
+  firstName: z.string().trim().min(1),
+  lastName: z.string().trim().min(1),
+  email: z.string().trim().email(),
+  phone: z.string().trim().optional().or(z.literal("")),
+  zip: z.string().trim().min(1),
+  interest: z.string().trim().min(1),
+  updatesOptIn: z.boolean().default(true),
+  smsOptIn: z.boolean().default(false),
+  sourcePath: z.string().trim().min(1),
+  locale: z.enum(locales),
+  company: z.string().optional()
+});
+
 export type LeadInput = z.infer<typeof leadSchema>;
 export type DonationClickInput = z.infer<typeof donationClickSchema>;
+export type VolunteerSignupInput = z.infer<typeof volunteerSignupSchema>;
