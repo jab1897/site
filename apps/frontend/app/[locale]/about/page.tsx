@@ -52,8 +52,8 @@ export default function Page({ params }: { params: { locale: Locale } }) {
             className="w-full rounded-3xl border border-navy/10 object-cover shadow"
           />
           <figcaption className="text-sm text-slate-600">
-            UTSA was a turning point that shaped Jorge’s discipline, direction,
-            and love for San Antonio.
+            UTSA was a turning point that shaped Jorge his discipline and
+            direction. Where he found the love of his life.
           </figcaption>
         </figure>
 
@@ -73,7 +73,8 @@ export default function Page({ params }: { params: { locale: Locale } }) {
             className="w-full rounded-3xl border border-navy/10 object-cover shadow"
           />
           <figcaption className="text-sm text-slate-600">
-            Faith, family, and San Antonio roots.
+            Faith, family, and traditional values are at the root of Jorge &
+            Lexie‘s marriage
           </figcaption>
         </figure>
 
