@@ -5,6 +5,7 @@ import { Locale } from "@/lib/i18n";
 import { LeadForm } from "@/components/LeadForm";
 import { DonateButtons } from "@/components/DonateButtons";
 import { Hero } from "@/components/Hero";
+import { VideoWithSoundToggle } from "@/components/VideoWithSoundToggle";
 
 export default function Home({ params }: { params: { locale: Locale } }) {
   const { locale } = params;
@@ -22,17 +23,11 @@ export default function Home({ params }: { params: { locale: Locale } }) {
             <p className="mt-3 text-2xl font-semibold uppercase text-navy">For Texas House District 118</p>
           </div>
 
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
+          <VideoWithSoundToggle
             poster="/images/candidate/speaking-flag.jpg"
-            className="w-full rounded-2xl border border-navy/10 shadow lg:col-start-2 lg:row-span-2 lg:row-start-1"
-          >
-            <source src="/video/primary-commercial.mov" />
-          </video>
+            source="/video/primary-commercial.mov"
+            className="w-full rounded-2xl border border-navy/10 shadow"
+          />
 
           <div>
             <p className="mt-6 max-w-3xl text-lg leading-relaxed text-slate-700">
