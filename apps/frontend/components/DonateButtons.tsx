@@ -14,7 +14,7 @@ export function DonateButtons({ locale, path }: { locale: Locale; path: string }
         </h2>
         <p className="mx-auto mt-5 max-w-3xl text-xl font-semibold text-red md:text-[2rem]">{t.donateSubhead}</p>
 
-        <div className="mx-auto mt-8 flex max-w-6xl flex-nowrap items-center justify-center gap-3 overflow-x-auto pb-2">
+        <div className="mx-auto mt-8 grid w-full max-w-3xl grid-cols-3 gap-2 md:flex md:max-w-6xl md:flex-nowrap md:items-center md:justify-center md:gap-3 md:overflow-x-auto md:pb-2">
           {featuredDonationAmounts.map((amt) => {
             const label = amt === "Other" ? amt.toUpperCase() : `$${amt}`;
             const amountQuery = amt === "Other" ? "" : `?amount=${encodeURIComponent(amt)}`;
@@ -26,7 +26,7 @@ export function DonateButtons({ locale, path }: { locale: Locale; path: string }
                 rel="noopener noreferrer"
                 aria-label={`${t.donateButton} ${label}`}
                 data-path={path}
-                className="min-w-[140px] rounded-md bg-red px-5 py-3 text-3xl font-bold uppercase tracking-tight text-white transition hover:brightness-95"
+                className="rounded-md bg-red px-3 py-2 text-2xl font-bold uppercase tracking-tight text-white transition hover:brightness-95 md:min-w-[140px] md:px-5 md:py-3 md:text-3xl"
               >
                 {label}
               </a>

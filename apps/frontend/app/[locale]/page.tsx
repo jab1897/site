@@ -20,6 +20,21 @@ export default function Home({ params }: { params: { locale: Locale } }) {
           <div>
             <h2 className="text-4xl font-black uppercase tracking-tight text-red">Meet Jorge Borrego</h2>
             <p className="mt-3 text-2xl font-semibold uppercase text-navy">For Texas House District 118</p>
+          </div>
+
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster="/images/candidate/speaking-flag.jpg"
+            className="w-full rounded-2xl border border-navy/10 shadow lg:col-start-2 lg:row-span-2 lg:row-start-1"
+          >
+            <source src="/video/primary-commercial.mov" />
+          </video>
+
+          <div>
             <p className="mt-6 max-w-3xl text-lg leading-relaxed text-slate-700">
               Jorge Borrego is a conservative Republican running to represent Texas House District 118 in San Antonio.
             </p>
@@ -39,17 +54,6 @@ export default function Home({ params }: { params: { locale: Locale } }) {
               Learn More
             </Link>
           </div>
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            poster="/images/candidate/speaking-flag.jpg"
-            className="w-full rounded-2xl border border-navy/10 shadow"
-          >
-            <source src="/video/primary-commercial.mov" />
-          </video>
         </div>
       </section>
 
