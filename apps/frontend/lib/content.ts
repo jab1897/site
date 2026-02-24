@@ -5,8 +5,6 @@ export type PriorityItem = {
   bullets: string[];
   image: string;
   imageAlt: string;
-  imageWidth: number;
-  imageHeight: number;
 };
 
 export const priorities: Record<Locale, PriorityItem[]> = {
@@ -19,8 +17,6 @@ export const priorities: Record<Locale, PriorityItem[]> = {
       ],
       image: "/images/priorities/lobbyists.jpg",
       imageAlt: "Capitol dome and document representing government accountability",
-      imageWidth: 612,
-      imageHeight: 400
     },
     {
       title: "Protect our second amendment rights",
@@ -30,8 +26,6 @@ export const priorities: Record<Locale, PriorityItem[]> = {
       ],
       image: "/images/priorities/second-amendment.jpg",
       imageAlt: "Constitution and star imagery representing second amendment rights",
-      imageWidth: 612,
-      imageHeight: 408
     },
     {
       title: "Fight to permanently lower property taxes",
@@ -41,8 +35,6 @@ export const priorities: Record<Locale, PriorityItem[]> = {
       ],
       image: "/images/priorities/property-taxes.jpg",
       imageAlt: "Texas home and tax tag graphic for lower property taxes",
-      imageWidth: 275,
-      imageHeight: 183
     },
     {
       title: "Defend our conservative values that make Texas strong and safe, and fight for San Antonio families",
@@ -52,8 +44,6 @@ export const priorities: Record<Locale, PriorityItem[]> = {
       ],
       image: "/images/priorities/faith-family.jpg",
       imageAlt: "Texas flag inspired graphic representing conservative values",
-      imageWidth: 600,
-      imageHeight: 900
     },
     {
       title: "Oppose the radical, woke indoctrination of our children and fight the liberal takeover of our education system",
@@ -63,8 +53,6 @@ export const priorities: Record<Locale, PriorityItem[]> = {
       ],
       image: "/images/priorities/classroom.jpg",
       imageAlt: "Classroom chalkboard and books representing education priorities",
-      imageWidth: 275,
-      imageHeight: 183
     },
     {
       title: "Stand with local law enforcement and fight any efforts to defund the police",
@@ -74,8 +62,6 @@ export const priorities: Record<Locale, PriorityItem[]> = {
       ],
       image: "/images/priorities/law-enforcement.jpg",
       imageAlt: "Police badge and shield representing support for law enforcement",
-      imageWidth: 300,
-      imageHeight: 168
     },
     {
       title: "Ban sexually explicit school materials and drag show performances in front of children",
@@ -85,8 +71,6 @@ export const priorities: Record<Locale, PriorityItem[]> = {
       ],
       image: "/images/priorities/protect-children.jpg",
       imageAlt: "Books and child-safe shield symbol representing child protection",
-      imageWidth: 275,
-      imageHeight: 183
     }
   ],
   es: [
@@ -95,56 +79,42 @@ export const priorities: Record<Locale, PriorityItem[]> = {
       bullets: ["Terminar con el uso de dinero público para beneficiar intereses especiales.", "Aumentar la transparencia para que los recursos sirvan a las familias."],
       image: "/images/priorities/lobbyists.jpg",
       imageAlt: "Cúpula del capitolio y documento que representan rendición de cuentas",
-      imageWidth: 612,
-      imageHeight: 400
     },
     {
       title: "Proteger nuestros derechos de la segunda enmienda",
       bullets: ["Defender el derecho de los texanos respetuosos de la ley a portar armas.", "Oponerse a cargas injustas para propietarios responsables."],
       image: "/images/priorities/second-amendment.jpg",
       imageAlt: "Constitución y estrella que representan derechos de la segunda enmienda",
-      imageWidth: 612,
-      imageHeight: 408
     },
     {
       title: "Luchar para bajar permanentemente los impuestos a la propiedad",
       bullets: ["Impulsar alivio fiscal permanente para las familias.", "Exigir responsabilidad al gasto gubernamental local."],
       image: "/images/priorities/property-taxes.jpg",
       imageAlt: "Casa de Texas y etiqueta fiscal",
-      imageWidth: 275,
-      imageHeight: 183
     },
     {
       title: "Defender nuestros valores conservadores que mantienen a Texas fuerte y seguro, y luchar por las familias de San Antonio",
       bullets: ["Proteger fe, familia, libertad y responsabilidad personal.", "Impulsar políticas para vecindarios seguros y prósperos."],
       image: "/images/priorities/faith-family.jpg",
       imageAlt: "Gráfico inspirado en la bandera de Texas",
-      imageWidth: 600,
-      imageHeight: 900
     },
     {
       title: "Oponerse al adoctrinamiento radical de nuestros hijos y frenar la toma liberal del sistema educativo",
       bullets: ["Poner a los padres al mando de la educación de sus hijos.", "Enfocar escuelas en aprendizaje y disciplina."],
       image: "/images/priorities/classroom.jpg",
       imageAlt: "Pizarrón y libros",
-      imageWidth: 275,
-      imageHeight: 183
     },
     {
       title: "Respaldar a la policía local y oponerse a cualquier intento de quitarle fondos",
       bullets: ["Apoyar a los oficiales con recursos y entrenamiento.", "Rechazar políticas que debiliten la seguridad pública."],
       image: "/images/priorities/law-enforcement.jpg",
       imageAlt: "Insignia y escudo de policía",
-      imageWidth: 300,
-      imageHeight: 168
     },
     {
       title: "Prohibir material sexualmente explícito en escuelas y espectáculos para adultos frente a menores",
       bullets: ["Mantener contenido inapropiado fuera de los espacios infantiles.", "Defender el derecho de los padres a proteger a sus hijos."],
       image: "/images/priorities/protect-children.jpg",
       imageAlt: "Libros y escudo de protección infantil",
-      imageWidth: 275,
-      imageHeight: 183
     }
   ]
 };
