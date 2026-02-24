@@ -12,7 +12,22 @@ export default function Page({ params }: { params: { locale: Locale } }) {
         {items.map((item, i) => (
           <details key={item.title} id={`issue-${i + 1}`} className="overflow-hidden rounded-2xl border border-navy/10 bg-white">
             <summary className="cursor-pointer p-4 text-xl font-semibold text-navy">{item.title}</summary>
-            <Image src={item.image} alt={item.imageAlt} width={1200} height={675} className="h-60 w-full object-cover" />
+            <div className="px-4 pb-1">
+              <div
+                className="relative mx-auto w-full overflow-hidden rounded-xl aspect-[16/9]"
+                style={{ maxWidth: `${item.imageWidth}px` }}
+              >
+                <Image
+                  src={item.image}
+                  alt={item.imageAlt}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 800px"
+                  className="object-cover"
+                  quality={90}
+                  priority={false}
+                />
+              </div>
+            </div>
             <div className="p-4">
               <ul className="list-disc space-y-2 pl-6 text-slate-700">
                 {item.bullets.map((bullet) => (
