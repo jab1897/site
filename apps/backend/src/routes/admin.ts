@@ -3,6 +3,32 @@ import { pool } from "../db/client.js";
 import { stringify } from "csv-stringify/sync";
 import { env } from "../config/env.js";
 
+async function tableExists(tableName: string) {
+  const result = await pool.query("SELECT to_regclass($1) IS NOT NULL AS exists", [tableName]);
+  return Boolean(result.rows[0]?.exists);
+}
+
+async function columnExists(tableName: string, columnName: string) {
+  const result = await pool.query(
+    `SELECT EXISTS (
+      SELECT 1
+      FROM information_schema.columns
+      WHERE table_schema = current_schema() AND table_name = $1 AND column_name = $2
+    ) AS exists`,
+    [tableName, columnName]
+  );
+  return Boolean(result.rows[0]?.exists);
+}
+
+async function safeCount(sql: string, params: unknown[] = []) {
+  try {
+    const result = await pool.query(sql, params);
+    return Number(result.rows[0]?.total || 0);
+  } catch {
+    return 0;
+  }
+}
+
 export async function adminRoutes(app: FastifyInstance) {
   app.post("/api/admin/login", async (req, reply) => {
     const { email, passwordHash } = req.body as { email: string; passwordHash: string };
@@ -20,23 +46,44 @@ export async function adminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.get("/api/admin/metrics", async () => {
-    const [leads, sms, clicks, daily] = await Promise.all([
-      pool.query("SELECT COUNT(*)::int AS total FROM leads"),
-      pool.query("SELECT COUNT(*)::int AS total FROM leads WHERE sms_opt_in=true"),
-      pool.query("SELECT COUNT(*)::int AS total FROM donation_clicks"),
-      pool.query(`SELECT DATE(created_at) AS day,
-        (SELECT COUNT(*) FROM leads l WHERE DATE(l.created_at)=DATE(x.created_at))::int AS leads,
-        (SELECT COUNT(*) FROM donation_clicks d WHERE DATE(d.created_at)=DATE(x.created_at))::int AS clicks
-        FROM leads x GROUP BY DATE(created_at) ORDER BY day DESC LIMIT 30`)
-    ]);
+  app.get("/api/admin/metrics", async (req) => {
+    try {
+      const hasLeads = await tableExists("leads");
+      if (!hasLeads) {
+        req.log.error("Admin metrics: leads table is missing");
+        return { totalLeads: 0, smsOptIns: 0, winredClicks: 0 };
+      }
 
-    return {
-      totalLeads: leads.rows[0]?.total || 0,
-      totalSmsOptIns: sms.rows[0]?.total || 0,
-      totalWinRedClicks: clicks.rows[0]?.total || 0,
-      daily: daily.rows
-    };
+      const totalLeads = await safeCount("SELECT COUNT(*)::int AS total FROM leads");
+
+      const hasLeadsSmsOptIn = await columnExists("leads", "sms_opt_in");
+      const smsOptIns = hasLeadsSmsOptIn
+        ? await safeCount("SELECT COUNT(*)::int AS total FROM leads WHERE sms_opt_in = true")
+        : 0;
+
+      let winredClicks = 0;
+      const hasEvents = await tableExists("events");
+      if (hasEvents && (await columnExists("events", "event_type"))) {
+        winredClicks = await safeCount("SELECT COUNT(*)::int AS total FROM events WHERE event_type = 'winred_click'");
+      } else if (await tableExists("donation_clicks")) {
+        winredClicks = await safeCount("SELECT COUNT(*)::int AS total FROM donation_clicks");
+      } else {
+        const fallbackPredicates: string[] = [];
+        if (await columnExists("leads", "source_path")) fallbackPredicates.push("source_path ILIKE '%winred%'");
+        if (await columnExists("leads", "utm_source")) fallbackPredicates.push("utm_source ILIKE '%winred%'");
+        if (await columnExists("leads", "interest")) fallbackPredicates.push("interest ILIKE '%donate%'");
+        if (await columnExists("leads", "source")) fallbackPredicates.push("source ILIKE '%winred%'");
+
+        if (fallbackPredicates.length > 0) {
+          winredClicks = await safeCount(`SELECT COUNT(*)::int AS total FROM leads WHERE ${fallbackPredicates.join(" OR ")}`);
+        }
+      }
+
+      return { totalLeads, smsOptIns, winredClicks };
+    } catch (error) {
+      req.log.error({ err: error }, "Admin metrics query failed");
+      return { totalLeads: 0, smsOptIns: 0, winredClicks: 0 };
+    }
   });
 
   app.get("/api/admin/leads", async (req) => {
