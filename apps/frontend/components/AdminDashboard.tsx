@@ -94,7 +94,7 @@ export default function AdminDashboard() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          email: ADMIN_EMAIL,
+          email,
           passwordHash: adminKey
         })
       });
