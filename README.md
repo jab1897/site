@@ -154,6 +154,26 @@ Return results as:
 - [ ] Confirm redirect to WinRed URL.
 - [ ] Call backend admin metrics endpoint and verify click count increased.
 
+### Render Shell smoke checks (admin analytics)
+```bash
+# 1) Login and capture token
+TOKEN=$(curl -sS -X POST "$BACKEND_URL/api/admin/login" \
+  -H 'content-type: application/json' \
+  -d '{"email":"'$ADMIN_EMAIL'","passwordHash":"'$ADMIN_PASSWORD_HASH'"}' | jq -r '.token')
+
+# 2) Date-range totals
+curl -sS "$BACKEND_URL/api/admin/metrics?from=2026-01-01&to=2026-01-31" \
+  -H "Authorization: Bearer $TOKEN"
+
+# 3) Daily time series
+curl -sS "$BACKEND_URL/api/admin/timeseries?from=2026-01-01&to=2026-01-31" \
+  -H "Authorization: Bearer $TOKEN"
+
+# 4) Attribution summary
+curl -sS "$BACKEND_URL/api/admin/attribution?from=2026-01-01&to=2026-01-31" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
 ## 14 Step 12 Set up custom domain
 - [ ] Click **Vercel project → Settings → Domains**.
 - [ ] Click **Add Domain**.
