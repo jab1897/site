@@ -31,12 +31,17 @@ export default function AdminDashboard() {
   const [leads, setLeads] = useState<Lead[]>([]);
 
   useEffect(() => {
-    setToken(localStorage.getItem(ADMIN_TOKEN_KEY));
+    const storedToken = localStorage.getItem(ADMIN_TOKEN_KEY);
+    if (!storedToken) {
+      return;
+    }
+
+    setToken(storedToken);
   }, []);
 
   const adminFetch = useCallback(
-    async (path: string, init?: RequestInit) => {
-      if (!token) {
+    async (path: string, authToken: string, init?: RequestInit) => {
+      if (!authToken) {
         throw new Error("No admin token");
       }
 
@@ -45,7 +50,7 @@ export default function AdminDashboard() {
         headers: {
           "Content-Type": "application/json",
           ...(init?.headers || {}),
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${authToken}`
         }
       });
 
@@ -55,14 +60,14 @@ export default function AdminDashboard() {
 
       return response;
     },
-    [token]
+    []
   );
 
-  const loadAdminData = useCallback(async () => {
+  const loadAdminData = useCallback(async (authToken: string) => {
     try {
       const [metricsResponse, leadsResponse] = await Promise.all([
-        adminFetch("/api/admin/metrics"),
-        adminFetch("/api/admin/leads")
+        adminFetch("/api/admin/metrics", authToken),
+        adminFetch("/api/admin/leads", authToken)
       ]);
 
       const [metricsData, leadsData] = await Promise.all([metricsResponse.json(), leadsResponse.json()]);
@@ -73,12 +78,13 @@ export default function AdminDashboard() {
     }
   }, [adminFetch]);
 
+
   useEffect(() => {
     if (!token) {
       return;
     }
 
-    void loadAdminData();
+    void loadAdminData(token);
   }, [loadAdminData, token]);
 
   const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
@@ -103,13 +109,18 @@ export default function AdminDashboard() {
       });
 
       if (!response.ok) {
-        throw new Error("Login failed");
+        setError("Invalid admin credentials");
+        return;
       }
 
-      const data = (await response.json()) as { token: string };
+      const data = (await response.json()) as { token?: string };
+      if (!data.token) {
+        setError("Login succeeded but token missing");
+        return;
+      }
+
       localStorage.setItem(ADMIN_TOKEN_KEY, data.token);
       setToken(data.token);
-      void loadAdminData();
     } catch {
       setError("Invalid admin credentials");
     }
