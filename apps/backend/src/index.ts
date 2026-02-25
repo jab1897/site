@@ -14,7 +14,19 @@ app.addHook("onRequest", async (req, reply) => {
   await new Promise<void>((resolve, reject) => helmet()(req.raw, reply.raw, (err) => (err ? reject(err) : resolve())));
 });
 
-await app.register(cors, { origin: true });
+const allowedOrigins = new Set([
+  "https://www.jorgefortexas.com",
+  "https://jorgefortexas.com"
+]);
+
+await app.register(cors, {
+  origin: (origin, cb) => {
+    if (!origin) return cb(null, true);
+    if (allowedOrigins.has(origin)) return cb(null, true);
+    if (origin.startsWith("http://localhost:")) return cb(null, true);
+    return cb(null, false);
+  }
+});
 await app.register(jwt, { secret: env.jwtSecret });
 await app.register(rateLimit, { max: 100, timeWindow: "1 minute" });
 
@@ -23,7 +35,7 @@ await app.register(adminRoutes);
 
 app.get("/health", async () => ({ ok: true }));
 app.get("/admin", async (_, reply) => {
-  return reply.type("text/html").send(`<!doctype html><html><body style="font-family:sans-serif;max-width:860px;margin:2rem auto;padding:1rem"><h1>Campaign Admin Dashboard</h1><p>Login and metrics:</p><ol><li>POST /api/admin/login with {email,passwordHash}</li><li>Use Bearer token for /api/admin/metrics, /api/admin/leads, /api/admin/leads.csv</li></ol></body></html>`);
+  return reply.type("text/html").send(`<!doctype html><html><body style="font-family:sans-serif;max-width:860px;margin:2rem auto;padding:1rem"><h1>Campaign Admin Dashboard</h1><p>Login and analytics:</p><ol><li>POST /api/admin/login with {email,passwordHash}</li><li>Use Bearer token for /api/admin/metrics, /api/admin/timeseries, /api/admin/attribution, /api/admin/leads, /api/admin/leads.csv</li></ol></body></html>`);
 });
 
 await initDb();
