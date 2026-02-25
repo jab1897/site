@@ -15,9 +15,18 @@ export async function initDb() {
       phone TEXT,
       sms_opt_in BOOLEAN NOT NULL DEFAULT FALSE,
       locale TEXT NOT NULL,
-      source TEXT NOT NULL
+      source TEXT NOT NULL,
+      status TEXT DEFAULT 'new',
+      tags TEXT[],
+      notes TEXT,
+      assigned_to TEXT
     );
   `);
+
+  await pool.query("ALTER TABLE leads ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'new';");
+  await pool.query("ALTER TABLE leads ADD COLUMN IF NOT EXISTS tags TEXT[];");
+  await pool.query("ALTER TABLE leads ADD COLUMN IF NOT EXISTS notes TEXT;");
+  await pool.query("ALTER TABLE leads ADD COLUMN IF NOT EXISTS assigned_to TEXT;");
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS donation_clicks (

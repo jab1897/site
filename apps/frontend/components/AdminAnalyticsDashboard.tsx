@@ -11,7 +11,7 @@ type AdminMetrics = {
 };
 
 type Lead = {
-  id?: string;
+  id?: string | number;
   name?: string;
   email?: string;
   phone?: string;
@@ -25,6 +25,10 @@ type Lead = {
   source_path?: string;
   referrer?: string;
   page?: string;
+  status?: string;
+  tags?: string[] | string;
+  notes?: string;
+  assigned_to?: string;
   [key: string]: unknown;
 };
 
@@ -40,10 +44,30 @@ type AttributionPayload = {
   pages?: Record<string, number>;
 };
 
+
+type PipelineCounts = {
+  new: number;
+  contacted: number;
+  committed: number;
+  volunteer: number;
+  donor: number;
+};
+
+const PIPELINE_STATUSES = ["new", "contacted", "committed", "volunteer", "donor"] as const;
+type PipelineStatus = (typeof PIPELINE_STATUSES)[number];
+
+type LeadEditorState = {
+  status: PipelineStatus;
+  tags: string;
+  notes: string;
+  assignedTo: string;
+};
+
 const ADMIN_EMAIL = "jorge@jorgefortexas.com";
 const ADMIN_TOKEN_KEY = "admin_token";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "";
 const PAGE_SIZE = 25;
+const EMPTY_PIPELINE_COUNTS: PipelineCounts = { new: 0, contacted: 0, committed: 0, volunteer: 0, donor: 0 };
 
 const RANGE_OPTIONS: Array<{ label: string; value: DateRangeKey }> = [
   { label: "Last 7 days", value: "7d" },
@@ -82,6 +106,34 @@ function formatDate(date: Date): string {
   });
 }
 
+
+
+function normalizeLeadStatus(value: unknown): PipelineStatus {
+  const normalized = typeof value === "string" ? value.trim().toLowerCase() : "";
+  return (PIPELINE_STATUSES as readonly string[]).includes(normalized) ? (normalized as PipelineStatus) : "new";
+}
+
+function toTagArray(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value.map((item) => String(item).trim()).filter(Boolean);
+  }
+  if (typeof value === "string") {
+    return value
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+  return [];
+}
+
+function toEditorState(lead: Lead): LeadEditorState {
+  return {
+    status: normalizeLeadStatus(lead.status),
+    tags: toTagArray(lead.tags).join(", "),
+    notes: typeof lead.notes === "string" ? lead.notes : "",
+    assignedTo: typeof lead.assigned_to === "string" ? lead.assigned_to : ""
+  };
+}
 function mapToTopList(input: Record<string, number> | undefined): Array<{ label: string; count: number }> {
   if (!input) return [];
   return Object.entries(input)
@@ -154,6 +206,11 @@ export default function AdminAnalyticsDashboard() {
   const [searchText, setSearchText] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const [leadEditor, setLeadEditor] = useState<LeadEditorState | null>(null);
+  const [isSavingLead, setIsSavingLead] = useState(false);
+  const [saveLeadError, setSaveLeadError] = useState("");
+  const [pipeline, setPipeline] = useState<PipelineCounts>(EMPTY_PIPELINE_COUNTS);
+  const [activePipelineFilter, setActivePipelineFilter] = useState<PipelineStatus | "all">("all");
 
   useEffect(() => {
     const storedToken = localStorage.getItem(ADMIN_TOKEN_KEY);
@@ -162,12 +219,14 @@ export default function AdminAnalyticsDashboard() {
     setIsAuthed(true);
   }, []);
 
-  const adminFetch = useCallback(async (path: string, authToken: string) => {
+  const adminFetch = useCallback(async (path: string, authToken: string, init?: RequestInit) => {
     if (!authToken) throw new Error("No admin token");
     const response = await fetch(`${API_BASE}${path}`, {
+      ...init,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`
+        Authorization: `Bearer ${authToken}`,
+        ...(init?.headers || {})
       }
     });
     if (!response.ok) {
@@ -217,6 +276,25 @@ export default function AdminAnalyticsDashboard() {
       }
 
       try {
+        const pipelineResponse = await adminFetch(`/api/admin/pipeline`, authToken);
+        const pipelineData = (await pipelineResponse.json()) as Partial<PipelineCounts>;
+        setPipeline({
+          new: Number(pipelineData.new ?? 0),
+          contacted: Number(pipelineData.contacted ?? 0),
+          committed: Number(pipelineData.committed ?? 0),
+          volunteer: Number(pipelineData.volunteer ?? 0),
+          donor: Number(pipelineData.donor ?? 0)
+        });
+      } catch {
+        const fallback = { ...EMPTY_PIPELINE_COUNTS };
+        nextLeads.forEach((lead) => {
+          const status = normalizeLeadStatus(lead.status);
+          fallback[status] += 1;
+        });
+        setPipeline(fallback);
+      }
+
+      try {
         const tsResponse = await adminFetch(`/api/admin/timeseries${query}`, authToken);
         const data = (await tsResponse.json()) as TimeseriesPoint[] | { points?: TimeseriesPoint[] };
         const points = Array.isArray(data) ? data : Array.isArray(data.points) ? data.points : [];
@@ -261,7 +339,16 @@ export default function AdminAnalyticsDashboard() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchText, selectedRange]);
+  }, [activePipelineFilter, searchText, selectedRange]);
+
+  useEffect(() => {
+    if (!selectedLead) {
+      setLeadEditor(null);
+      setSaveLeadError("");
+      return;
+    }
+    setLeadEditor(toEditorState(selectedLead));
+  }, [selectedLead]);
 
   const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -309,7 +396,12 @@ export default function AdminAnalyticsDashboard() {
       return created >= start;
     });
 
-    const bySearch = byRange.filter((lead) => {
+    const byPipeline = byRange.filter((lead) => {
+      if (activePipelineFilter === "all") return true;
+      return normalizeLeadStatus(lead.status) === activePipelineFilter;
+    });
+
+    const bySearch = byPipeline.filter((lead) => {
       if (!normalizedSearch) return true;
       const haystack = [lead.name, lead.email, lead.phone].filter(Boolean).join(" ").toLowerCase();
       return haystack.includes(normalizedSearch);
@@ -320,7 +412,7 @@ export default function AdminAnalyticsDashboard() {
       const right = parseCreatedDate(b)?.getTime() ?? 0;
       return right - left;
     });
-  }, [leads, searchText, selectedRange]);
+  }, [activePipelineFilter, leads, searchText, selectedRange]);
 
   const totalPages = Math.max(1, Math.ceil(filteredLeads.length / PAGE_SIZE));
   const paginatedLeads = filteredLeads.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -362,6 +454,64 @@ export default function AdminAnalyticsDashboard() {
     URL.revokeObjectURL(url);
   };
 
+
+  const updateLeadInState = useCallback((updatedLead: Lead) => {
+    setLeads((current) =>
+      current.map((lead) => {
+        if (String(lead.id) !== String(updatedLead.id)) return lead;
+        return { ...lead, ...updatedLead };
+      })
+    );
+    setSelectedLead((current) => {
+      if (!current || String(current.id) !== String(updatedLead.id)) return current;
+      return { ...current, ...updatedLead };
+    });
+  }, []);
+
+  const saveLead = useCallback(async () => {
+    if (!token || !selectedLead || !leadEditor) return;
+    setIsSavingLead(true);
+    setSaveLeadError("");
+
+    try {
+      const payload = {
+        status: leadEditor.status,
+        tags: toTagArray(leadEditor.tags),
+        notes: leadEditor.notes,
+        assignedTo: leadEditor.assignedTo
+      };
+
+      const response = await adminFetch(`/api/admin/leads/${selectedLead.id}`, token, {
+        method: "PATCH",
+        body: JSON.stringify(payload)
+      });
+      const updatedLead = (await response.json()) as Lead;
+      updateLeadInState(updatedLead);
+      await loadAdminData(token);
+    } catch {
+      setSaveLeadError("Failed to save lead updates");
+    } finally {
+      setIsSavingLead(false);
+    }
+  }, [adminFetch, leadEditor, loadAdminData, selectedLead, token, updateLeadInState]);
+
+  const updateLeadStatusInline = useCallback(
+    async (lead: Lead, status: PipelineStatus) => {
+      if (!token) return;
+      try {
+        const response = await adminFetch(`/api/admin/leads/${lead.id}`, token, {
+          method: "PATCH",
+          body: JSON.stringify({ status })
+        });
+        const updatedLead = (await response.json()) as Lead;
+        updateLeadInState(updatedLead);
+        await loadAdminData(token);
+      } catch {
+        setLeadsError("Unable to update lead status");
+      }
+    },
+    [adminFetch, loadAdminData, token, updateLeadInState]
+  );
   const copyEmails = async () => {
     const emails = filteredLeads
       .map((lead) => (typeof lead.email === "string" ? lead.email.trim() : ""))
@@ -432,6 +582,28 @@ export default function AdminAnalyticsDashboard() {
           >
             Refresh
           </button>
+        </div>
+      </div>
+
+
+      <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+        <h2 className="text-xl font-semibold">Pipeline Overview</h2>
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {PIPELINE_STATUSES.map((status) => {
+            const isActive = activePipelineFilter === status;
+            const label = status[0].toUpperCase() + status.slice(1);
+            return (
+              <button
+                key={status}
+                type="button"
+                onClick={() => setActivePipelineFilter((current) => (current === status ? "all" : status))}
+                className={`rounded-md border px-3 py-4 text-left transition ${isActive ? "border-black bg-black text-white" : "border-gray-200 bg-white hover:bg-gray-50"}`}
+              >
+                <p className={`text-xs uppercase tracking-wide ${isActive ? "text-gray-200" : "text-gray-500"}`}>{label}</p>
+                <p className="mt-1 text-2xl font-semibold">{pipeline[status]}</p>
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -549,13 +721,16 @@ export default function AdminAnalyticsDashboard() {
                 <th className="px-3 py-2">Phone</th>
                 <th className="px-3 py-2">SMS opt in</th>
                 <th className="px-3 py-2">Source/page</th>
+                <th className="px-3 py-2">Status</th>
+                <th className="px-3 py-2">Tags</th>
+                <th className="px-3 py-2">Assigned</th>
                 <th className="px-3 py-2">Created date</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {isLoadingLeads ? (
                 <tr>
-                  <td className="px-3 py-4 text-gray-500" colSpan={6}>Loading leads…</td>
+                  <td className="px-3 py-4 text-gray-500" colSpan={9}>Loading leads…</td>
                 </tr>
               ) : paginatedLeads.length ? (
                 paginatedLeads.map((lead, index) => {
@@ -572,13 +747,40 @@ export default function AdminAnalyticsDashboard() {
                       <td className="px-3 py-2">{String(lead.phone ?? "—")}</td>
                       <td className="px-3 py-2">{lead.smsOptIn || lead.sms_opt_in ? "Yes" : "No"}</td>
                       <td className="px-3 py-2">{String(source)}</td>
+                      <td className="px-3 py-2" onClick={(event) => event.stopPropagation()}>
+                        <select
+                          value={normalizeLeadStatus(lead.status)}
+                          onChange={(event) => void updateLeadStatusInline(lead, event.target.value as PipelineStatus)}
+                          className="rounded border border-gray-300 px-2 py-1 text-xs"
+                        >
+                          {PIPELINE_STATUSES.map((status) => (
+                            <option key={status} value={status}>
+                              {status[0].toUpperCase() + status.slice(1)}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="px-3 py-2">
+                        <div className="flex flex-wrap gap-1">
+                          {toTagArray(lead.tags).length ? (
+                            toTagArray(lead.tags).map((tag) => (
+                              <span key={tag} className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-700">
+                                {tag}
+                              </span>
+                            ))
+                          ) : (
+                            <span className="text-gray-400">—</span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-3 py-2">{typeof lead.assigned_to === "string" && lead.assigned_to ? lead.assigned_to : "—"}</td>
                       <td className="px-3 py-2">{created ? formatDate(created) : "—"}</td>
                     </tr>
                   );
                 })
               ) : (
                 <tr>
-                  <td className="px-3 py-4 text-gray-500" colSpan={6}>{leadsError || "No leads found for current filters."}</td>
+                  <td className="px-3 py-4 text-gray-500" colSpan={9}>{leadsError || "No leads found for current filters."}</td>
                 </tr>
               )}
             </tbody>
@@ -629,16 +831,67 @@ export default function AdminAnalyticsDashboard() {
                 Close
               </button>
             </div>
-            <dl className="space-y-2 text-sm">
-              {Object.entries(selectedLead).map(([key, value]) => (
-                <div key={key} className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
-                  <dt className="font-medium text-gray-700">{key}</dt>
-                  <dd className="col-span-2 break-all text-gray-900">{typeof value === "string" ? value : JSON.stringify(value)}</dd>
-                </div>
-              ))}
-            </dl>
-            <h4 className="mt-4 text-sm font-semibold text-gray-700">JSON</h4>
-            <pre className="mt-2 rounded-md bg-gray-100 p-3 text-xs text-gray-800">{JSON.stringify(selectedLead, null, 2)}</pre>
+            <div className="space-y-4 text-sm">
+              <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                <span className="font-medium text-gray-700">Name</span>
+                <span className="col-span-2 break-all text-gray-900">{String(selectedLead.name ?? "—")}</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2 border-b border-gray-100 pb-2">
+                <span className="font-medium text-gray-700">Email</span>
+                <span className="col-span-2 break-all text-gray-900">{String(selectedLead.email ?? "—")}</span>
+              </div>
+              {leadEditor ? (
+                <>
+                  <div>
+                    <label className="mb-1 block font-medium text-gray-700">Status</label>
+                    <select
+                      value={leadEditor.status}
+                      onChange={(event) => setLeadEditor((current) => (current ? { ...current, status: event.target.value as PipelineStatus } : current))}
+                      className="w-full rounded border border-gray-300 px-3 py-2"
+                    >
+                      {PIPELINE_STATUSES.map((status) => (
+                        <option key={status} value={status}>
+                          {status[0].toUpperCase() + status.slice(1)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="mb-1 block font-medium text-gray-700">Tags (comma separated)</label>
+                    <input
+                      value={leadEditor.tags}
+                      onChange={(event) => setLeadEditor((current) => (current ? { ...current, tags: event.target.value } : current))}
+                      className="w-full rounded border border-gray-300 px-3 py-2"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block font-medium text-gray-700">Notes</label>
+                    <textarea
+                      value={leadEditor.notes}
+                      onChange={(event) => setLeadEditor((current) => (current ? { ...current, notes: event.target.value } : current))}
+                      className="min-h-28 w-full rounded border border-gray-300 px-3 py-2"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block font-medium text-gray-700">Assigned to</label>
+                    <input
+                      value={leadEditor.assignedTo}
+                      onChange={(event) => setLeadEditor((current) => (current ? { ...current, assignedTo: event.target.value } : current))}
+                      className="w-full rounded border border-gray-300 px-3 py-2"
+                    />
+                  </div>
+                  {saveLeadError ? <p className="text-sm text-red-600">{saveLeadError}</p> : null}
+                  <button
+                    type="button"
+                    onClick={() => void saveLead()}
+                    disabled={isSavingLead}
+                    className="rounded bg-black px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+                  >
+                    {isSavingLead ? "Saving..." : "Save"}
+                  </button>
+                </>
+              ) : null}
+            </div>
           </aside>
         </div>
       ) : null}
