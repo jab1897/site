@@ -26,7 +26,9 @@ export default function AdminDashboard() {
   const [email, setEmail] = useState(ADMIN_EMAIL);
   const [adminKey, setAdminKey] = useState("");
   const [token, setToken] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [isAuthed, setIsAuthed] = useState(false);
+  const [loginError, setLoginError] = useState("");
+  const [dataError, setDataError] = useState("");
   const [metrics, setMetrics] = useState<AdminMetrics | null>(null);
   const [leads, setLeads] = useState<Lead[]>([]);
 
@@ -37,6 +39,7 @@ export default function AdminDashboard() {
     }
 
     setToken(storedToken);
+    setIsAuthed(true);
   }, []);
 
   const adminFetch = useCallback(
@@ -64,18 +67,27 @@ export default function AdminDashboard() {
   );
 
   const loadAdminData = useCallback(async (authToken: string) => {
-    try {
-      const [metricsResponse, leadsResponse] = await Promise.all([
-        adminFetch("/api/admin/metrics", authToken),
-        adminFetch("/api/admin/leads", authToken)
-      ]);
+    let nextDataError = "";
 
-      const [metricsData, leadsData] = await Promise.all([metricsResponse.json(), leadsResponse.json()]);
+    try {
+      const metricsResponse = await adminFetch("/api/admin/metrics", authToken);
+      const metricsData = (await metricsResponse.json()) as AdminMetrics;
       setMetrics(metricsData);
+    } catch {
+      setMetrics(null);
+      nextDataError = "Metrics unavailable";
+    }
+
+    try {
+      const leadsResponse = await adminFetch("/api/admin/leads", authToken);
+      const leadsData = (await leadsResponse.json()) as Lead[];
       setLeads(leadsData);
     } catch {
-      setError("Invalid admin credentials");
+      setLeads([]);
+      nextDataError = nextDataError ? `${nextDataError}. Leads unavailable` : "Leads unavailable";
     }
+
+    setDataError(nextDataError);
   }, [adminFetch]);
 
 
@@ -85,17 +97,17 @@ export default function AdminDashboard() {
     }
 
     void loadAdminData(token);
-  }, [loadAdminData, token]);
+  }, [isAuthed, loadAdminData, token]);
 
   const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!API_BASE) {
-      setError("Missing NEXT_PUBLIC_API_URL in Vercel environment variables.");
+      setLoginError("Missing NEXT_PUBLIC_API_URL in Vercel environment variables.");
       return;
     }
 
     try {
-      setError(null);
+      setLoginError("");
 
       const response = await fetch(`${API_BASE}/api/admin/login`, {
         method: "POST",
@@ -109,84 +121,91 @@ export default function AdminDashboard() {
       });
 
       if (!response.ok) {
-        setError("Invalid admin credentials");
+        setLoginError("Invalid admin credentials");
         return;
       }
 
       const data = (await response.json()) as { token?: string };
       if (!data.token) {
-        setError("Login succeeded but token missing");
+        setLoginError("Login succeeded but token missing");
         return;
       }
 
       localStorage.setItem(ADMIN_TOKEN_KEY, data.token);
       setToken(data.token);
+      setIsAuthed(true);
+      setLoginError("");
     } catch {
-      setError("Invalid admin credentials");
+      setLoginError("Invalid admin credentials");
     }
   };
 
   return (
     <section className="space-y-6">
-      <form onSubmit={handleLogin} className="space-y-4">
-        <div>
-          <label htmlFor="admin-email" className="block text-sm font-medium">
-            Admin Email
-          </label>
-          <input
-            id="admin-email"
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            className="w-full rounded-md border border-gray-300 px-3 py-2"
-          />
-        </div>
-        <div>
-          <label htmlFor="admin-password" className="block text-sm font-medium">
-            Admin Key
-          </label>
-          <input
-            id="admin-password"
-            type="password"
-            value={adminKey}
-            onChange={(event) => setAdminKey(event.target.value)}
-            className="w-full rounded-md border border-gray-300 px-3 py-2"
-          />
-        </div>
-        <button type="submit" className="rounded-md bg-black px-4 py-2 text-white">
-          Login
-        </button>
-      </form>
+      {!isAuthed ? (
+        <>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label htmlFor="admin-email" className="block text-sm font-medium">
+                Admin Email
+              </label>
+              <input
+                id="admin-email"
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                className="w-full rounded-md border border-gray-300 px-3 py-2"
+              />
+            </div>
+            <div>
+              <label htmlFor="admin-password" className="block text-sm font-medium">
+                Admin Key
+              </label>
+              <input
+                id="admin-password"
+                type="password"
+                value={adminKey}
+                onChange={(event) => setAdminKey(event.target.value)}
+                className="w-full rounded-md border border-gray-300 px-3 py-2"
+              />
+            </div>
+            <button type="submit" className="rounded-md bg-black px-4 py-2 text-white">
+              Login
+            </button>
+          </form>
+          {loginError ? <p className="text-sm text-red-600">{loginError}</p> : null}
+        </>
+      ) : (
+        <>
+          {dataError ? <p className="text-sm text-red-600">{dataError}</p> : null}
 
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
+          <dl className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div className="rounded-md border p-4">
+              <dt className="text-sm text-gray-500">Total leads</dt>
+              <dd className="text-2xl font-semibold">{metrics ? metrics.totalLeads : "N/A"}</dd>
+            </div>
+            <div className="rounded-md border p-4">
+              <dt className="text-sm text-gray-500">SMS opt-ins</dt>
+              <dd className="text-2xl font-semibold">{metrics ? metrics.totalSmsOptIns : "N/A"}</dd>
+            </div>
+            <div className="rounded-md border p-4">
+              <dt className="text-sm text-gray-500">WinRed clicks</dt>
+              <dd className="text-2xl font-semibold">{metrics ? metrics.totalWinRedClicks : "N/A"}</dd>
+            </div>
+          </dl>
 
-      {metrics ? (
-        <dl className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <div className="rounded-md border p-4">
-            <dt className="text-sm text-gray-500">Total leads</dt>
-            <dd className="text-2xl font-semibold">{metrics.totalLeads}</dd>
-          </div>
-          <div className="rounded-md border p-4">
-            <dt className="text-sm text-gray-500">SMS opt-ins</dt>
-            <dd className="text-2xl font-semibold">{metrics.totalSmsOptIns}</dd>
-          </div>
-          <div className="rounded-md border p-4">
-            <dt className="text-sm text-gray-500">WinRed clicks</dt>
-            <dd className="text-2xl font-semibold">{metrics.totalWinRedClicks}</dd>
-          </div>
-        </dl>
-      ) : null}
-
-      {leads.length ? (
-        <ul className="space-y-2">
-          {leads.map((lead) => (
-            <li key={lead.id} className="rounded-md border p-3 text-sm">
-              <div className="font-semibold">{lead.name}</div>
-              <div>{lead.email}</div>
-            </li>
-          ))}
-        </ul>
-      ) : null}
+          {leads.length ? (
+            <ul className="space-y-2">
+              {leads.map((lead) => (
+                <li key={lead.id} className="rounded-md border p-3 text-sm">
+                  <div className="font-semibold">{lead.name}</div>
+                  <div>{lead.email}</div>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </>
+      )}
     </section>
   );
 }
