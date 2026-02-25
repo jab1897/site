@@ -135,15 +135,6 @@ function toEditorState(lead: Lead): LeadEditorState {
     assignedTo: typeof lead.assigned_to === "string" ? lead.assigned_to : ""
   };
 }
-function mapToTopList(input: Record<string, number> | undefined): Array<{ label: string; count: number }> {
-  if (!input) return [];
-  return Object.entries(input)
-    .map(([label, count]) => ({ label, count: Number(count) || 0 }))
-    .filter((item) => item.label)
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 5);
-}
-
 function deriveAttribution(leads: Lead[]): AttributionPayload {
   const sources: Record<string, number> = {};
   const campaigns: Record<string, number> = {};
@@ -212,6 +203,11 @@ export default function AdminAnalyticsDashboard() {
   const [saveLeadError, setSaveLeadError] = useState("");
   const [pipeline, setPipeline] = useState<PipelineCounts>(EMPTY_PIPELINE_COUNTS);
   const [activePipelineFilter, setActivePipelineFilter] = useState<PipelineStatus | "all">("all");
+  const [smsOnly, setSmsOnly] = useState(false);
+  const [hasPhoneOnly, setHasPhoneOnly] = useState(false);
+  const [selectedSource, setSelectedSource] = useState("all");
+  const [lastUpdatedAt, setLastUpdatedAt] = useState<Date | null>(null);
+  const [isApiConnected, setIsApiConnected] = useState(true);
 
   useEffect(() => {
     const storedToken = localStorage.getItem(ADMIN_TOKEN_KEY);
@@ -247,6 +243,7 @@ export default function AdminAnalyticsDashboard() {
       setLeadsError("");
       setTimeseriesError("");
       setAttributionError("");
+      let hadPrimaryFailure = false;
 
       try {
         const metricsResponse = await adminFetch(`/api/admin/metrics${query}`, authToken);
@@ -257,6 +254,7 @@ export default function AdminAnalyticsDashboard() {
           winredClicks: Number(data.winredClicks ?? 0)
         });
       } catch {
+        hadPrimaryFailure = true;
         setMetrics(null);
         setMetricsError("Metrics unavailable");
       } finally {
@@ -270,6 +268,7 @@ export default function AdminAnalyticsDashboard() {
         nextLeads = Array.isArray(data) ? data : [];
         setLeads(nextLeads);
       } catch {
+        hadPrimaryFailure = true;
         setLeads([]);
         setLeadsError("Leads unavailable");
       } finally {
@@ -329,6 +328,11 @@ export default function AdminAnalyticsDashboard() {
           setAttributionError("Attribution unavailable until UTM fields are captured");
         }
       }
+
+      setIsApiConnected(!hadPrimaryFailure);
+      if (!hadPrimaryFailure) {
+        setLastUpdatedAt(new Date());
+      }
     },
     [adminFetch, selectedRange]
   );
@@ -340,7 +344,7 @@ export default function AdminAnalyticsDashboard() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [activePipelineFilter, searchText, selectedRange]);
+  }, [activePipelineFilter, hasPhoneOnly, searchText, selectedRange, selectedSource, smsOnly]);
 
   useEffect(() => {
     if (!selectedLead) {
@@ -386,6 +390,15 @@ export default function AdminAnalyticsDashboard() {
     }
   };
 
+  const sourceOptions = useMemo(() => {
+    const unique = new Set<string>();
+    leads.forEach((lead) => {
+      const source = String(lead.utm_source || lead.source_path || lead.page || "").trim();
+      if (source) unique.add(source);
+    });
+    return Array.from(unique).sort((a, b) => a.localeCompare(b));
+  }, [leads]);
+
   const filteredLeads = useMemo(() => {
     const start = rangeStartDate(selectedRange);
     const normalizedSearch = searchText.trim().toLowerCase();
@@ -408,22 +421,69 @@ export default function AdminAnalyticsDashboard() {
       return haystack.includes(normalizedSearch);
     });
 
-    return bySearch.sort((a, b) => {
+    const bySms = bySearch.filter((lead) => (smsOnly ? Boolean(lead.smsOptIn || lead.sms_opt_in) : true));
+
+    const byPhone = bySms.filter((lead) => {
+      if (!hasPhoneOnly) return true;
+      return typeof lead.phone === "string" && lead.phone.trim().length > 0;
+    });
+
+    const bySource = byPhone.filter((lead) => {
+      if (selectedSource === "all") return true;
+      const source = String(lead.utm_source || lead.source_path || lead.page || "").trim();
+      return source === selectedSource;
+    });
+
+    return bySource.sort((a, b) => {
       const left = parseCreatedDate(a)?.getTime() ?? 0;
       const right = parseCreatedDate(b)?.getTime() ?? 0;
       return right - left;
     });
-  }, [activePipelineFilter, leads, searchText, selectedRange]);
+  }, [activePipelineFilter, hasPhoneOnly, leads, searchText, selectedRange, selectedSource, smsOnly]);
 
   const totalPages = Math.max(1, Math.ceil(filteredLeads.length / PAGE_SIZE));
   const paginatedLeads = filteredLeads.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
-  const topSources = mapToTopList(attribution?.sources);
-  const topCampaigns = mapToTopList(attribution?.campaigns);
-  const topMediums = mapToTopList(attribution?.mediums);
-  const topPages = mapToTopList(attribution?.pages);
 
-  const lineMax = Math.max(...timeseries.map((point) => point.leads), 1);
+  const statCards = [
+    {
+      key: "total-leads",
+      label: "Total leads",
+      value: Number(metrics?.totalLeads ?? 0),
+      icon: (
+        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+          <circle cx="9" cy="8" r="3.2" />
+          <path d="M3.5 18.5c0-3 2.5-5.4 5.5-5.4s5.5 2.4 5.5 5.4" />
+          <path d="M15.5 10.5a2.7 2.7 0 1 0 0-5.4" />
+          <path d="M18 18.5c0-2.1-1.1-3.9-2.9-4.8" />
+        </svg>
+      )
+    },
+    {
+      key: "sms",
+      label: "SMS opt-ins",
+      value: Number(metrics?.smsOptIns ?? 0),
+      icon: (
+        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+          <rect x="3.5" y="4" width="17" height="13" rx="2" />
+          <path d="M7 8.5h10M7 12h6" />
+          <path d="M9.5 17v3l3-3" />
+        </svg>
+      )
+    },
+    {
+      key: "winred",
+      label: "WinRed clicks",
+      value: Number(metrics?.winredClicks ?? 0),
+      icon: (
+        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+          <path d="M5 18.5h14" />
+          <path d="M7 15l3-3 3 2 4-5" />
+          <path d="M17 9h3v3" />
+        </svg>
+      )
+    }
+  ];
 
   const downloadCsv = () => {
     const headers = ["name", "email", "phone", "smsOptIn", "sourceOrPage", "createdDate"];
@@ -513,16 +573,6 @@ export default function AdminAnalyticsDashboard() {
     },
     [adminFetch, loadAdminData, token, updateLeadInState]
   );
-  const copyEmails = async () => {
-    const emails = filteredLeads
-      .map((lead) => (typeof lead.email === "string" ? lead.email.trim() : ""))
-      .filter(Boolean)
-      .join(", ");
-
-    if (!emails) return;
-    await navigator.clipboard.writeText(emails);
-  };
-
   if (!isAuthed) {
     return (
       <section className={`space-y-4 ${styles.dashboardRoot}`}>
@@ -578,14 +628,40 @@ export default function AdminAnalyticsDashboard() {
           </select>
           <button
             type="button"
-            onClick={() => token && void loadAdminData(token)}
+            onClick={() => setActivePipelineFilter("all")}
             className="rounded-md border border-gray-300 px-3 py-2 text-sm font-medium hover:bg-gray-100"
           >
-            Refresh
+            Reset stage
           </button>
         </div>
       </div>
 
+      <div className={`rounded-lg border border-gray-200 bg-white p-4 shadow-sm ${styles.card}`}>
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div className="text-sm text-gray-700">
+            Last updated: {lastUpdatedAt ? lastUpdatedAt.toLocaleTimeString() : "Not yet synced"}
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${isApiConnected ? "bg-emerald-100 text-emerald-700" : "bg-gray-200 text-gray-700"}`}>
+              {isApiConnected ? "API Connected" : "Offline"}
+            </span>
+            <button
+              type="button"
+              onClick={() => token && void loadAdminData(token)}
+              className="rounded-md border border-gray-300 px-3 py-2 text-sm font-medium hover:bg-gray-100"
+            >
+              Refresh
+            </button>
+            <button
+              type="button"
+              onClick={downloadCsv}
+              className="rounded-md border border-gray-300 px-3 py-2 text-sm font-medium hover:bg-gray-100"
+            >
+              Download CSV
+            </button>
+          </div>
+        </div>
+      </div>
 
       <div className={`rounded-lg border border-gray-200 bg-white p-5 shadow-sm ${styles.card}`}>
         <h2 className={`text-xl font-semibold ${styles.sectionTitle}`}>Pipeline Overview</h2>
@@ -608,213 +684,188 @@ export default function AdminAnalyticsDashboard() {
         </div>
       </div>
 
-      <dl className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        {[
-          { label: "Total leads", value: metrics?.totalLeads, error: metricsError },
-          { label: "SMS opt-ins", value: metrics?.smsOptIns, error: metricsError },
-          { label: "WinRed clicks", value: metrics?.winredClicks, error: metricsError }
-        ].map((card) => (
-          <div key={card.label} className={`rounded-lg border border-gray-200 bg-white p-4 shadow-sm ${styles.card}`}>
-            <dt className={`text-sm font-medium text-gray-500 ${styles.subtleLabel}`}>{card.label}</dt>
-            <dd className="mt-2 text-3xl font-semibold text-gray-900">
-              {isLoadingMetrics ? <span className="inline-block h-8 w-20 animate-pulse rounded bg-gray-200" /> : Number(card.value ?? 0)}
-            </dd>
-            <p className="mt-2 text-xs text-gray-500">Range: {rangeLabel(selectedRange)}</p>
-            {card.error ? <span className="mt-2 inline-block rounded bg-red-100 px-2 py-1 text-xs text-red-700">{card.error}</span> : null}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        {statCards.map((card) => (
+          <div key={card.key} className={`rounded-lg border border-gray-200 bg-white p-4 shadow-sm ${styles.card}`}>
+            <div className="flex items-center justify-between">
+              <span className="rounded-md bg-slate-100 p-2 text-slate-700">{card.icon}</span>
+              <span className="text-xs text-slate-500">Trend: {timeseries.length ? `${timeseries[timeseries.length - 1]?.leads ?? 0} latest` : "—"}</span>
+            </div>
+            <p className="mt-4 text-3xl font-bold text-slate-900">
+              {isLoadingMetrics ? <span className="inline-block h-8 w-20 animate-pulse rounded bg-gray-200" /> : card.value}
+            </p>
+            <p className={`mt-1 text-sm font-medium ${styles.subtleLabel}`}>{card.label}</p>
           </div>
         ))}
-      </dl>
-
-      <div className={`rounded-lg border border-gray-200 bg-white p-5 shadow-sm ${styles.card}`}>
-        <h2 className={`text-xl font-semibold ${styles.sectionTitle}`}>Leads over time</h2>
-        {timeseries.length > 0 ? (
-          <div className="mt-4 h-64">
-            <div className="flex h-48 items-end gap-2">
-              {timeseries.map((point) => (
-                <div key={point.date} className="flex flex-1 flex-col items-center justify-end gap-1">
-                  <div
-                    className="w-full rounded-t bg-black/80"
-                    style={{ height: `${Math.max((point.leads / lineMax) * 100, 3)}%` }}
-                    title={`${point.date}: ${point.leads}`}
-                  />
-                </div>
-              ))}
-            </div>
-            <div className="mt-2 flex justify-between text-xs text-gray-500">
-              <span>{timeseries[0]?.date}</span>
-              <span>{timeseries[timeseries.length - 1]?.date}</span>
-            </div>
-          </div>
-        ) : (
-          <p className="mt-3 text-sm text-gray-600">{timeseriesError || "Time series unavailable until timestamps are captured"}</p>
-        )}
       </div>
 
-      <div className={`rounded-lg border border-gray-200 bg-white p-5 shadow-sm ${styles.card}`}>
-        <h2 className={`text-xl font-semibold ${styles.sectionTitle}`}>Attribution</h2>
-        {(topSources.length || topCampaigns.length || topMediums.length || topPages.length) ? (
-          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {[
-              { title: "Top sources", data: topSources },
-              { title: "Top campaigns", data: topCampaigns },
-              { title: "Top mediums", data: topMediums },
-              { title: "Top pages", data: topPages }
-            ].map((group) => (
-              <div key={group.title} className={`rounded-md border border-gray-200 p-3 ${styles.card}`}>
-                <h3 className={`text-sm font-semibold text-gray-700 ${styles.sectionTitle}`}>{group.title}</h3>
-                {group.data.length ? (
-                  <ul className="mt-2 space-y-1 text-sm">
-                    {group.data.map((item) => (
-                      <li key={item.label} className="flex items-center justify-between gap-2">
-                        <span className="truncate" title={item.label}>{item.label}</span>
-                        <span className="font-semibold">{item.count}</span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="mt-2 text-xs text-gray-500">No data</p>
-                )}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="mt-3 text-sm text-gray-600">{attributionError || "Attribution unavailable until UTM fields are captured"}</p>
-        )}
-      </div>
-
-      <div className={`rounded-lg border border-gray-200 bg-white p-5 shadow-sm ${styles.card}`}>
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)]">
+        <div className={`rounded-lg border border-gray-200 bg-white p-5 shadow-sm ${styles.card}`}>
           <h2 className={`text-xl font-semibold ${styles.sectionTitle}`}>Leads</h2>
-          <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={downloadCsv}
-              className="rounded-md border border-gray-300 px-3 py-2 text-sm font-medium hover:bg-gray-100"
-            >
-              Download CSV
-            </button>
-            <button
-              type="button"
-              onClick={() => void copyEmails()}
-              className="rounded-md border border-gray-300 px-3 py-2 text-sm font-medium hover:bg-gray-100"
-            >
-              Copy emails
-            </button>
+          <div className="mt-4 overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200 text-sm">
+              <thead>
+                <tr className="text-left text-xs uppercase tracking-wide text-gray-500">
+                  <th className="px-3 py-2">Name</th>
+                  <th className="px-3 py-2">Email</th>
+                  <th className="px-3 py-2">Phone</th>
+                  <th className="px-3 py-2">SMS opt in</th>
+                  <th className="px-3 py-2">Source/page</th>
+                  <th className="px-3 py-2">Status</th>
+                  <th className="px-3 py-2">Tags</th>
+                  <th className="px-3 py-2">Assigned</th>
+                  <th className="px-3 py-2">Created date</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {isLoadingLeads
+                  ? Array.from({ length: 6 }).map((_, index) => (
+                      <tr key={`lead-skeleton-${index}`}>
+                        <td className="px-3 py-3" colSpan={9}>
+                          <span className="block h-5 w-full animate-pulse rounded bg-gray-100" />
+                        </td>
+                      </tr>
+                    ))
+                  : paginatedLeads.length
+                    ? paginatedLeads.map((lead, index) => {
+                        const created = parseCreatedDate(lead);
+                        const source = lead.utm_source || lead.source_path || lead.page || "—";
+                        return (
+                          <tr
+                            key={`${lead.id ?? "lead"}-${index}`}
+                            className="cursor-pointer hover:bg-gray-50"
+                            onClick={() => setSelectedLead(lead)}
+                          >
+                            <td className="px-3 py-2 font-medium">{String(lead.name ?? "—")}</td>
+                            <td className="px-3 py-2">{String(lead.email ?? "—")}</td>
+                            <td className="px-3 py-2">{String(lead.phone ?? "—")}</td>
+                            <td className="px-3 py-2">{lead.smsOptIn || lead.sms_opt_in ? "Yes" : "No"}</td>
+                            <td className="px-3 py-2">{String(source)}</td>
+                            <td className="px-3 py-2" onClick={(event) => event.stopPropagation()}>
+                              <select
+                                value={normalizeLeadStatus(lead.status)}
+                                onChange={(event) => void updateLeadStatusInline(lead, event.target.value as PipelineStatus)}
+                                className="rounded border border-gray-300 px-2 py-1 text-xs"
+                              >
+                                {PIPELINE_STATUSES.map((status) => (
+                                  <option key={status} value={status}>
+                                    {status[0].toUpperCase() + status.slice(1)}
+                                  </option>
+                                ))}
+                              </select>
+                            </td>
+                            <td className="px-3 py-2">
+                              <div className="flex flex-wrap gap-1">
+                                {toTagArray(lead.tags).length ? (
+                                  toTagArray(lead.tags).map((tag) => (
+                                    <span key={tag} className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-700">
+                                      {tag}
+                                    </span>
+                                  ))
+                                ) : (
+                                  <span className="text-gray-400">—</span>
+                                )}
+                              </div>
+                            </td>
+                            <td className="px-3 py-2">{typeof lead.assigned_to === "string" && lead.assigned_to ? lead.assigned_to : "—"}</td>
+                            <td className="px-3 py-2">{created ? formatDate(created) : "—"}</td>
+                          </tr>
+                        );
+                      })
+                    : (
+                      <tr>
+                        <td className="px-3 py-8 text-center" colSpan={9}>
+                          <p className="text-sm font-medium text-slate-700">No leads found for these filters.</p>
+                          <p className="mt-1 text-xs text-slate-500">Send test lead: submit the public "Get Involved" signup form to generate a lead record.</p>
+                          {leadsError ? <p className="mt-2 text-xs text-red-600">{leadsError}</p> : null}
+                        </td>
+                      </tr>
+                    )}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="mt-4 flex items-center justify-between text-sm text-gray-600">
+            <p>
+              Showing {filteredLeads.length ? (currentPage - 1) * PAGE_SIZE + 1 : 0}–{Math.min(currentPage * PAGE_SIZE, filteredLeads.length)} of {filteredLeads.length}
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                disabled={currentPage <= 1}
+                onClick={() => setCurrentPage((value) => Math.max(1, value - 1))}
+                className="rounded border border-gray-300 px-2 py-1 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Prev
+              </button>
+              <span>
+                Page {currentPage} / {totalPages}
+              </span>
+              <button
+                type="button"
+                disabled={currentPage >= totalPages}
+                onClick={() => setCurrentPage((value) => Math.min(totalPages, value + 1))}
+                className="rounded border border-gray-300 px-2 py-1 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
           </div>
         </div>
 
-        <div className="mt-4">
-          <input
-            type="search"
-            value={searchText}
-            onChange={(event) => setSearchText(event.target.value)}
-            placeholder="Search name, email, phone"
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-          />
-        </div>
-
-        <div className="mt-4 overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200 text-sm">
-            <thead>
-              <tr className="text-left text-xs uppercase tracking-wide text-gray-500">
-                <th className="px-3 py-2">Name</th>
-                <th className="px-3 py-2">Email</th>
-                <th className="px-3 py-2">Phone</th>
-                <th className="px-3 py-2">SMS opt in</th>
-                <th className="px-3 py-2">Source/page</th>
-                <th className="px-3 py-2">Status</th>
-                <th className="px-3 py-2">Tags</th>
-                <th className="px-3 py-2">Assigned</th>
-                <th className="px-3 py-2">Created date</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {isLoadingLeads ? (
-                <tr>
-                  <td className="px-3 py-4 text-gray-500" colSpan={9}>Loading leads…</td>
-                </tr>
-              ) : paginatedLeads.length ? (
-                paginatedLeads.map((lead, index) => {
-                  const created = parseCreatedDate(lead);
-                  const source = lead.utm_source || lead.source_path || lead.page || "—";
-                  return (
-                    <tr
-                      key={`${lead.id ?? "lead"}-${index}`}
-                      className="cursor-pointer hover:bg-gray-50"
-                      onClick={() => setSelectedLead(lead)}
-                    >
-                      <td className="px-3 py-2 font-medium">{String(lead.name ?? "—")}</td>
-                      <td className="px-3 py-2">{String(lead.email ?? "—")}</td>
-                      <td className="px-3 py-2">{String(lead.phone ?? "—")}</td>
-                      <td className="px-3 py-2">{lead.smsOptIn || lead.sms_opt_in ? "Yes" : "No"}</td>
-                      <td className="px-3 py-2">{String(source)}</td>
-                      <td className="px-3 py-2" onClick={(event) => event.stopPropagation()}>
-                        <select
-                          value={normalizeLeadStatus(lead.status)}
-                          onChange={(event) => void updateLeadStatusInline(lead, event.target.value as PipelineStatus)}
-                          className="rounded border border-gray-300 px-2 py-1 text-xs"
-                        >
-                          {PIPELINE_STATUSES.map((status) => (
-                            <option key={status} value={status}>
-                              {status[0].toUpperCase() + status.slice(1)}
-                            </option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="px-3 py-2">
-                        <div className="flex flex-wrap gap-1">
-                          {toTagArray(lead.tags).length ? (
-                            toTagArray(lead.tags).map((tag) => (
-                              <span key={tag} className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-700">
-                                {tag}
-                              </span>
-                            ))
-                          ) : (
-                            <span className="text-gray-400">—</span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-3 py-2">{typeof lead.assigned_to === "string" && lead.assigned_to ? lead.assigned_to : "—"}</td>
-                      <td className="px-3 py-2">{created ? formatDate(created) : "—"}</td>
-                    </tr>
-                  );
-                })
-              ) : (
-                <tr>
-                  <td className="px-3 py-4 text-gray-500" colSpan={9}>{leadsError || "No leads found for current filters."}</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="mt-4 flex items-center justify-between text-sm text-gray-600">
-          <p>
-            Showing {filteredLeads.length ? (currentPage - 1) * PAGE_SIZE + 1 : 0}–{Math.min(currentPage * PAGE_SIZE, filteredLeads.length)} of {filteredLeads.length}
-          </p>
-          <div className="flex items-center gap-2">
+        <aside className={`rounded-lg border border-gray-200 bg-white p-5 shadow-sm ${styles.card}`}>
+          <h2 className={`text-xl font-semibold ${styles.sectionTitle}`}>Quick filters</h2>
+          <div className="mt-4 space-y-4">
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">Search</label>
+              <input
+                type="search"
+                value={searchText}
+                onChange={(event) => setSearchText(event.target.value)}
+                placeholder="Name, email, phone"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+              />
+            </div>
+            <label className="flex items-center gap-2 text-sm text-gray-700">
+              <input type="checkbox" checked={smsOnly} onChange={(event) => setSmsOnly(event.target.checked)} />
+              SMS opt-ins only
+            </label>
+            <label className="flex items-center gap-2 text-sm text-gray-700">
+              <input type="checkbox" checked={hasPhoneOnly} onChange={(event) => setHasPhoneOnly(event.target.checked)} />
+              Has phone only
+            </label>
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">Source</label>
+              <select
+                value={selectedSource}
+                onChange={(event) => setSelectedSource(event.target.value)}
+                className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+              >
+                <option value="all">All sources</option>
+                {sourceOptions.map((source) => (
+                  <option key={source} value={source}>
+                    {source}
+                  </option>
+                ))}
+              </select>
+            </div>
             <button
               type="button"
-              disabled={currentPage <= 1}
-              onClick={() => setCurrentPage((value) => Math.max(1, value - 1))}
-              className="rounded border border-gray-300 px-2 py-1 disabled:cursor-not-allowed disabled:opacity-50"
+              onClick={() => {
+                setSearchText("");
+                setSmsOnly(false);
+                setHasPhoneOnly(false);
+                setSelectedSource("all");
+                setActivePipelineFilter("all");
+              }}
+              className="rounded-md border border-gray-300 px-3 py-2 text-sm font-medium hover:bg-gray-100"
             >
-              Prev
-            </button>
-            <span>
-              Page {currentPage} / {totalPages}
-            </span>
-            <button
-              type="button"
-              disabled={currentPage >= totalPages}
-              onClick={() => setCurrentPage((value) => Math.min(totalPages, value + 1))}
-              className="rounded border border-gray-300 px-2 py-1 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Next
+              Clear filters
             </button>
           </div>
-        </div>
+        </aside>
       </div>
+
 
       {selectedLead ? (
         <div className="fixed inset-0 z-40 flex justify-end bg-black/30" onClick={() => setSelectedLead(null)}>
