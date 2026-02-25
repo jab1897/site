@@ -8,9 +8,8 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_
 
 type AdminMetrics = {
   totalLeads: number;
-  totalSmsOptIns: number;
-  totalWinRedClicks: number;
-  daily: Array<{ day: string; leads: number; clicks: number }>;
+  smsOptIns: number;
+  winredClicks: number;
 };
 
 type Lead = {
@@ -71,8 +70,12 @@ export default function AdminDashboard() {
 
     try {
       const metricsResponse = await adminFetch("/api/admin/metrics", authToken);
-      const metricsData = (await metricsResponse.json()) as AdminMetrics;
-      setMetrics(metricsData);
+      const data = await metricsResponse.json();
+      setMetrics({
+        totalLeads: Number(data.totalLeads ?? 0),
+        smsOptIns: Number(data.smsOptIns ?? 0),
+        winredClicks: Number(data.winredClicks ?? 0)
+      });
     } catch {
       setMetrics(null);
       nextDataError = "Metrics unavailable";
@@ -89,6 +92,8 @@ export default function AdminDashboard() {
 
     setDataError(nextDataError);
   }, [adminFetch]);
+
+  const metricValue = (value: number | undefined) => (Number.isFinite(value) ? value : 0);
 
 
   useEffect(() => {
@@ -182,15 +187,15 @@ export default function AdminDashboard() {
           <dl className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div className="rounded-md border p-4">
               <dt className="text-sm text-gray-500">Total leads</dt>
-              <dd className="text-2xl font-semibold">{metrics ? metrics.totalLeads : "N/A"}</dd>
+              <dd className="text-2xl font-semibold">{metricValue(metrics?.totalLeads)}</dd>
             </div>
             <div className="rounded-md border p-4">
               <dt className="text-sm text-gray-500">SMS opt-ins</dt>
-              <dd className="text-2xl font-semibold">{metrics ? metrics.totalSmsOptIns : "N/A"}</dd>
+              <dd className="text-2xl font-semibold">{metricValue(metrics?.smsOptIns)}</dd>
             </div>
             <div className="rounded-md border p-4">
               <dt className="text-sm text-gray-500">WinRed clicks</dt>
-              <dd className="text-2xl font-semibold">{metrics ? metrics.totalWinRedClicks : "N/A"}</dd>
+              <dd className="text-2xl font-semibold">{metricValue(metrics?.winredClicks)}</dd>
             </div>
           </dl>
 
