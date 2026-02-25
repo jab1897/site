@@ -19,6 +19,29 @@ const ATTRIBUTION_DEFAULT = {
   topPages: [] as Array<{ key: string; count: number }>
 };
 
+
+
+const PIPELINE_STATUSES = ["new", "contacted", "committed", "volunteer", "donor"] as const;
+type PipelineStatus = (typeof PIPELINE_STATUSES)[number];
+
+function normalizeStatus(value: unknown): PipelineStatus {
+  const normalized = typeof value === "string" ? value.trim().toLowerCase() : "";
+  return (PIPELINE_STATUSES as readonly string[]).includes(normalized) ? (normalized as PipelineStatus) : "new";
+}
+
+function normalizeTags(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .map((item) => (typeof item === "string" ? item.trim() : ""))
+    .filter(Boolean)
+    .slice(0, 50);
+}
+
+function normalizeOptionalText(value: unknown) {
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim();
+  return trimmed.length ? trimmed : null;
+}
 async function tableExists(tableName: string) {
   const result = await pool.query("SELECT to_regclass($1) IS NOT NULL AS exists", [tableName]);
   return Boolean(result.rows[0]?.exists);
@@ -317,6 +340,74 @@ export async function adminRoutes(app: FastifyInstance) {
       req.log.error({ err: error }, "Admin attribution query failed");
       return ATTRIBUTION_DEFAULT;
     }
+  });
+
+
+  app.patch("/api/admin/leads/:id", async (req, reply) => {
+    const leadId = Number((req.params as { id?: string }).id || 0);
+    if (!Number.isInteger(leadId) || leadId <= 0) {
+      return reply.status(400).send({ error: "Invalid lead id" });
+    }
+
+    const body = (req.body || {}) as { status?: string; tags?: string[]; notes?: string; assignedTo?: string };
+    const updates: string[] = [];
+    const values: unknown[] = [];
+
+    if (Object.prototype.hasOwnProperty.call(body, "status")) {
+      values.push(normalizeStatus(body.status));
+      updates.push(`status = $${values.length}`);
+    }
+
+    if (Object.prototype.hasOwnProperty.call(body, "tags")) {
+      values.push(normalizeTags(body.tags));
+      updates.push(`tags = $${values.length}::text[]`);
+    }
+
+    if (Object.prototype.hasOwnProperty.call(body, "notes")) {
+      values.push(normalizeOptionalText(body.notes));
+      updates.push(`notes = $${values.length}`);
+    }
+
+    if (Object.prototype.hasOwnProperty.call(body, "assignedTo")) {
+      values.push(normalizeOptionalText(body.assignedTo));
+      updates.push(`assigned_to = $${values.length}`);
+    }
+
+    if (!updates.length) {
+      return reply.status(400).send({ error: "No supported fields provided" });
+    }
+
+    values.push(leadId);
+
+    const result = await pool.query(
+      `UPDATE leads
+       SET ${updates.join(", ")}
+       WHERE id = $${values.length}
+       RETURNING *`,
+      values
+    );
+
+    if (!result.rows[0]) {
+      return reply.status(404).send({ error: "Lead not found" });
+    }
+
+    return result.rows[0];
+  });
+
+  app.get("/api/admin/pipeline", async () => {
+    const result = await pool.query(
+      `SELECT LOWER(COALESCE(NULLIF(TRIM(status), ''), 'new')) AS status, COUNT(*)::int AS total
+       FROM leads
+       GROUP BY 1`
+    );
+
+    const counts = { new: 0, contacted: 0, committed: 0, volunteer: 0, donor: 0 };
+    for (const row of result.rows) {
+      const status = normalizeStatus(row.status);
+      counts[status] += Number(row.total || 0);
+    }
+
+    return counts;
   });
 
   app.get("/api/admin/leads", async (req) => {
