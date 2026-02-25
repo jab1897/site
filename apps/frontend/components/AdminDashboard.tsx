@@ -1,9 +1,10 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 
 const ADMIN_EMAIL = "jorge@jorgefortexas.com";
 const ADMIN_TOKEN_KEY = "admin_token";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
 type AdminMetrics = {
   totalLeads: number;
@@ -33,15 +34,13 @@ export default function AdminDashboard() {
     setToken(localStorage.getItem(ADMIN_TOKEN_KEY));
   }, []);
 
-  const apiBaseUrl = useMemo(() => process.env.NEXT_PUBLIC_API_URL, []);
-
   const adminFetch = useCallback(
     async (path: string, init?: RequestInit) => {
       if (!token) {
         throw new Error("No admin token");
       }
 
-      const response = await fetch(`${apiBaseUrl}${path}`, {
+      const response = await fetch(`${API_BASE}${path}`, {
         ...init,
         headers: {
           "Content-Type": "application/json",
@@ -56,7 +55,7 @@ export default function AdminDashboard() {
 
       return response;
     },
-    [apiBaseUrl, token]
+    [token]
   );
 
   const loadAdminData = useCallback(async () => {
@@ -84,11 +83,15 @@ export default function AdminDashboard() {
 
   const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!API_BASE) {
+      setError("Missing NEXT_PUBLIC_API_URL in Vercel environment variables.");
+      return;
+    }
 
     try {
       setError(null);
 
-      const response = await fetch(`${apiBaseUrl}/api/admin/login`, {
+      const response = await fetch(`${API_BASE}/api/admin/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
