@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import styles from "@/components/admin/AdminDashboard.module.css";
 
 type DateRangeKey = "7d" | "30d" | "90d" | "all";
 
@@ -524,8 +525,8 @@ export default function AdminAnalyticsDashboard() {
 
   if (!isAuthed) {
     return (
-      <section className="space-y-4">
-        <form onSubmit={handleLogin} className="space-y-4 rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+      <section className={`space-y-4 ${styles.dashboardRoot}`}>
+        <form onSubmit={handleLogin} className={`space-y-4 rounded-lg border border-gray-200 bg-white p-5 shadow-sm ${styles.card}`}>
           <div>
             <label htmlFor="admin-email" className="block text-sm font-medium text-gray-800">
               Admin Email
@@ -560,9 +561,9 @@ export default function AdminAnalyticsDashboard() {
   }
 
   return (
-    <section className="space-y-6">
-      <div className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
+    <section className={`space-y-6 ${styles.dashboardRoot}`}>
+      <div className={`flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between ${styles.card}`}>
+        <h1 className={`text-4xl font-extrabold tracking-tight ${styles.dashboardTitle}`}>Admin Dashboard</h1>
         <div className="flex flex-wrap items-center gap-2">
           <select
             value={selectedRange}
@@ -586,8 +587,8 @@ export default function AdminAnalyticsDashboard() {
       </div>
 
 
-      <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
-        <h2 className="text-xl font-semibold">Pipeline Overview</h2>
+      <div className={`rounded-lg border border-gray-200 bg-white p-5 shadow-sm ${styles.card}`}>
+        <h2 className={`text-xl font-semibold ${styles.sectionTitle}`}>Pipeline Overview</h2>
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {PIPELINE_STATUSES.map((status) => {
             const isActive = activePipelineFilter === status;
@@ -613,8 +614,8 @@ export default function AdminAnalyticsDashboard() {
           { label: "SMS opt-ins", value: metrics?.smsOptIns, error: metricsError },
           { label: "WinRed clicks", value: metrics?.winredClicks, error: metricsError }
         ].map((card) => (
-          <div key={card.label} className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-            <dt className="text-sm font-medium text-gray-500">{card.label}</dt>
+          <div key={card.label} className={`rounded-lg border border-gray-200 bg-white p-4 shadow-sm ${styles.card}`}>
+            <dt className={`text-sm font-medium text-gray-500 ${styles.subtleLabel}`}>{card.label}</dt>
             <dd className="mt-2 text-3xl font-semibold text-gray-900">
               {isLoadingMetrics ? <span className="inline-block h-8 w-20 animate-pulse rounded bg-gray-200" /> : Number(card.value ?? 0)}
             </dd>
@@ -624,8 +625,8 @@ export default function AdminAnalyticsDashboard() {
         ))}
       </dl>
 
-      <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
-        <h2 className="text-xl font-semibold">Leads over time</h2>
+      <div className={`rounded-lg border border-gray-200 bg-white p-5 shadow-sm ${styles.card}`}>
+        <h2 className={`text-xl font-semibold ${styles.sectionTitle}`}>Leads over time</h2>
         {timeseries.length > 0 ? (
           <div className="mt-4 h-64">
             <div className="flex h-48 items-end gap-2">
@@ -649,8 +650,8 @@ export default function AdminAnalyticsDashboard() {
         )}
       </div>
 
-      <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
-        <h2 className="text-xl font-semibold">Attribution</h2>
+      <div className={`rounded-lg border border-gray-200 bg-white p-5 shadow-sm ${styles.card}`}>
+        <h2 className={`text-xl font-semibold ${styles.sectionTitle}`}>Attribution</h2>
         {(topSources.length || topCampaigns.length || topMediums.length || topPages.length) ? (
           <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
             {[
@@ -659,8 +660,8 @@ export default function AdminAnalyticsDashboard() {
               { title: "Top mediums", data: topMediums },
               { title: "Top pages", data: topPages }
             ].map((group) => (
-              <div key={group.title} className="rounded-md border border-gray-200 p-3">
-                <h3 className="text-sm font-semibold text-gray-700">{group.title}</h3>
+              <div key={group.title} className={`rounded-md border border-gray-200 p-3 ${styles.card}`}>
+                <h3 className={`text-sm font-semibold text-gray-700 ${styles.sectionTitle}`}>{group.title}</h3>
                 {group.data.length ? (
                   <ul className="mt-2 space-y-1 text-sm">
                     {group.data.map((item) => (
@@ -681,9 +682,9 @@ export default function AdminAnalyticsDashboard() {
         )}
       </div>
 
-      <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+      <div className={`rounded-lg border border-gray-200 bg-white p-5 shadow-sm ${styles.card}`}>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <h2 className="text-xl font-semibold">Leads</h2>
+          <h2 className={`text-xl font-semibold ${styles.sectionTitle}`}>Leads</h2>
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
