@@ -2,6 +2,8 @@ import { FastifyInstance } from "fastify";
 import { pool } from "../db/client.js";
 import { stringify } from "csv-stringify/sync";
 import { env } from "../config/env.js";
+import { calculateLeadScore } from "../services/leadScoring.js";
+import { isMailchimpConfigured, syncLeadsBatchToMailchimp } from "../services/mailchimp.js";
 
 type DateRange = {
   from: string;
@@ -10,7 +12,7 @@ type DateRange = {
   toDate: Date;
 };
 
-const METRICS_DEFAULT = { totalLeads: 0, smsOptIns: 0, winredClicks: 0 };
+const METRICS_DEFAULT = { totalLeads: 0, smsOptIns: 0, winredClicks: 0, hotLeadsCount: 0, newLast7Days: 0, mailchimpEnabled: false };
 const TIMESERIES_DEFAULT = { days: [] as Array<{ date: string; leads: number; smsOptIns: number; winredClicks: number }> };
 const ATTRIBUTION_DEFAULT = {
   utmSource: [] as Array<{ key: string; count: number }>,
@@ -41,6 +43,16 @@ function normalizeOptionalText(value: unknown) {
   if (typeof value !== "string") return null;
   const trimmed = value.trim();
   return trimmed.length ? trimmed : null;
+}
+
+
+function withLeadScore<T extends Record<string, unknown>>(lead: T) {
+  return { ...lead, leadScore: calculateLeadScore(lead) };
+}
+
+function hasAtLeastTenPhoneDigits(value: unknown) {
+  const digits = String(value ?? "").replace(/\D/g, "");
+  return digits.length >= 10;
 }
 async function tableExists(tableName: string) {
   const result = await pool.query("SELECT to_regclass($1) IS NOT NULL AS exists", [tableName]);
@@ -226,6 +238,18 @@ export async function adminRoutes(app: FastifyInstance) {
           )
         : 0;
 
+      const newLast7Days = await safeCount(
+        `SELECT COUNT(*)::int AS total FROM leads${leadsTimestampColumn ? ` WHERE ${leadsTimestampColumn} >= NOW() - INTERVAL '7 days'` : ""}`
+      );
+
+      const leadScoreRows = (
+        await pool.query(
+          `SELECT created_at, phone, sms_opt_in, source, tags, utm_campaign FROM leads${leadsDateFilter}`,
+          leadsDateParams
+        )
+      ).rows;
+      const hotLeadsCount = leadScoreRows.reduce((sum, lead) => (calculateLeadScore(lead) >= 7 ? sum + 1 : sum), 0);
+
       let winredClicks = 0;
       const hasEvents = await tableExists("events");
       if (hasEvents && (await columnExists("events", "event_type"))) {
@@ -255,7 +279,7 @@ export async function adminRoutes(app: FastifyInstance) {
         }
       }
 
-      return { totalLeads, smsOptIns, winredClicks };
+      return { totalLeads, smsOptIns, winredClicks, hotLeadsCount, newLast7Days, mailchimpEnabled: isMailchimpConfigured() };
     } catch (error) {
       req.log.error({ err: error }, "Admin metrics query failed");
       return METRICS_DEFAULT;
@@ -416,7 +440,23 @@ export async function adminRoutes(app: FastifyInstance) {
       ? pool.query("SELECT * FROM leads WHERE name ILIKE $1 OR email ILIKE $1 ORDER BY created_at DESC LIMIT 500", [`%${q}%`])
       : pool.query("SELECT * FROM leads ORDER BY created_at DESC LIMIT 500");
     const result = await query;
-    return result.rows;
+    return result.rows.map((lead) => withLeadScore(lead));
+  });
+
+  app.post("/api/admin/mailchimp/sync", async (req, reply) => {
+    const configured = isMailchimpConfigured();
+    if (!configured) {
+      return reply.status(400).send({ error: "Set Mailchimp env vars to enable" });
+    }
+
+    const hasEmailColumn = await columnExists("leads", "email");
+    if (!hasEmailColumn) {
+      return reply.status(400).send({ error: "Leads email column missing" });
+    }
+
+    const result = await pool.query("SELECT * FROM leads WHERE email IS NOT NULL AND TRIM(email) != '' ORDER BY created_at DESC LIMIT 500");
+    const syncResult = await syncLeadsBatchToMailchimp(result.rows, req.log);
+    return { ...syncResult, batchLimit: 500 };
   });
 
   app.get("/api/admin/leads.csv", async (req, reply) => {

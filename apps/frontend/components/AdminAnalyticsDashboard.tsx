@@ -9,6 +9,9 @@ type AdminMetrics = {
   totalLeads: number;
   smsOptIns: number;
   winredClicks: number;
+  hotLeadsCount: number;
+  newLast7Days: number;
+  mailchimpEnabled?: boolean;
 };
 
 type Lead = {
@@ -27,6 +30,7 @@ type Lead = {
   referrer?: string;
   page?: string;
   status?: string;
+  leadScore?: number;
   tags?: string[] | string;
   notes?: string;
   assigned_to?: string;
@@ -183,11 +187,13 @@ export default function AdminAnalyticsDashboard() {
   const [selectedSourceInput, setSelectedSourceInput] = useState("all");
   const [smsOnlyInput, setSmsOnlyInput] = useState(false);
   const [hasPhoneOnlyInput, setHasPhoneOnlyInput] = useState(false);
+  const [hotLeadsOnlyInput, setHotLeadsOnlyInput] = useState(false);
 
   const [searchText, setSearchText] = useState("");
   const [selectedSource, setSelectedSource] = useState("all");
   const [smsOnly, setSmsOnly] = useState(false);
   const [hasPhoneOnly, setHasPhoneOnly] = useState(false);
+  const [hotLeadsOnly, setHotLeadsOnly] = useState(false);
   const [activePipelineFilter, setActivePipelineFilter] = useState<PipelineStatus | "all">("all");
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -247,7 +253,10 @@ export default function AdminAnalyticsDashboard() {
         setMetrics({
           totalLeads: Number(data.totalLeads ?? 0),
           smsOptIns: Number(data.smsOptIns ?? 0),
-          winredClicks: Number(data.winredClicks ?? 0)
+          winredClicks: Number(data.winredClicks ?? 0),
+          hotLeadsCount: Number(data.hotLeadsCount ?? 0),
+          newLast7Days: Number(data.newLast7Days ?? 0),
+          mailchimpEnabled: Boolean(data.mailchimpEnabled)
         });
       } catch {
         hadPrimaryFailure = true;
@@ -332,7 +341,7 @@ export default function AdminAnalyticsDashboard() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [activePipelineFilter, hasPhoneOnly, searchText, selectedRange, selectedSource, smsOnly]);
+  }, [activePipelineFilter, hasPhoneOnly, hotLeadsOnly, searchText, selectedRange, selectedSource, smsOnly]);
 
   const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -396,13 +405,14 @@ export default function AdminAnalyticsDashboard() {
       })
       .filter((lead) => (smsOnly ? Boolean(lead.smsOptIn || lead.sms_opt_in) : true))
       .filter((lead) => (hasPhoneOnly ? Boolean(String(lead.phone ?? "").trim()) : true))
+      .filter((lead) => (hotLeadsOnly ? Number(lead.leadScore ?? 0) >= 7 : true))
       .filter((lead) => {
         if (selectedSource === "all") return true;
         const source = String(lead.utm_source || lead.source_path || lead.page || "").trim();
         return source === selectedSource;
       })
-      .sort((a, b) => (parseCreatedDate(b)?.getTime() ?? 0) - (parseCreatedDate(a)?.getTime() ?? 0));
-  }, [activePipelineFilter, hasPhoneOnly, leads, searchText, selectedRange, selectedSource, smsOnly]);
+      .sort((a, b) => Number(b.leadScore ?? 0) - Number(a.leadScore ?? 0) || (parseCreatedDate(b)?.getTime() ?? 0) - (parseCreatedDate(a)?.getTime() ?? 0));
+  }, [activePipelineFilter, hasPhoneOnly, hotLeadsOnly, leads, searchText, selectedRange, selectedSource, smsOnly]);
 
   const totalPages = Math.max(1, Math.ceil(filteredLeads.length / PAGE_SIZE));
   const paginatedLeads = filteredLeads.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -414,6 +424,7 @@ export default function AdminAnalyticsDashboard() {
     setSelectedSource(selectedSourceInput);
     setSmsOnly(smsOnlyInput);
     setHasPhoneOnly(hasPhoneOnlyInput);
+    setHotLeadsOnly(hotLeadsOnlyInput);
   };
 
   const clearFilters = () => {
@@ -421,10 +432,12 @@ export default function AdminAnalyticsDashboard() {
     setSelectedSourceInput("all");
     setSmsOnlyInput(false);
     setHasPhoneOnlyInput(false);
+    setHotLeadsOnlyInput(false);
     setSearchText("");
     setSelectedSource("all");
     setSmsOnly(false);
     setHasPhoneOnly(false);
+    setHotLeadsOnly(false);
     setActivePipelineFilter("all");
   };
 
@@ -449,6 +462,17 @@ export default function AdminAnalyticsDashboard() {
         current.map((item) => (item.id === leadId ? { ...item, status: previousStatus } : item))
       );
       setToast({ type: "error", message: "Could not update lead status" });
+    }
+  };
+
+  const syncToMailchimp = async () => {
+    if (!token) return;
+    try {
+      const response = await adminFetch(`/api/admin/mailchimp/sync`, token, { method: "POST" });
+      const data = (await response.json()) as { processed?: number };
+      setToast({ type: "success", message: `Mailchimp synced: ${Number(data.processed ?? 0)} processed` });
+    } catch {
+      setToast({ type: "error", message: "Mailchimp sync failed" });
     }
   };
 
@@ -546,6 +570,9 @@ export default function AdminAnalyticsDashboard() {
             <button type="button" onClick={() => token && void loadAdminData(token)} className="rounded-md border border-slate-300 px-3 py-2 text-sm font-medium hover:bg-slate-100">
               Refresh
             </button>
+            <button type="button" title={metrics?.mailchimpEnabled ? "" : "Set Mailchimp env vars to enable"} disabled={!metrics?.mailchimpEnabled} onClick={() => void syncToMailchimp()} className="rounded-md border border-slate-300 px-3 py-2 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50 hover:bg-slate-100">
+              Sync to Mailchimp
+            </button>
             <button type="button" onClick={downloadCsv} className="rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-800">
               Download CSV
             </button>
@@ -577,11 +604,12 @@ export default function AdminAnalyticsDashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
         {[
           { label: "Total leads", value: metrics?.totalLeads ?? 0 },
           { label: "SMS opt-ins", value: metrics?.smsOptIns ?? 0 },
-          { label: "WinRed clicks", value: metrics?.winredClicks ?? 0 }
+          { label: "WinRed clicks", value: metrics?.winredClicks ?? 0 },
+          { label: "Hot leads", value: metrics?.hotLeadsCount ?? 0 }
         ].map((card) => (
           <div key={card.label} className={`rounded-xl border border-slate-200 bg-white p-5 shadow-sm ${styles.card} min-h-[140px]`}>
             {isLoadingMetrics ? (
@@ -621,13 +649,13 @@ export default function AdminAnalyticsDashboard() {
               <thead className="sticky top-0 z-10 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-600">
                 <tr>
                   <th className="px-3 py-2">Name</th><th className="px-3 py-2">Email</th><th className="px-3 py-2">Phone</th>
-                  <th className="px-3 py-2">SMS</th><th className="px-3 py-2">Source</th><th className="px-3 py-2">Status</th><th className="px-3 py-2">Created</th>
+                  <th className="px-3 py-2">SMS</th><th className="px-3 py-2">Lead Score</th><th className="px-3 py-2">Source</th><th className="px-3 py-2">Status</th><th className="px-3 py-2">Created</th>
                 </tr>
               </thead>
               <tbody>
                 {isLoadingLeads
                   ? Array.from({ length: 8 }).map((_, index) => (
-                      <tr key={`lead-skeleton-${index}`}><td className="px-3 py-3" colSpan={7}><span className="block h-5 w-full animate-pulse rounded bg-slate-100" /></td></tr>
+                      <tr key={`lead-skeleton-${index}`}><td className="px-3 py-3" colSpan={8}><span className="block h-5 w-full animate-pulse rounded bg-slate-100" /></td></tr>
                     ))
                   : paginatedLeads.length
                     ? paginatedLeads.map((lead, index) => {
@@ -639,6 +667,7 @@ export default function AdminAnalyticsDashboard() {
                             <td className="max-w-[180px] truncate px-3 py-2" title={String(lead.email ?? "—")}>{String(lead.email ?? "—")}</td>
                             <td className="max-w-[130px] truncate px-3 py-2" title={String(lead.phone ?? "—")}>{String(lead.phone ?? "—")}</td>
                             <td className="px-3 py-2">{lead.smsOptIn || lead.sms_opt_in ? "Yes" : "No"}</td>
+                            <td className="px-3 py-2"><span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${Number(lead.leadScore ?? 0) >= 7 ? "bg-rose-100 text-rose-700" : "bg-slate-100 text-slate-700"}`}>{Number(lead.leadScore ?? 0)}</span></td>
                             <td className="max-w-[160px] truncate px-3 py-2" title={source}>{source}</td>
                             <td className="px-3 py-2">
                               <select value={normalizeLeadStatus(lead.status)} onChange={(event) => void updateLeadStatusInline(lead, event.target.value as PipelineStatus)} className="rounded-md border border-slate-300 px-2 py-1 text-xs">
@@ -651,7 +680,7 @@ export default function AdminAnalyticsDashboard() {
                       })
                     : (
                       <tr>
-                        <td className="px-3 py-12 text-center" colSpan={7}>
+                        <td className="px-3 py-12 text-center" colSpan={8}>
                           <p className="text-sm font-medium text-slate-700">No leads match these filters.</p>
                           <p className="mt-1 text-xs text-slate-500">Try broadening filters or clear them.</p>
                           {leadsError ? <p className="mt-2 text-xs text-rose-700">{leadsError}</p> : null}
@@ -690,6 +719,7 @@ export default function AdminAnalyticsDashboard() {
             </div>
             <label className="flex items-center gap-2 text-sm text-slate-700"><input type="checkbox" checked={smsOnlyInput} onChange={(event) => setSmsOnlyInput(event.target.checked)} /> SMS opt-ins only</label>
             <label className="flex items-center gap-2 text-sm text-slate-700"><input type="checkbox" checked={hasPhoneOnlyInput} onChange={(event) => setHasPhoneOnlyInput(event.target.checked)} /> Has phone only</label>
+            <label className="flex items-center gap-2 text-sm text-slate-700"><input type="checkbox" checked={hotLeadsOnlyInput} onChange={(event) => setHotLeadsOnlyInput(event.target.checked)} /> Hot leads only</label>
             <div className="grid grid-cols-2 gap-2">
               <button type="button" onClick={applyFilters} className="rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white">Apply</button>
               <button type="button" onClick={clearFilters} className="rounded-md border border-slate-300 px-3 py-2 text-sm font-medium">Clear</button>

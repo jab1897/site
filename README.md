@@ -78,7 +78,7 @@ git push origin main
 ## 11 Step 9 Add environment variables safely
 Never commit secrets. Add values only in Vercel/Render dashboards:
 - Frontend: `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_API_URL`
-- Backend: `PORT`, `DATABASE_URL`, `JWT_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, `LEADS_NOTIFY_EMAIL`, `RESEND_API_KEY`
+- Backend: `PORT`, `DATABASE_URL`, `JWT_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, `LEADS_NOTIFY_EMAIL`, `RESEND_API_KEY`, `EMAIL_FROM`, `MAILCHIMP_API_KEY`, `MAILCHIMP_SERVER_PREFIX`, `MAILCHIMP_AUDIENCE_ID`
 
 ## 12 Step 10 Turn on email notifications for volunteer signups
 - [ ] Click **Resend → API Keys → Create key**.
@@ -215,3 +215,14 @@ git add .
 git commit -m "Update campaign site"
 git push
 ```
+
+
+## Admin operations: weekly digest + Mailchimp sync
+
+- Weekly digest cron job (Render):
+  - Build command: `pnpm -C apps/backend build`
+  - Start command for cron: `pnpm -C apps/backend weekly:digest`
+  - Required env vars: `DATABASE_URL`, `RESEND_API_KEY`, optional `EMAIL_FROM` (defaults to `info@jorgefortexas.com`).
+- Admin Mailchimp sync endpoint: `POST /api/admin/mailchimp/sync` (requires admin JWT).
+  - Required env vars: `MAILCHIMP_API_KEY`, `MAILCHIMP_SERVER_PREFIX`, `MAILCHIMP_AUDIENCE_ID`.
+  - Sync is limited to 500 leads per call.
