@@ -84,14 +84,17 @@ function isIsoDateString(value: string) {
   return /^\d{4}-\d{2}-\d{2}$/.test(value);
 }
 
-function parseDateRange(query: { from?: string; to?: string }): DateRange {
+function parseDateRange(query: { from?: string; to?: string; start?: string; end?: string; days?: string }): DateRange {
   const today = new Date();
   const defaultTo = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
-  const defaultFrom = new Date(defaultTo);
-  defaultFrom.setUTCDate(defaultFrom.getUTCDate() - 29);
 
-  const fromInput = (query.from || "").trim();
-  const toInput = (query.to || "").trim();
+  const daysRaw = Number.parseInt(String(query.days || ""), 10);
+  const days = Number.isFinite(daysRaw) && daysRaw > 0 ? Math.min(daysRaw, 3650) : 30;
+  const defaultFrom = new Date(defaultTo);
+  defaultFrom.setUTCDate(defaultFrom.getUTCDate() - (days - 1));
+
+  const fromInput = (query.from || query.start || "").trim();
+  const toInput = (query.to || query.end || "").trim();
 
   const from = isIsoDateString(fromInput) ? fromInput : defaultFrom.toISOString().slice(0, 10);
   const to = isIsoDateString(toInput) ? toInput : defaultTo.toISOString().slice(0, 10);
@@ -366,6 +369,54 @@ export async function adminRoutes(app: FastifyInstance) {
     }
   });
 
+
+  app.get("/api/admin/pageviews", async (req) => {
+    try {
+      const range = parseDateRange(req.query as { from?: string; to?: string; start?: string; end?: string; days?: string });
+
+      if (!(await tableExists("page_views"))) {
+        return { totalPageViews: 0, daily: [], topPages: [] };
+      }
+
+      const params = [range.fromDate.toISOString(), range.toDate.toISOString()];
+
+      const totalResult = await pool.query(
+        `SELECT COUNT(*)::int AS total
+         FROM page_views
+         WHERE created_at >= $1 AND created_at <= $2`,
+        params
+      );
+
+      const dailyResult = await pool.query(
+        `SELECT TO_CHAR(DATE_TRUNC('day', created_at AT TIME ZONE 'UTC'), 'YYYY-MM-DD') AS date,
+                COUNT(*)::int AS views
+         FROM page_views
+         WHERE created_at >= $1 AND created_at <= $2
+         GROUP BY 1
+         ORDER BY 1 ASC`,
+        params
+      );
+
+      const topPagesResult = await pool.query(
+        `SELECT path, COUNT(*)::int AS views
+         FROM page_views
+         WHERE created_at >= $1 AND created_at <= $2
+         GROUP BY path
+         ORDER BY views DESC, path ASC
+         LIMIT 10`,
+        params
+      );
+
+      return {
+        totalPageViews: Number(totalResult.rows[0]?.total || 0),
+        daily: dailyResult.rows.map((row) => ({ date: String(row.date), views: Number(row.views || 0) })),
+        topPages: topPagesResult.rows.map((row) => ({ path: String(row.path || ""), views: Number(row.views || 0) }))
+      };
+    } catch (error) {
+      req.log.error({ err: error }, "Admin pageviews query failed");
+      return { totalPageViews: 0, daily: [], topPages: [] };
+    }
+  });
 
   app.patch("/api/admin/leads/:id", async (req, reply) => {
     const leadId = Number((req.params as { id?: string }).id || 0);

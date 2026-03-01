@@ -40,6 +40,23 @@ export async function initDb() {
     );
   `);
 
+
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS page_views (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      path TEXT NOT NULL,
+      referrer TEXT,
+      user_agent TEXT,
+      ip_hash TEXT,
+      session_id TEXT
+    );
+  `);
+
+  await pool.query("CREATE INDEX IF NOT EXISTS idx_page_views_created_at ON page_views(created_at);");
+  await pool.query("CREATE INDEX IF NOT EXISTS idx_page_views_path ON page_views(path);");
+
   await pool.query(`
     CREATE TABLE IF NOT EXISTS volunteer_signups (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

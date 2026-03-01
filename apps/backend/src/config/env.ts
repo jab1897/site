@@ -12,5 +12,6 @@ export const env = {
   emailFrom: process.env.EMAIL_FROM || "info@jorgefortexas.com",
   mailchimpApiKey: process.env.MAILCHIMP_API_KEY || "",
   mailchimpServerPrefix: process.env.MAILCHIMP_SERVER_PREFIX || "",
-  mailchimpAudienceId: process.env.MAILCHIMP_AUDIENCE_ID || ""
+  mailchimpAudienceId: process.env.MAILCHIMP_AUDIENCE_ID || "",
+  analyticsSalt: process.env.ANALYTICS_SALT || process.env.JWT_SECRET || "dev_secret"
 };
