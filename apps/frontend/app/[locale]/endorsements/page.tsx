@@ -53,7 +53,7 @@ export default function EndorsementsPage({ params }: { params: { locale: string 
         </p>
         <div className="mt-5 overflow-hidden rounded-xl border bg-white">
           <div className="relative aspect-[16/8]">
-            <Image src="/assets/endorsements/Middleton.JPEG" alt="State Senator Mayes Middleton endorsement" fill className="object-contain object-left p-3" />
+            <Image src="/assets/endorsements/Middleton.jpg" alt="State Senator Mayes Middleton endorsement" fill className="object-contain object-left p-3" />
           </div>
         </div>
       </section>
