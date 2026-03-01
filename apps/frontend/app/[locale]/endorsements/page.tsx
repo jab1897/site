@@ -42,10 +42,19 @@ export default function EndorsementsPage({ params }: { params: { locale: string 
         <div className="mt-5 relative aspect-[16/8] overflow-hidden rounded-xl border">
           <Image src="/assets/endorsements/abbott.jpg" alt="Governor Greg Abbott endorses Jorge Borrego" fill className="object-cover" priority />
         </div>
+      </section>
 
-        <p className="mt-8 text-neutral-700">{isEs ? "Respaldo destacado" : `State Senator Mayes Middleton proudly endorsed Jorge Borrego for House District 118. Jorge is a proven conservative who will fight for safer neighborhoods, stronger schools, and more opportunity for South San Antonio families.`}</p>
-        <div className="mt-5 relative aspect-[16/8] overflow-hidden rounded-xl border">
-          <Image src="/assets/endorsements/middleton.jpg" alt="State Senator Mayes Middleton endorsement" fill className="object-cover" />
+      <section className="mt-8 rounded-2xl border bg-white p-6 shadow-sm">
+        <h2 className="text-xl font-extrabold text-navy">{isEs ? "Senador Estatal Middleton" : "State Senator Middleton"}</h2>
+        <p className="mt-1 font-bold text-neutral-700">
+          {isEs
+            ? "El senador estatal conservador Mayes Middleton probablemente respalda a Jorge Borrego para el Distrito 118."
+            : "Conservative State Senator Mayes Middleton probably endorses Jorge Borrego for House District 118."}
+        </p>
+        <div className="mt-5 overflow-hidden rounded-xl border bg-white">
+          <div className="relative aspect-[16/8]">
+            <Image src="/assets/endorsements/Middleton.JPEG" alt="State Senator Mayes Middleton endorsement" fill className="object-contain object-left p-3" />
+          </div>
         </div>
       </section>
 
