@@ -78,7 +78,7 @@ git push origin main
 ## 11 Step 9 Add environment variables safely
 Never commit secrets. Add values only in Vercel/Render dashboards:
 - Frontend: `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_API_URL`
-- Backend: `PORT`, `DATABASE_URL`, `JWT_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, `LEADS_NOTIFY_EMAIL`, `RESEND_API_KEY`, `EMAIL_FROM`, `MAILCHIMP_API_KEY`, `MAILCHIMP_SERVER_PREFIX`, `MAILCHIMP_AUDIENCE_ID`
+- Backend: `PORT`, `DATABASE_URL`, `JWT_SECRET`, `ANALYTICS_SALT`, `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, `LEADS_NOTIFY_EMAIL`, `RESEND_API_KEY`, `EMAIL_FROM`, `MAILCHIMP_API_KEY`, `MAILCHIMP_SERVER_PREFIX`, `MAILCHIMP_AUDIENCE_ID`
 
 ## 12 Step 10 Turn on email notifications for volunteer signups
 - [ ] Click **Resend → API Keys → Create key**.
@@ -226,3 +226,28 @@ git push
 - Admin Mailchimp sync endpoint: `POST /api/admin/mailchimp/sync` (requires admin JWT).
   - Required env vars: `MAILCHIMP_API_KEY`, `MAILCHIMP_SERVER_PREFIX`, `MAILCHIMP_AUDIENCE_ID`.
   - Sync is limited to 500 leads per call.
+
+
+## First-party pageview analytics
+- Backend env var: `ANALYTICS_SALT` (recommended). Used to salt SHA-256 hashing for visitor IP before storage so raw IPs are never stored.
+- Fallback behavior: if `ANALYTICS_SALT` is unset, backend uses `JWT_SECRET`.
+- Frontend env var: `NEXT_PUBLIC_ENABLE_ANALYTICS` (`true`/`false`). Defaults to enabled in production.
+
+### Pageview analytics smoke test
+```bash
+# Track one pageview
+curl -i -X POST "$BACKEND_URL/api/track/pageview" \
+  -H 'content-type: application/json' \
+  -d '{"path":"/en/issues","referrer":"https://www.jorgefortexas.com/en"}'
+
+# Admin pageviews summary (last 30 days)
+curl -sS "$BACKEND_URL/api/admin/pageviews?days=30" \
+  -H "Authorization: Bearer $TOKEN"
+
+# Example output
+# {
+#   "totalPageViews": 123,
+#   "daily": [{"date":"2026-02-01","views":4}],
+#   "topPages": [{"path":"/en/issues","views":31}]
+# }
+```

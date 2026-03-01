@@ -42,6 +42,17 @@ type TimeseriesPoint = {
   leads: number;
 };
 
+type PageViewsPoint = {
+  date: string;
+  views: number;
+};
+
+type PageViewsResponse = {
+  totalPageViews: number;
+  daily: PageViewsPoint[];
+  topPages: Array<{ path: string; views: number }>;
+};
+
 type AttributionPayload = {
   sources?: Record<string, number>;
   campaigns?: Record<string, number>;
@@ -84,6 +95,11 @@ function parseCreatedDate(lead: Lead): Date | null {
 
 function rangeLabel(range: DateRangeKey): string {
   return RANGE_OPTIONS.find((item) => item.value === range)?.label ?? "All time";
+}
+
+function rangeToDays(range: DateRangeKey): number | null {
+  if (range === "all") return null;
+  return range === "7d" ? 7 : range === "30d" ? 30 : 90;
 }
 
 function rangeStartDate(range: DateRangeKey): Date | null {
@@ -182,6 +198,7 @@ export default function AdminAnalyticsDashboard() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [timeseries, setTimeseries] = useState<TimeseriesPoint[]>([]);
   const [attribution, setAttribution] = useState<AttributionPayload | null>(null);
+  const [pageviews, setPageviews] = useState<PageViewsResponse>({ totalPageViews: 0, daily: [], topPages: [] });
 
   const [searchInput, setSearchInput] = useState("");
   const [selectedSourceInput, setSelectedSourceInput] = useState("all");
@@ -314,6 +331,27 @@ export default function AdminAnalyticsDashboard() {
         if (!derived.length) {
           setTimeseriesError("Time series unavailable until timestamps are captured");
         }
+      }
+
+      const pageviewsQuery = (() => {
+        const days = rangeToDays(selectedRange);
+        return days ? `?days=${days}` : "";
+      })();
+
+      try {
+        const pageviewsResponse = await adminFetch(`/api/admin/pageviews${pageviewsQuery}`, authToken);
+        const payload = (await pageviewsResponse.json()) as Partial<PageViewsResponse>;
+        setPageviews({
+          totalPageViews: Number(payload.totalPageViews ?? 0),
+          daily: Array.isArray(payload.daily)
+            ? payload.daily.map((point) => ({ date: String(point.date), views: Number(point.views ?? 0) }))
+            : [],
+          topPages: Array.isArray(payload.topPages)
+            ? payload.topPages.map((item) => ({ path: String(item.path ?? ""), views: Number(item.views ?? 0) }))
+            : []
+        });
+      } catch {
+        setPageviews({ totalPageViews: 0, daily: [], topPages: [] });
       }
 
       try {
@@ -604,12 +642,13 @@ export default function AdminAnalyticsDashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
         {[
           { label: "Total leads", value: metrics?.totalLeads ?? 0 },
           { label: "SMS opt-ins", value: metrics?.smsOptIns ?? 0 },
           { label: "WinRed clicks", value: metrics?.winredClicks ?? 0 },
-          { label: "Hot leads", value: metrics?.hotLeadsCount ?? 0 }
+          { label: "Hot leads", value: metrics?.hotLeadsCount ?? 0 },
+          { label: "Page views", value: pageviews.totalPageViews }
         ].map((card) => (
           <div key={card.label} className={`rounded-xl border border-slate-200 bg-white p-5 shadow-sm ${styles.card} min-h-[140px]`}>
             {isLoadingMetrics ? (
@@ -632,6 +671,48 @@ export default function AdminAnalyticsDashboard() {
             )}
           </div>
         ))}
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+        <div className={`rounded-xl border border-slate-200 bg-white p-5 shadow-sm ${styles.card}`}>
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className={`text-lg font-semibold ${styles.sectionTitle}`}>Page view trend</h2>
+            <span className="text-xs text-slate-500">{rangeLabel(selectedRange)}</span>
+          </div>
+          {pageviews.daily.length ? (
+            <div className="h-40 w-full">
+              <svg viewBox="0 0 100 30" className="h-full w-full" preserveAspectRatio="none" role="img" aria-label="Daily page views trend">
+                {(() => {
+                  const max = Math.max(...pageviews.daily.map((point) => point.views), 1);
+                  const coords = pageviews.daily.map((point, index) => {
+                    const x = pageviews.daily.length === 1 ? 0 : (index / (pageviews.daily.length - 1)) * 100;
+                    const y = 30 - (point.views / max) * 28;
+                    return `${x},${y}`;
+                  });
+                  return <polyline fill="none" stroke="#0f172a" strokeWidth="1.2" points={coords.join(" ")} />;
+                })()}
+              </svg>
+            </div>
+          ) : (
+            <p className="text-sm text-slate-500">No page view data in this range.</p>
+          )}
+        </div>
+
+        <div className={`rounded-xl border border-slate-200 bg-white p-5 shadow-sm ${styles.card}`}>
+          <h2 className={`text-lg font-semibold ${styles.sectionTitle}`}>Top pages</h2>
+          <ul className="mt-3 space-y-2 text-sm">
+            {pageviews.topPages.length ? (
+              pageviews.topPages.map((item) => (
+                <li key={item.path} className="flex items-center justify-between gap-3 rounded border border-slate-200 px-3 py-2">
+                  <span className="truncate text-slate-700" title={item.path}>{item.path}</span>
+                  <span className="text-xs font-semibold text-slate-900">{item.views}</span>
+                </li>
+              ))
+            ) : (
+              <li className="text-slate-500">No top pages yet.</li>
+            )}
+          </ul>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,2fr)_320px]">
