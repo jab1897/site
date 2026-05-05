@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { FormEvent, useMemo, useRef, useState } from "react";
 import { Locale, labels } from "@/lib/i18n";
+import { TurnstileWidget } from "./TurnstileWidget";
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
 
 // English values are sent to the backend regardless of display locale.
 const INTEREST_VALUES = {
@@ -37,6 +40,7 @@ export function VolunteerSignup({ locale }: { locale: Locale }) {
   const [isSuccess, setIsSuccess] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [turnstileToken, setTurnstileToken] = useState<string>("");
 
   const apiBase = useMemo(() => process.env.NEXT_PUBLIC_API_URL || "", []);
 
@@ -76,6 +80,11 @@ export function VolunteerSignup({ locale }: { locale: Locale }) {
     setIsSubmitting(true);
     setServerError(null);
 
+    if (TURNSTILE_SITE_KEY && !turnstileToken) {
+      setServerError(t.errors.server);
+      return;
+    }
+
     const payload = {
       firstName: String(formData.get("firstName") || "").trim(),
       lastName: String(formData.get("lastName") || "").trim(),
@@ -87,7 +96,8 @@ export function VolunteerSignup({ locale }: { locale: Locale }) {
       smsOptIn: formData.get("smsOptIn") === "on",
       sourcePath: window.location.pathname,
       locale,
-      company: String(formData.get("company") || "")
+      company: String(formData.get("company") || ""),
+      ...(turnstileToken ? { turnstileToken } : {}),
     };
 
     try {
@@ -281,6 +291,14 @@ export function VolunteerSignup({ locale }: { locale: Locale }) {
               </span>
             </label>
           ) : null}
+
+          {TURNSTILE_SITE_KEY && (
+            <TurnstileWidget
+              siteKey={TURNSTILE_SITE_KEY}
+              onToken={setTurnstileToken}
+              onExpire={() => setTurnstileToken("")}
+            />
+          )}
 
           <button
             type="submit"
