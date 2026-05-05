@@ -11,8 +11,8 @@ export const metadata: Metadata = {
   openGraph: { title: "Jorge Borrego", description: "South San Antonio Deserves a Fighter" }
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const locale = headers().get("x-locale") ?? "en";
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = (await headers()).get("x-locale") ?? "en";
   return (
     <html lang={locale}>
       <body>
