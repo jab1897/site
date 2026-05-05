@@ -2,8 +2,9 @@ import Image from "next/image";
 import { priorities } from "@/lib/content";
 import { Locale } from "@/lib/i18n";
 
-export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
-  const { locale } = await params;
+export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale: rawLocale } = await params;
+  const locale = (rawLocale === "es" ? "es" : "en") as Locale;
   const items = priorities[locale];
 
   return (

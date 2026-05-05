@@ -8,8 +8,9 @@ import { EndorsementsTeaser } from "@/components/EndorsementsTeaser";
 import { Hero } from "@/components/Hero";
 import { VideoWithSoundToggle } from "@/components/VideoWithSoundToggle";
 
-export default async function Home({ params }: { params: Promise<{ locale: Locale }> }) {
-  const { locale } = await params;
+export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale: rawLocale } = await params;
+  const locale = (rawLocale === "es" ? "es" : "en") as Locale;
 
   return (
     <div>
