@@ -29,7 +29,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
   return <div>
     <Hero locale={locale} />
-    <section className="proof-strip"><div className="container">Trusted conservative leadership for San Antonio, Bexar County, and communities across HD118.</div></section>
+    <section className="proof-strip"><div className="container">Trusted conservative leadership for San Antonio, Bexar County, and communities across District 118.</div></section>
 
     <section className="container py-12">
       <h2 className="section-title">Top Priorities</h2>
@@ -41,7 +41,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     <section className="texas-panel py-12"><div className="container grid gap-6 lg:grid-cols-2">
       <div>
         <h2 className="section-title">Meet Jorge</h2>
-        <p className="story-grid">Faith. Family. Service. Results.</p>
+        <p className="story-grid">Faith • Family • Service • Results</p>
         <p className="mt-4 text-lg text-slate-700">Jorge Borrego’s story is rooted in hard work, conviction, and service to San Antonio families. As a husband, father, and conservative policy leader, he is focused on delivering real results for District 118.</p>
         <Link href={`/${locale}/about`} className="mt-6 inline-block font-bold text-red underline">Read Jorge&apos;s full story</Link>
       </div>

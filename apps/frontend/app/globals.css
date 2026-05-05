@@ -60,18 +60,20 @@ body {
   background: linear-gradient(180deg, rgba(13, 27, 61, 0.03) 0%, rgba(179, 25, 45, 0.06) 100%);
 }
 
-:root { --navy:#0a224f; --red:#b3192d; --cream:#f7f2e8; --gold:#d3a446; }
-body { background: var(--cream); }
-.hero-v2 { background: radial-gradient(circle at 20% 20%, #1d3f8a 0%, var(--navy) 45%, #071534 100%); }
-.hero-visual { position: relative; min-height: 420px; border-radius: 1.5rem; overflow: hidden; border:1px solid rgba(255,255,255,.25); box-shadow: 0 20px 45px rgba(0,0,0,.28); }
-.btn-primary { @apply rounded-xl bg-red px-6 py-3 text-base font-bold text-white shadow-lg transition hover:brightness-95; }
-.btn-secondary { @apply rounded-xl border border-white/35 bg-white/10 px-6 py-3 text-base font-bold text-white transition hover:bg-white/20; }
-.floating-card{position:absolute; background:#fff; color:#0a224f; font-weight:800; padding:.55rem .8rem; border-radius:.75rem; box-shadow:0 10px 24px rgba(0,0,0,.25);}
-.floating-card.one{left:12px;top:18px}.floating-card.two{right:12px;top:48%}.floating-card.three{left:20%;bottom:16px}
-.proof-strip{background:linear-gradient(90deg,#fff,#f3f7ff,#fff);border-top:1px solid rgba(10,34,79,.1);border-bottom:1px solid rgba(10,34,79,.1);padding:14px 0;font-weight:700;color:#0a224f;text-align:center}
-.section-title{@apply text-3xl font-black uppercase tracking-tight text-navy md:text-4xl}
-.issue-card{@apply rounded-2xl border border-navy/10 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg}
-.issue-card h3{@apply text-xl font-black text-red}
-.issue-card p{@apply mt-2 text-slate-700}
-.story-grid{@apply mt-3 text-2xl font-bold uppercase tracking-wide text-navy}
-@media (max-width: 768px){ .hero-visual{min-height:280px}.floating-card{font-size:.78rem;padding:.45rem .6rem} }
+:root { --campaign-navy:#0d1b3d; --campaign-red:#b3192d; --campaign-cream:#fbf8f2; --campaign-tan:#e9dcc4; }
+body { background: var(--campaign-cream); color:#0f172a; }
+.hero-premium { background: linear-gradient(180deg, #fffdf9 0%, #f8f2e6 100%); }
+.hero-panel { background: rgba(255,255,255,.9); border:1px solid rgba(13,27,61,.08); border-radius: 1.25rem; padding: clamp(1rem,2vw,2rem); box-shadow: 0 14px 35px rgba(13,27,61,.08); }
+.hero-photo-wrap { position: relative; min-height: 310px; border-radius: 1.25rem; overflow:hidden; border:1px solid rgba(13,27,61,.14); box-shadow: 0 16px 36px rgba(13,27,61,.16); }
+@media (min-width:1024px){ .hero-photo-wrap{ min-height: 520px; } }
+.btn-campaign-primary { @apply inline-flex min-h-[48px] items-center justify-center rounded-lg bg-red px-6 py-3 text-base font-bold text-white shadow-md transition hover:brightness-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red; }
+.btn-campaign-secondary { @apply inline-flex min-h-[48px] items-center justify-center rounded-lg border border-navy/30 bg-white px-6 py-3 text-base font-bold text-navy transition hover:bg-navy hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy; }
+.star-layer { position:absolute; inset:0; pointer-events:none; }
+.star-layer::before { content:""; position:absolute; inset:-8%; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Cg fill='%230d1b3d'%3E%3Cpath opacity='.08' d='M42 44l4 12h12l-10 7 4 12-10-7-10 7 4-12-10-7h12z'/%3E%3Cpath opacity='.06' d='M195 70l3 9h9l-7 5 3 9-8-6-8 6 3-9-7-5h9z'/%3E%3Cpath opacity='.05' d='M245 210l5 13h13l-10 7 4 12-10-7-10 7 4-12-10-7h13z'/%3E%3C/g%3E%3C/svg%3E"); background-size: 280px 280px; }
+.star-layer-a::before { animation: driftA 28s linear infinite; }
+.star-layer-b::before { animation: driftB 36s linear infinite; transform: scale(1.06); opacity:.7; }
+@keyframes driftA { from { transform: translate3d(0,0,0);} to { transform: translate3d(-22px,14px,0);} }
+@keyframes driftB { from { transform: translate3d(0,0,0) scale(1.06);} to { transform: translate3d(18px,-12px,0) scale(1.06);} }
+.proof-strip { background:#fff; border-top:1px solid rgba(13,27,61,.1); border-bottom:1px solid rgba(13,27,61,.1); padding: .75rem 0; text-align:center; color:#0d1b3d; font-weight:700; }
+.issue-card { @apply rounded-xl border border-navy/10 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md; }
+.issue-card h3 { @apply text-xl font-black text-red; }

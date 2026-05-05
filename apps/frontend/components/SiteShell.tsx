@@ -80,15 +80,15 @@ export function SiteShell({ locale, children }: { locale: Locale; children: Reac
     <>
       {flags.showEarlyVotingBanner && <ElectionCountdown />}
 
-      <header className="sticky top-0 z-40 border-b border-navy/10 bg-navy text-white">
+      <header className="sticky top-0 z-40 border-b border-navy/10 bg-white/95 text-navy backdrop-blur">
         <div className="container flex items-center justify-between py-4">
           <div className="flex items-center gap-8">
-            <Link href={`/${locale}`} className="font-bold tracking-wide">
+            <Link href={`/${locale}`} className="font-black tracking-wide text-navy">
               Jorge Borrego
             </Link>
-            <nav aria-label="Main navigation" className="hidden items-center gap-5 text-sm md:flex">
+            <nav aria-label="Main navigation" className="hidden items-center gap-6 text-sm font-semibold md:flex">
               {links.map(([href, label]) => (
-                <Link key={href} href={`/${locale}/${href}`} className="opacity-95 transition hover:text-red">
+                <Link key={href} href={`/${locale}/${href}`} className="transition hover:text-red focus-visible:text-red">
                   {label}
                 </Link>
               ))}
@@ -99,13 +99,13 @@ export function SiteShell({ locale, children }: { locale: Locale; children: Reac
           <div className="flex items-center gap-3">
             <LanguageToggle
               locale={locale}
-              className="hidden text-sm font-semibold text-white/80 underline underline-offset-2 transition hover:text-white md:inline-block"
+              className="hidden text-sm font-semibold text-navy/70 underline underline-offset-2 transition hover:text-navy md:inline-block"
             />
             <a
               href={WINRED_DONATE_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden rounded-md bg-red px-4 py-2 text-sm font-semibold md:inline-block"
+              className="hidden rounded-lg bg-red px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:brightness-95 md:inline-block"
             >
               {t.donate}
             </a>
@@ -116,7 +116,7 @@ export function SiteShell({ locale, children }: { locale: Locale; children: Reac
               aria-expanded={mobileOpen}
               aria-controls="mobile-nav"
               aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
-              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded border border-white/30 md:hidden"
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded border border-navy/20 md:hidden"
             >
               <Menu size={20} aria-hidden="true" />
             </button>
@@ -132,7 +132,7 @@ export function SiteShell({ locale, children }: { locale: Locale; children: Reac
           role="dialog"
           aria-modal="true"
           aria-label="Navigation menu"
-          className="fixed inset-0 z-50 flex flex-col bg-navy px-6 py-5 md:hidden"
+          className="fixed inset-0 z-50 flex flex-col bg-navy px-6 py-5 text-white md:hidden"
         >
           {/* Header row */}
           <div className="flex items-center justify-between">
@@ -188,7 +188,7 @@ export function SiteShell({ locale, children }: { locale: Locale; children: Reac
             </a>
             <LanguageToggle
               locale={locale}
-              className="flex min-h-[44px] w-full items-center justify-center text-base font-semibold text-white/80 underline underline-offset-2"
+              className="flex min-h-[44px] w-full items-center justify-center text-base font-semibold text-navy/70 underline underline-offset-2"
             />
           </div>
         </div>
