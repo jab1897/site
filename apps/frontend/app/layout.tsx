@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { headers } from "next/headers";
 import { Analytics } from "@vercel/analytics/next";
 import AnalyticsTracker from "@/components/AnalyticsTracker";
 
@@ -11,5 +12,14 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return <html lang="en"><body>{children}<Suspense fallback={null}><AnalyticsTracker /></Suspense><Analytics /></body></html>;
+  const locale = headers().get("x-locale") ?? "en";
+  return (
+    <html lang={locale}>
+      <body>
+        {children}
+        <Suspense fallback={null}><AnalyticsTracker /></Suspense>
+        <Analytics />
+      </body>
+    </html>
+  );
 }
