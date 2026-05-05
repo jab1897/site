@@ -1,7 +1,8 @@
 import { Locale, labels } from "@/lib/i18n";
 
-export default function Page({ params }: { params: { locale: Locale } }) {
-  const t = labels[params.locale].pages.terms;
+export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params;
+  const t = labels[locale].pages.terms;
 
   return (
     <div className="container py-12 max-w-3xl">

@@ -2,8 +2,8 @@ import Image from "next/image";
 import { Locale, labels } from "@/lib/i18n";
 import { getAboutContent } from "@/lib/about";
 
-export default function Page({ params }: { params: { locale: Locale } }) {
-  const { locale } = params;
+export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params;
   const t = labels[locale];
   const c = getAboutContent(locale);
 

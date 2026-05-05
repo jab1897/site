@@ -1,7 +1,8 @@
 import Image from "next/image";
 
-export default function EndorsementsPage({ params }: { params: { locale: string } }) {
-  const locale = params.locale || "en";
+export default async function EndorsementsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale: rawLocale } = await params;
+  const locale = rawLocale || "en";
   const isEs = locale === "es";
   const electedOfficials = [
     { name: "Helen Kerwin", title: "State Representative", descriptor: "Texas House District 58" },

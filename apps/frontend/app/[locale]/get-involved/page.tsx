@@ -1,8 +1,9 @@
 import { VolunteerSignup } from "@/components/VolunteerSignup";
 import { Locale, labels } from "@/lib/i18n";
 
-export default function Page({ params }: { params: { locale: Locale } }) {
-  const t = labels[params.locale].getInvolved;
+export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params;
+  const t = labels[locale].getInvolved;
 
   return (
     <div className="container py-12">
@@ -10,7 +11,7 @@ export default function Page({ params }: { params: { locale: Locale } }) {
       <p className="mt-3 max-w-2xl text-slate-700">{t.pageSubhead}</p>
 
       <div className="mt-8">
-        <VolunteerSignup locale={params.locale} />
+        <VolunteerSignup locale={locale} />
       </div>
     </div>
   );

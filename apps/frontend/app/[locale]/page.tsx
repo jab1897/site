@@ -8,8 +8,8 @@ import { EndorsementsTeaser } from "@/components/EndorsementsTeaser";
 import { Hero } from "@/components/Hero";
 import { VideoWithSoundToggle } from "@/components/VideoWithSoundToggle";
 
-export default function Home({ params }: { params: { locale: Locale } }) {
-  const { locale } = params;
+export default async function Home({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params;
 
   return (
     <div>
