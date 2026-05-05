@@ -25,7 +25,8 @@ export default function Home({ params }: { params: { locale: Locale } }) {
 
           <VideoWithSoundToggle
             poster="/images/candidate/speaking-flag.jpg"
-            source="/video/primary-commercial.mov"
+            mp4="/video/hero.mp4"
+            webm="/video/hero.webm"
             className="w-full rounded-2xl border border-navy/10 shadow"
           />
 
