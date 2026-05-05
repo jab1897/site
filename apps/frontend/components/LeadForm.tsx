@@ -9,6 +9,7 @@ const inputClass =
 export function LeadForm({ locale }: { locale: Locale }) {
   const [status, setStatus] = useState<"idle" | "ok" | "error">("idle");
   const t = labels[locale];
+  const lf = t.leadsForm;
 
   async function submit(formData: FormData) {
     const firstName = String(formData.get("firstName") || "").trim();
@@ -45,7 +46,7 @@ export function LeadForm({ locale }: { locale: Locale }) {
 
   return (
     <form action={submit} className="w-full max-w-3xl space-y-4 rounded-[2rem] bg-[#d4e2f2] p-6 md:p-8" noValidate>
-      <h3 className="text-center text-3xl font-black uppercase tracking-wide text-red md:text-4xl">Sign Up For Updates</h3>
+      <h3 className="text-center text-3xl font-black uppercase tracking-wide text-red md:text-4xl">{lf.heading}</h3>
 
       {/* Honeypot field: hidden from humans, ignored by bots that fill every field */}
       <input
@@ -59,35 +60,35 @@ export function LeadForm({ locale }: { locale: Locale }) {
 
       <div className="space-y-1">
         <label htmlFor="lf-firstName" className="block text-sm font-semibold text-slate-700">
-          First Name <span aria-hidden="true" className="text-red">*</span>
+          {lf.labels.firstName} <span aria-hidden="true" className="text-red">*</span>
         </label>
         <input
           id="lf-firstName"
           required
           name="firstName"
           aria-required="true"
-          placeholder="First Name"
+          placeholder={lf.labels.firstName}
           className={inputClass}
         />
       </div>
 
       <div className="space-y-1">
         <label htmlFor="lf-lastName" className="block text-sm font-semibold text-slate-700">
-          Last Name <span aria-hidden="true" className="text-red">*</span>
+          {lf.labels.lastName} <span aria-hidden="true" className="text-red">*</span>
         </label>
         <input
           id="lf-lastName"
           required
           name="lastName"
           aria-required="true"
-          placeholder="Last Name"
+          placeholder={lf.labels.lastName}
           className={inputClass}
         />
       </div>
 
       <div className="space-y-1">
         <label htmlFor="lf-email" className="block text-sm font-semibold text-slate-700">
-          Email Address <span aria-hidden="true" className="text-red">*</span>
+          {lf.labels.email} <span aria-hidden="true" className="text-red">*</span>
         </label>
         <input
           id="lf-email"
@@ -95,27 +96,27 @@ export function LeadForm({ locale }: { locale: Locale }) {
           type="email"
           name="email"
           aria-required="true"
-          placeholder="Email Address"
+          placeholder={lf.labels.email}
           className={inputClass}
         />
       </div>
 
       <div className="space-y-1">
         <label htmlFor="lf-phone" className="block text-sm font-semibold text-slate-700">
-          Cell Phone
+          {lf.labels.phone}
         </label>
         <input
           id="lf-phone"
           name="phone"
           type="tel"
-          placeholder="Cell Phone (optional)"
+          placeholder={lf.labels.phone}
           className={inputClass}
         />
       </div>
 
       <div className="space-y-1">
         <label htmlFor="lf-zip" className="block text-sm font-semibold text-slate-700">
-          Zip Code <span aria-hidden="true" className="text-red">*</span>
+          {lf.labels.zip} <span aria-hidden="true" className="text-red">*</span>
         </label>
         <input
           id="lf-zip"
@@ -123,7 +124,7 @@ export function LeadForm({ locale }: { locale: Locale }) {
           name="zip"
           aria-required="true"
           inputMode="numeric"
-          placeholder="Zip Code"
+          placeholder={lf.labels.zip}
           className={inputClass}
         />
       </div>
@@ -131,15 +132,13 @@ export function LeadForm({ locale }: { locale: Locale }) {
       <label className="mt-2 flex items-start gap-3 text-base leading-snug text-slate-700 md:text-lg">
         <input type="checkbox" name="smsOptIn" className="mt-1 h-7 w-7 rounded border-slate-400" />
         <span>
-          By providing my mobile number, I consent to receive informational text messages from the
-          campaign. Message frequency may vary. Msg and data rates may apply. Text STOP to opt-out.
-          Text HELP for help. For additional information, please see our{" "}
+          {labels[locale].getInvolved.labels.smsConsent}{" "}
           <Link href={`/${locale}/terms`} className="underline">
-            Terms
+            {labels[locale].getInvolved.labels.smsConsentTerms}
           </Link>{" "}
-          and{" "}
+          {locale === "es" ? "y" : "and"}{" "}
           <Link href={`/${locale}/privacy`} className="underline">
-            Privacy Policy
+            {labels[locale].getInvolved.labels.smsConsentPrivacy}
           </Link>
           .
         </span>
@@ -154,12 +153,12 @@ export function LeadForm({ locale }: { locale: Locale }) {
 
       {status === "ok" && (
         <p role="status" aria-live="polite" className="text-lg font-medium text-green-800">
-          Thanks for joining. We will be in touch soon.
+          {lf.thankYou}
         </p>
       )}
       {status === "error" && (
         <p role="alert" aria-live="assertive" className="text-lg font-medium text-red">
-          Something went wrong. Please try again.
+          {lf.error}
         </p>
       )}
     </form>

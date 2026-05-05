@@ -1,1 +1,12 @@
-export default function Page() { return <div className="container py-12"><h1 className="text-3xl font-bold">Terms</h1><p>Placeholder terms text.</p><a href="/en/get-involved" className="underline">Volunteer</a></div>; }
+import { Locale, labels } from "@/lib/i18n";
+
+export default function Page({ params }: { params: { locale: Locale } }) {
+  const t = labels[params.locale].pages.terms;
+
+  return (
+    <div className="container py-12 max-w-3xl">
+      <h1 className="text-3xl font-bold text-navy">{t.heading}</h1>
+      <p className="mt-6 text-lg leading-8 text-slate-700">{t.body}</p>
+    </div>
+  );
+}
