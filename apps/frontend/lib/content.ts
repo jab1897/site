@@ -60,7 +60,7 @@ export const priorities: Record<Locale, PriorityItem[]> = {
         "Back officers with resources, training, and public support.",
         "Reject policies that weaken public safety in our communities."
       ],
-      image: "/images/priorities/law-enforcement.jpg",
+      image: "/images/priorities/law-enforcement.svg",
       imageAlt: "Police badge and shield representing support for law enforcement",
     },
     {
@@ -69,7 +69,7 @@ export const priorities: Record<Locale, PriorityItem[]> = {
         "Keep age-inappropriate content out of schools and children's spaces.",
         "Defend parents' rights to protect their kids and set standards."
       ],
-      image: "/images/priorities/protect-children.jpg",
+      image: "/images/priorities/protect-children.svg",
       imageAlt: "Books and child-safe shield symbol representing child protection",
     }
   ],
@@ -107,13 +107,13 @@ export const priorities: Record<Locale, PriorityItem[]> = {
     {
       title: "Respaldar a la policía local y oponerse a cualquier intento de quitarle fondos",
       bullets: ["Apoyar a los oficiales con recursos y entrenamiento.", "Rechazar políticas que debiliten la seguridad pública."],
-      image: "/images/priorities/law-enforcement.jpg",
+      image: "/images/priorities/law-enforcement.svg",
       imageAlt: "Insignia y escudo de policía",
     },
     {
       title: "Prohibir material sexualmente explícito en escuelas y espectáculos para adultos frente a menores",
       bullets: ["Mantener contenido inapropiado fuera de los espacios infantiles.", "Defender el derecho de los padres a proteger a sus hijos."],
-      image: "/images/priorities/protect-children.jpg",
+      image: "/images/priorities/protect-children.svg",
       imageAlt: "Libros y escudo de protección infantil",
     }
   ]

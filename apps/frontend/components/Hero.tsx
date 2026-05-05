@@ -1,46 +1,52 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Locale, labels } from "@/lib/i18n";
+import { Locale } from "@/lib/i18n";
 import { WINRED_DONATE_URL } from "@/lib/config";
 
-export function Hero({ locale }: { locale: Locale }) {
-  const t = labels[locale].home;
+const copy = {
+  en: {
+    kicker: "Texas House District 118",
+    headline: "Conservative leadership for San Antonio families.",
+    subhead:
+      "Jorge Borrego is fighting to lower property taxes, support law enforcement, defend parents’ rights, and protect the values that make Bexar County strong.",
+    primary: "Donate Today",
+    secondary: "Join Team Jorge",
+    proof: "Endorsed by Governor Greg Abbott • Fighting for San Antonio families • Conservative leadership for Bexar County",
+    imageAlt: "Jorge Borrego with his family",
+  },
+  es: {
+    kicker: "Distrito 118 de la Cámara de Texas",
+    headline: "Liderazgo conservador para las familias de San Antonio.",
+    subhead:
+      "Jorge Borrego lucha para bajar los impuestos a la propiedad, respaldar a la policía, defender los derechos de los padres y proteger los valores que hacen fuerte al condado de Bexar.",
+    primary: "Donar hoy",
+    secondary: "Únete al Equipo Jorge",
+    proof: "Respaldado por el Gobernador Greg Abbott • Luchando por familias de San Antonio • Liderazgo conservador para el condado de Bexar",
+    imageAlt: "Jorge Borrego con su familia",
+  }
+} as const;
 
+export function Hero({ locale }: { locale: Locale }) {
+  const t = copy[locale];
   return (
-    <section className="hero-surface relative overflow-hidden border-y border-navy/10 bg-slate-100">
-      <div className="hero-flag-stripe" aria-hidden="true" />
-      <div className="hero-star-pattern" aria-hidden="true" />
-      <div className="container relative z-10 grid items-center gap-6 py-10 md:grid-cols-[1.05fr_0.95fr] md:py-14">
-        <div className="hero-copy-card relative rounded-3xl border border-white/60 bg-white/82 p-6 shadow-xl backdrop-blur-sm md:p-8">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red">{t.kicker}</p>
-          <h1 className="sr-only">{t.name}</h1>
-          <Image src="/images/logo.png" alt="" width={520} height={260} className="mt-3 h-auto w-full max-w-[460px]" priority />
-          <p className="mt-3 text-xl font-semibold text-slate-800">{t.slogan}</p>
-          <p className="mt-4 text-base leading-7 text-slate-700">{t.summary}</p>
+    <section className="hero-v2 relative overflow-hidden">
+      <div className="container relative z-10 grid items-center gap-8 py-10 md:grid-cols-[1.05fr_.95fr] md:py-16">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-gold">{t.kicker}</p>
+          <h1 className="mt-3 text-balance text-4xl font-black leading-tight text-white md:text-6xl">{t.headline}</h1>
+          <p className="mt-4 max-w-2xl text-lg leading-8 text-white/90 md:text-xl">{t.subhead}</p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <a
-              href={WINRED_DONATE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-md bg-red px-5 py-3 font-semibold text-white shadow hover:brightness-95"
-            >
-              {t.primaryCta}
-            </a>
-            <Link href={`/${locale}/get-involved`} className="rounded-md border border-navy/20 bg-white px-5 py-3 font-semibold text-navy hover:bg-slate-50">
-              {t.secondaryCta}
-            </Link>
+            <a href={WINRED_DONATE_URL} target="_blank" rel="noopener noreferrer" className="btn-primary">{t.primary}</a>
+            <Link href={`/${locale}/get-involved`} className="btn-secondary">{t.secondary}</Link>
           </div>
+          <p className="mt-5 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm text-white/90">{t.proof}</p>
         </div>
 
-        <div className="hero-image-wrap relative min-h-[280px] overflow-hidden rounded-3xl border border-white/40 shadow-2xl md:min-h-[460px]">
-          <Image
-            src="/images/family/family-main.jpg"
-            alt={t.imageAlt}
-            fill
-            priority
-            sizes="(max-width: 768px) 100vw, 56vw"
-            className="object-cover object-center"
-          />
+        <div className="hero-visual">
+          <Image src="/images/family/family-main.jpg" alt={t.imageAlt} fill priority sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
+          <div className="floating-card one">Lower Property Taxes</div>
+          <div className="floating-card two">Support Law Enforcement</div>
+          <div className="floating-card three">Parents&apos; Rights</div>
         </div>
       </div>
     </section>

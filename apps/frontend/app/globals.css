@@ -59,3 +59,19 @@ body {
 .texas-panel {
   background: linear-gradient(180deg, rgba(13, 27, 61, 0.03) 0%, rgba(179, 25, 45, 0.06) 100%);
 }
+
+:root { --navy:#0a224f; --red:#b3192d; --cream:#f7f2e8; --gold:#d3a446; }
+body { background: var(--cream); }
+.hero-v2 { background: radial-gradient(circle at 20% 20%, #1d3f8a 0%, var(--navy) 45%, #071534 100%); }
+.hero-visual { position: relative; min-height: 420px; border-radius: 1.5rem; overflow: hidden; border:1px solid rgba(255,255,255,.25); box-shadow: 0 20px 45px rgba(0,0,0,.28); }
+.btn-primary { @apply rounded-xl bg-red px-6 py-3 text-base font-bold text-white shadow-lg transition hover:brightness-95; }
+.btn-secondary { @apply rounded-xl border border-white/35 bg-white/10 px-6 py-3 text-base font-bold text-white transition hover:bg-white/20; }
+.floating-card{position:absolute; background:#fff; color:#0a224f; font-weight:800; padding:.55rem .8rem; border-radius:.75rem; box-shadow:0 10px 24px rgba(0,0,0,.25);}
+.floating-card.one{left:12px;top:18px}.floating-card.two{right:12px;top:48%}.floating-card.three{left:20%;bottom:16px}
+.proof-strip{background:linear-gradient(90deg,#fff,#f3f7ff,#fff);border-top:1px solid rgba(10,34,79,.1);border-bottom:1px solid rgba(10,34,79,.1);padding:14px 0;font-weight:700;color:#0a224f;text-align:center}
+.section-title{@apply text-3xl font-black uppercase tracking-tight text-navy md:text-4xl}
+.issue-card{@apply rounded-2xl border border-navy/10 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg}
+.issue-card h3{@apply text-xl font-black text-red}
+.issue-card p{@apply mt-2 text-slate-700}
+.story-grid{@apply mt-3 text-2xl font-bold uppercase tracking-wide text-navy}
+@media (max-width: 768px){ .hero-visual{min-height:280px}.floating-card{font-size:.78rem;padding:.45rem .6rem} }

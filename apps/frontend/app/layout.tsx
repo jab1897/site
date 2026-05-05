@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     template: "%s | Jorge Borrego for Texas HD118",
   },
   description:
-    "Jorge Borrego is a conservative Republican fighting for safe neighborhoods, school choice, lower property taxes, and Texas values in San Antonio's House District 118.",
+    "Conservative leadership for San Antonio families. Jorge Borrego is fighting to lower property taxes, support law enforcement, defend parents’ rights, and protect the values that make Bexar County strong.",
   keywords: [
     "Jorge Borrego",
     "Texas House District 118",
@@ -33,14 +33,14 @@ export const metadata: Metadata = {
     siteName: "Jorge Borrego for Texas House District 118",
     title: "Jorge Borrego for Texas House District 118",
     description:
-      "A conservative fighter for San Antonio. Fighting for safe neighborhoods, school choice, lower property taxes, and Texas values.",
+      "Conservative leadership for San Antonio families. Jorge Borrego is fighting to lower property taxes, support law enforcement, defend parents’ rights, and protect the values that make Bexar County strong.",
     images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Jorge Borrego for Texas House District 118" }],
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
     title: "Jorge Borrego for Texas House District 118",
-    description: "A conservative fighter for San Antonio — safe neighborhoods, school choice, lower property taxes.",
+    description: "Conservative leadership for San Antonio families. Jorge Borrego is fighting to lower property taxes, support law enforcement, defend parents’ rights, and protect the values that make Bexar County strong.",
     images: ["/opengraph-image"],
   },
   robots: {
@@ -53,6 +53,12 @@ export const metadata: Metadata = {
       "max-snippet": -1,
       "max-video-preview": -1,
     },
+  },
+
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    shortcut: ["/icon.svg"],
+    apple: [{ url: "/apple-icon.svg", type: "image/svg+xml" }],
   },
   alternates: {
     canonical: SITE_URL,
@@ -68,7 +74,7 @@ const jsonLd = {
   "@type": "Person",
   name: "Jorge Borrego",
   description:
-    "Conservative Republican candidate for Texas House of Representatives, District 118, representing South San Antonio.",
+    "Conservative Republican candidate for Texas House of Representatives, District 118, representing San Antonio and Bexar County communities in District 118.",
   jobTitle: "Candidate for Texas House District 118",
   url: SITE_URL,
   homeLocation: {
