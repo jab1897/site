@@ -4,6 +4,7 @@ import { priorities } from "@/lib/content";
 import { Locale } from "@/lib/i18n";
 import { LeadForm } from "@/components/LeadForm";
 import { DonateButtons } from "@/components/DonateButtons";
+import { EndorsementsTeaser } from "@/components/EndorsementsTeaser";
 import { Hero } from "@/components/Hero";
 import { VideoWithSoundToggle } from "@/components/VideoWithSoundToggle";
 
@@ -12,10 +13,10 @@ export default function Home({ params }: { params: { locale: Locale } }) {
 
   return (
     <div>
+      {/* 1. Hero */}
       <Hero locale={locale} />
 
-      <DonateButtons locale={locale} path="home" />
-
+      {/* 2. Meet Jorge */}
       <section className="texas-panel py-10">
         <div className="container grid items-start gap-8 lg:grid-cols-[1.25fr_1fr]">
           <div>
@@ -44,7 +45,7 @@ export default function Home({ params }: { params: { locale: Locale } }) {
               A husband and father, Jorge believes faith, family, and service are the foundation of strong communities. He is committed to safe neighborhoods, fully funding and backing law enforcement, securing the border, defending Texas values, and building an economy that rewards hard work and protects taxpayers.
             </p>
             <p className="mt-4 max-w-3xl text-lg leading-relaxed text-slate-700">
-              Jorge Borrego is running to serve the people of San Antonio — not special interests, not Austin insiders, and not career politicians.
+              Jorge Borrego is running to serve the people of San Antonio. Not special interests, not Austin insiders, and not career politicians.
             </p>
             <Link href={`/${locale}/about`} className="mt-8 inline-block text-3xl font-semibold uppercase text-red underline underline-offset-4 transition hover:text-red/80">
               Learn More
@@ -53,6 +54,7 @@ export default function Home({ params }: { params: { locale: Locale } }) {
         </div>
       </section>
 
+      {/* 3. Priorities */}
       <section className="container py-10">
         <h2 className="text-4xl font-black uppercase tracking-tight text-navy">Priorities</h2>
         <div className="mt-6 grid gap-6 lg:grid-cols-2">
@@ -76,17 +78,14 @@ export default function Home({ params }: { params: { locale: Locale } }) {
         </div>
       </section>
 
-      <section className="py-10">
-        <div className="container">
-          <div className="relative overflow-hidden rounded-3xl border border-navy/10">
-            <Image src="/images/family/walking-away.jpg" alt="Borrego family walking together" width={1500} height={700} className="h-auto w-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-navy/60 via-navy/10 to-transparent" />
-            <div className="absolute bottom-0 p-6 text-lg font-medium text-white">Faith, family, and work define our mission.</div>
-          </div>
-        </div>
-      </section>
+      {/* 4. Donation block */}
+      <DonateButtons locale={locale} path="home" />
 
-      <section className="container py-8">
+      {/* 5. Endorsements teaser */}
+      <EndorsementsTeaser locale={locale} />
+
+      {/* 6. Sign up for updates */}
+      <section className="container flex justify-center py-10">
         <LeadForm locale={locale} />
       </section>
     </div>
