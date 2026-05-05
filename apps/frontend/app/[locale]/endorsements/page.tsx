@@ -1,7 +1,8 @@
 import Image from "next/image";
 
-export default function EndorsementsPage({ params }: { params: { locale: string } }) {
-  const locale = params.locale || "en";
+export default async function EndorsementsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale: rawLocale } = await params;
+  const locale = rawLocale || "en";
   const isEs = locale === "es";
   const electedOfficials = [
     { name: "Helen Kerwin", title: "State Representative", descriptor: "Texas House District 58" },
@@ -48,12 +49,12 @@ export default function EndorsementsPage({ params }: { params: { locale: string 
         <h2 className="text-xl font-extrabold text-navy">{isEs ? "Senador Estatal Middleton" : "State Senator Middleton"}</h2>
         <p className="mt-1 font-bold text-neutral-700">
           {isEs
-            ? "El senador estatal conservador Mayes Middleton probablemente respalda a Jorge Borrego para el Distrito 118."
-            : "Conservative State Senator Mayes Middleton probably endorses Jorge Borrego for House District 118."}
+            ? "El senador estatal conservador Mayes Middleton respalda a Jorge Borrego para el Distrito 118."
+            : "Conservative State Senator Mayes Middleton endorses Jorge Borrego for House District 118."}
         </p>
         <div className="mt-5 overflow-hidden rounded-xl border bg-white">
           <div className="relative aspect-[16/8]">
-            <Image src="/assets/endorsements/Middleton.jpg" alt="State Senator Mayes Middleton endorsement" fill className="object-contain object-left p-3" />
+            <Image src="/assets/endorsements/middleton.jpg" alt="State Senator Mayes Middleton endorsement" fill className="object-contain object-left p-3" />
           </div>
         </div>
       </section>

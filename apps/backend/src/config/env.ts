@@ -13,5 +13,8 @@ export const env = {
   mailchimpApiKey: process.env.MAILCHIMP_API_KEY || "",
   mailchimpServerPrefix: process.env.MAILCHIMP_SERVER_PREFIX || "",
   mailchimpAudienceId: process.env.MAILCHIMP_AUDIENCE_ID || "",
-  analyticsSalt: process.env.ANALYTICS_SALT || process.env.JWT_SECRET || "dev_secret"
+  analyticsSalt: process.env.ANALYTICS_SALT || process.env.JWT_SECRET || "dev_secret",
+  turnstileSecretKey: process.env.TURNSTILE_SECRET_KEY || "",
+  upstashRedisUrl: process.env.UPSTASH_REDIS_REST_URL || "",
+  upstashRedisToken: process.env.UPSTASH_REDIS_REST_TOKEN || "",
 };

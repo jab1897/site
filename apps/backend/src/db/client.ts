@@ -27,6 +27,10 @@ export async function initDb() {
   await pool.query("ALTER TABLE leads ADD COLUMN IF NOT EXISTS tags TEXT[];");
   await pool.query("ALTER TABLE leads ADD COLUMN IF NOT EXISTS notes TEXT;");
   await pool.query("ALTER TABLE leads ADD COLUMN IF NOT EXISTS assigned_to TEXT;");
+  await pool.query("ALTER TABLE leads ADD COLUMN IF NOT EXISTS tcpa_ip TEXT;");
+  await pool.query("ALTER TABLE leads ADD COLUMN IF NOT EXISTS tcpa_user_agent TEXT;");
+  await pool.query("ALTER TABLE leads ADD COLUMN IF NOT EXISTS tcpa_consent_text TEXT;");
+  await pool.query("ALTER TABLE leads ADD COLUMN IF NOT EXISTS tcpa_timestamp TIMESTAMPTZ;");
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS donation_clicks (
@@ -73,4 +77,9 @@ export async function initDb() {
       locale TEXT NOT NULL
     );
   `);
+
+  await pool.query("ALTER TABLE volunteer_signups ADD COLUMN IF NOT EXISTS tcpa_ip TEXT;");
+  await pool.query("ALTER TABLE volunteer_signups ADD COLUMN IF NOT EXISTS tcpa_user_agent TEXT;");
+  await pool.query("ALTER TABLE volunteer_signups ADD COLUMN IF NOT EXISTS tcpa_consent_text TEXT;");
+  await pool.query("ALTER TABLE volunteer_signups ADD COLUMN IF NOT EXISTS tcpa_timestamp TIMESTAMPTZ;");
 }

@@ -4,8 +4,34 @@ import { donationClickSchema, leadSchema, volunteerSignupSchema } from "@jorge/s
 import { pool } from "../db/client.js";
 import { sendLeadNotification, sendVolunteerConfirmationEmail, sendVolunteerNotification } from "../services/email.js";
 import { env } from "../config/env.js";
+import { checkRateLimit } from "../utils/rateLimit.js";
+import { sanitizeName, sanitizeEmail, sanitizePhone, sanitizeZip } from "../utils/sanitize.js";
 
 const WINRED_URL = "https://secure.winred.com/jorge-borrego-campaign/donate-today";
+
+// TCPA consent text logged verbatim when smsOptIn is true
+const TCPA_CONSENT_EN =
+  "By providing my mobile number, I consent to receive informational text messages from the campaign. Message frequency may vary. Msg and data rates may apply. Text STOP to opt-out. Text HELP for help.";
+const TCPA_CONSENT_ES =
+  "Al proporcionar mi número de teléfono móvil, doy mi consentimiento para recibir mensajes de texto informativos de la campaña. La frecuencia de los mensajes puede variar. Se pueden aplicar tarifas de mensajes y datos. Envíe STOP para darse de baja. Envíe HELP para obtener ayuda.";
+
+async function verifyTurnstile(token: string, ip: string): Promise<boolean> {
+  if (!env.turnstileSecretKey) {
+    // Fail closed in production; allow in dev/test
+    return process.env.NODE_ENV !== "production";
+  }
+  try {
+    const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ secret: env.turnstileSecretKey, response: token, remoteip: ip }),
+    });
+    const data = (await res.json()) as { success: boolean };
+    return data.success === true;
+  } catch {
+    return false;
+  }
+}
 
 
 function parseCookies(cookieHeader: string | undefined) {
@@ -92,35 +118,94 @@ export async function publicRoutes(app: FastifyInstance) {
     return reply.status(204).send();
   });
   app.post("/api/leads", async (req, reply) => {
+    const clientIp = resolveClientIp(req.headers as Record<string, unknown>, req.ip);
+    const allowed = await checkRateLimit(clientIp, "leads");
+    if (!allowed) return reply.status(429).send({ error: "Too many requests" });
+
     const parsed = leadSchema.safeParse(req.body);
     if (!parsed.success) return reply.status(400).send({ error: parsed.error.flatten() });
 
-    const { name, email, phone, smsOptIn, locale, source } = parsed.data;
-    await pool.query("INSERT INTO leads(name,email,phone,sms_opt_in,locale,source) VALUES($1,$2,$3,$4,$5,$6)", [name, email, phone || null, smsOptIn, locale, source]);
+    const { smsOptIn, locale, source } = parsed.data;
+
+    const nameResult = sanitizeName(parsed.data.name);
+    const emailResult = sanitizeEmail(parsed.data.email);
+    const phoneResult = sanitizePhone(parsed.data.phone);
+    if (!nameResult.ok || !emailResult.ok || !phoneResult.ok) {
+      return reply.status(400).send({ error: "Invalid field values" });
+    }
+
+    const name = nameResult.value;
+    const email = emailResult.value;
+    const phone = phoneResult.value;
+
+    const userAgent = String((req.headers["user-agent"] || "") as string);
+    const tcpaTimestamp = smsOptIn ? new Date().toISOString() : null;
+    const tcpaConsentText = smsOptIn ? (locale === "es" ? TCPA_CONSENT_ES : TCPA_CONSENT_EN) : null;
+    const tcpaIp = smsOptIn ? clientIp || null : null;
+    const tcpaUserAgent = smsOptIn ? userAgent || null : null;
+
+    await pool.query(
+      `INSERT INTO leads(name,email,phone,sms_opt_in,locale,source,tcpa_ip,tcpa_user_agent,tcpa_consent_text,tcpa_timestamp)
+       VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+      [name, email, phone || null, smsOptIn, locale, source, tcpaIp, tcpaUserAgent, tcpaConsentText, tcpaTimestamp],
+    );
     await sendLeadNotification({ name, email, phone, smsOptIn, locale });
     return { ok: true };
   });
 
   app.post("/api/public/volunteer", async (req, reply) => {
-    const parsed = volunteerSignupSchema.safeParse(req.body);
+    const clientIp = resolveClientIp(req.headers as Record<string, unknown>, req.ip);
+    const allowed = await checkRateLimit(clientIp, "volunteer");
+    if (!allowed) return reply.status(429).send({ error: "Too many requests" });
+
+    const body = (req.body || {}) as Record<string, unknown>;
+
+    // Turnstile verification
+    const turnstileToken = typeof body.turnstileToken === "string" ? body.turnstileToken : "";
+    const turnstileOk = await verifyTurnstile(turnstileToken, clientIp);
+    if (!turnstileOk) {
+      return reply.status(400).send({ error: "Bot check failed" });
+    }
+
+    const parsed = volunteerSignupSchema.safeParse(body);
     if (!parsed.success) {
       return reply.status(400).send({ error: parsed.error.flatten() });
     }
 
-    const { firstName, lastName, email, phone, zip, interest, updatesOptIn, smsOptIn, sourcePath, locale, company } = parsed.data;
+    const { interest, updatesOptIn, smsOptIn, sourcePath, locale, company } = parsed.data;
 
+    // Honeypot
     if (company && company.trim()) {
       return reply.status(400).send({ error: "Invalid submission" });
     }
 
-    await pool.query(
-      `INSERT INTO volunteer_signups(first_name,last_name,email,phone,zip,interest,updates_opt_in,sms_opt_in,source_path,locale)
-      VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
-      [firstName, lastName, email, phone || null, zip, interest, updatesOptIn, smsOptIn, sourcePath, locale]
-    );
+    const firstNameResult = sanitizeName(parsed.data.firstName);
+    const lastNameResult = sanitizeName(parsed.data.lastName);
+    const emailResult = sanitizeEmail(parsed.data.email);
+    const phoneResult = sanitizePhone(parsed.data.phone);
+    const zipResult = sanitizeZip(parsed.data.zip);
+    if (!firstNameResult.ok || !lastNameResult.ok || !emailResult.ok || !phoneResult.ok || !zipResult.ok) {
+      return reply.status(400).send({ error: "Invalid field values" });
+    }
+
+    const firstName = firstNameResult.value;
+    const lastName = lastNameResult.value;
+    const email = emailResult.value;
+    const phone = phoneResult.value;
+    const zip = zipResult.value;
 
     const timestamp = new Date().toISOString();
     const userAgent = String((req.headers["user-agent"] || "") as string);
+    const tcpaConsentText = smsOptIn ? (locale === "es" ? TCPA_CONSENT_ES : TCPA_CONSENT_EN) : null;
+    const tcpaIp = smsOptIn ? clientIp || null : null;
+    const tcpaUserAgent = smsOptIn ? userAgent || null : null;
+    const tcpaTimestamp = smsOptIn ? timestamp : null;
+
+    await pool.query(
+      `INSERT INTO volunteer_signups(first_name,last_name,email,phone,zip,interest,updates_opt_in,sms_opt_in,source_path,locale,tcpa_ip,tcpa_user_agent,tcpa_consent_text,tcpa_timestamp)
+       VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)`,
+      [firstName, lastName, email, phone || null, zip, interest, updatesOptIn, smsOptIn, sourcePath, locale, tcpaIp, tcpaUserAgent, tcpaConsentText, tcpaTimestamp],
+    );
 
     await sendVolunteerNotification({
       firstName,
@@ -134,7 +219,7 @@ export async function publicRoutes(app: FastifyInstance) {
       sourcePath,
       locale,
       userAgent,
-      timestamp
+      timestamp,
     });
 
     await sendVolunteerConfirmationEmail({ email, firstName, interest });

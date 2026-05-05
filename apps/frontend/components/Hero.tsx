@@ -13,7 +13,8 @@ export function Hero({ locale }: { locale: Locale }) {
       <div className="container relative z-10 grid items-center gap-6 py-10 md:grid-cols-[1.05fr_0.95fr] md:py-14">
         <div className="hero-copy-card relative rounded-3xl border border-white/60 bg-white/82 p-6 shadow-xl backdrop-blur-sm md:p-8">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red">{t.kicker}</p>
-          <Image src="/images/logo.png" alt={t.name} width={520} height={260} className="mt-3 h-auto w-full max-w-[460px]" priority />
+          <h1 className="sr-only">{t.name}</h1>
+          <Image src="/images/logo.png" alt="" width={520} height={260} className="mt-3 h-auto w-full max-w-[460px]" priority />
           <p className="mt-3 text-xl font-semibold text-slate-800">{t.slogan}</p>
           <p className="mt-4 text-base leading-7 text-slate-700">{t.summary}</p>
           <div className="mt-7 flex flex-wrap gap-3">

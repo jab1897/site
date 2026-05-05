@@ -2,8 +2,10 @@ import Image from "next/image";
 import { priorities } from "@/lib/content";
 import { Locale } from "@/lib/i18n";
 
-export default function Page({ params }: { params: { locale: Locale } }) {
-  const items = priorities[params.locale];
+export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale: rawLocale } = await params;
+  const locale = (rawLocale === "es" ? "es" : "en") as Locale;
+  const items = priorities[locale];
 
   return (
     <div className="container py-12">
@@ -37,11 +39,11 @@ export default function Page({ params }: { params: { locale: Locale } }) {
           </details>
         ))}
       </div>
-      <div className="mt-6 flex gap-3">
-        <a href={`/${params.locale}/donate`} className="bg-red px-4 py-2 text-white">
+      <div className="mt-6 flex flex-wrap gap-3">
+        <a href={`/${locale}/donate`} className="inline-flex items-center justify-center rounded-md bg-red px-5 py-3 font-semibold text-white transition hover:brightness-95">
           Donate
         </a>
-        <a href={`/${params.locale}/get-involved`} className="border px-4 py-2">
+        <a href={`/${locale}/get-involved`} className="inline-flex items-center justify-center rounded-md border-2 border-navy px-5 py-3 font-semibold text-navy transition hover:bg-navy hover:text-white">
           Volunteer
         </a>
       </div>
