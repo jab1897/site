@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react";
 import { labels, Locale } from "@/lib/i18n";
 import { flags, WINRED_DONATE_URL } from "@/lib/config";
 import { ElectionCountdown } from "@/components/ElectionCountdown";
+import { LanguageToggle } from "@/components/LanguageToggle";
 
 export function SiteShell({ locale, children }: { locale: Locale; children: React.ReactNode }) {
   const t = labels[locale];
@@ -96,6 +97,10 @@ export function SiteShell({ locale, children }: { locale: Locale; children: Reac
           </div>
 
           <div className="flex items-center gap-3">
+            <LanguageToggle
+              locale={locale}
+              className="hidden text-sm font-semibold text-white/80 underline underline-offset-2 transition hover:text-white md:inline-block"
+            />
             <a
               href={WINRED_DONATE_URL}
               target="_blank"
@@ -171,8 +176,8 @@ export function SiteShell({ locale, children }: { locale: Locale; children: Reac
             )}
           </nav>
 
-          {/* Donate CTA pinned at bottom */}
-          <div className="mt-auto pt-6">
+          {/* Donate CTA and language toggle pinned at bottom */}
+          <div className="mt-auto space-y-3 pt-6">
             <a
               href={WINRED_DONATE_URL}
               target="_blank"
@@ -181,6 +186,10 @@ export function SiteShell({ locale, children }: { locale: Locale; children: Reac
             >
               {t.donate}
             </a>
+            <LanguageToggle
+              locale={locale}
+              className="flex min-h-[44px] w-full items-center justify-center text-base font-semibold text-white/80 underline underline-offset-2"
+            />
           </div>
         </div>
       )}
@@ -208,9 +217,10 @@ export function SiteShell({ locale, children }: { locale: Locale; children: Reac
       <footer className="mb-14 mt-16 border-t md:mb-0">
         <div className="container flex flex-wrap justify-between gap-4 py-8 text-sm">
           <div>Pol. Ad. Paid for Jorge Borrego Campaign</div>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-4">
             <a href={`/${locale}/privacy`}>{t.nav.privacy}</a>
             <a href={`/${locale}/terms`}>{t.nav.terms}</a>
+            <LanguageToggle locale={locale} className="font-medium underline underline-offset-2" />
           </div>
         </div>
       </footer>
