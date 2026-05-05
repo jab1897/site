@@ -42,10 +42,10 @@ image listed below.
 |------|--------|
 | `priorities/classroom.jpg` | Free stock photo |
 | `priorities/faith-family.jpg` | Free stock photo |
-| `priorities/law-enforcement.jpg` | Free stock photo |
+| `priorities/law-enforcement.svg` | Campaign-generated original illustration (copyright-free for campaign use) |
 | `priorities/lobbyists.jpg` | Free stock photo |
 | `priorities/property-taxes.jpg` | Free stock photo |
-| `priorities/protect-children.jpg` | Free stock photo |
+| `priorities/protect-children.svg` | Campaign-generated original illustration (copyright-free for campaign use) |
 | `priorities/second-amendment.jpg` | Free stock photo |
 
 ## Video
