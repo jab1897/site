@@ -17,15 +17,30 @@ export const labels = {
       terms: "Terms"
     },
     home: {
-      kicker: "Texas House District 118",
+      kicker: "Republican for Texas House District 118",
       name: "Jorge Borrego",
-      slogan: "A conservative fighter for San Antonio",
+      slogan: "Fighting to lower costs, cut property taxes, and keep families across House District 118 safe.",
       summary:
-        "Jorge Borrego is fighting for safe neighborhoods, strong schools, and lower taxes for working families. He is rooted in faith, family, and service, and he is ready to lead with steady conservative values for San Antonio.",
+        "Jorge Borrego is running to give every family in House District 118 a fair shot to get ahead. Rooted in faith, family, and service, Jorge will bring working-class Republican leadership to Austin — focused on affordability, safe neighborhoods, strong schools, and a government that puts Texans first.",
       primaryCta: "Donate",
-      secondaryCta: "Join our team",
+      secondaryCta: "Join Our Team",
       imageAlt: "Jorge Borrego with his family",
-      donateHeadline: "Jorge Borrego will defend our conservative values that make Texas strong and safe.",
+      meetHeading: "Meet Jorge Borrego",
+      meetSubhead: "For Texas House District 118",
+      meetBody: [
+        "Jorge Borrego is the Republican candidate for Texas House District 118, running to give every family a fair shot to get ahead.",
+        "Raised in a working-class family that knew hard times firsthand, Jorge understands what it means to fight for opportunity and earn everything through hard work. Through faith, discipline, and personal responsibility, he became the first in his family to graduate from college and built a career fighting for stronger schools, lower taxes, and more accountable government across Texas.",
+        "A husband, father, and small business owner, Jorge believes faith, family, and service are the foundation of strong communities. He is focused on lowering the cost of living, cutting property taxes, keeping neighborhoods safe, funding public schools, and protecting children.",
+        "Jorge Borrego is running to serve the families of House District 118 — not Austin insiders, not taxpayer-funded lobbyists, and not career politicians."
+      ],
+      learnMore: "Learn More",
+      prioritiesHeading: "Priorities",
+      choiceHeading: "The Choice in This Race",
+      choiceBody: [
+        "Jorge Borrego is running to put families across House District 118 first — lowering costs, cutting property taxes, keeping neighborhoods safe, and making sure state government listens to real Texans.",
+        "This race will draw political money and pressure from outside the district. Jorge will answer to the families of House District 118, not Austin insiders, taxpayer-funded lobbyists, or political operatives."
+      ],
+      donateHeadline: "Help Jorge fight for lower costs, safer neighborhoods, stronger schools, and a government that puts Texans first.",
       donateSubhead: "Your donation today of any amount helps Jorge reach more voters across District 118.",
       donateButton: "Donate Today"
     },
@@ -107,15 +122,30 @@ export const labels = {
       terms: "Términos"
     },
     home: {
-      kicker: "Distrito 118 de la Cámara de Texas",
+      kicker: "Republicano para la Cámara de Representantes de Texas, Distrito 118",
       name: "Jorge Borrego",
-      slogan: "Un luchador conservador por San Antonio",
+      slogan: "Luchando para bajar los costos, reducir los impuestos a la propiedad y mantener seguras a las familias del Distrito 118.",
       summary:
-        "Jorge Borrego lucha por vecindarios seguros, escuelas fuertes y menos impuestos para las familias trabajadoras. Está guiado por la fe, la familia y el servicio, y está listo para liderar con valores conservadores firmes para San Antonio.",
+        "Jorge Borrego está luchando para que cada familia del Distrito 118 tenga una oportunidad justa de salir adelante. Con raíces en la fe, la familia y el servicio, Jorge llevará a Austin un liderazgo Republicano de familias trabajadoras, enfocado en el costo de vida, vecindarios seguros, escuelas fuertes y un gobierno que ponga primero a los texanos.",
       primaryCta: "Donar",
-      secondaryCta: "Únete al equipo",
+      secondaryCta: "Únete al Equipo",
       imageAlt: "Jorge Borrego con su familia",
-      donateHeadline: "Jorge Borrego defenderá los valores conservadores que mantienen a Texas fuerte y seguro.",
+      meetHeading: "Conoce a Jorge Borrego",
+      meetSubhead: "Para la Cámara de Representantes de Texas, Distrito 118",
+      meetBody: [
+        "Jorge Borrego es el candidato Republicano para la Cámara de Representantes de Texas, Distrito 118, y se postula para que cada familia tenga una oportunidad justa de salir adelante.",
+        "Criado en una familia trabajadora que conoció tiempos difíciles de cerca, Jorge entiende lo que significa luchar por una oportunidad y ganarse todo con trabajo duro. A través de la fe, la disciplina y la responsabilidad personal, fue el primero de su familia en graduarse de la universidad y construyó una carrera luchando por escuelas más fuertes, impuestos más bajos y un gobierno más responsable en todo Texas.",
+        "Esposo, padre y dueño de un negocio propio, Jorge cree que la fe, la familia y el servicio son la base de comunidades fuertes. Está enfocado en bajar el costo de vida, reducir los impuestos a la propiedad, mantener seguros los vecindarios, financiar las escuelas públicas y proteger a los niños.",
+        "Jorge Borrego se postula para servir a las familias del Distrito 118, no a los intereses de Austin, los lobbyistas pagados con nuestros impuestos ni los políticos de carrera."
+      ],
+      learnMore: "Conoce Más",
+      prioritiesHeading: "Prioridades",
+      choiceHeading: "La Decisión en Esta Elección",
+      choiceBody: [
+        "Jorge Borrego está luchando para poner primero a las familias del Distrito 118: bajar los costos, reducir los impuestos a la propiedad, mantener seguros nuestros vecindarios y asegurar que el gobierno estatal escuche a los texanos.",
+        "Esta elección atraerá dinero político y presiones de fuera del distrito. Jorge responderá a las familias del Distrito 118, no a los intereses de Austin, los lobbyistas pagados con nuestros impuestos ni los operadores políticos."
+      ],
+      donateHeadline: "Ayuda a Jorge a luchar por costos más bajos, vecindarios más seguros, escuelas más fuertes y un gobierno que ponga primero a los texanos.",
       donateSubhead: "Tu donación de hoy, de cualquier cantidad, ayuda a Jorge a llegar a más votantes en todo el Distrito 118.",
       donateButton: "Donar hoy"
     },

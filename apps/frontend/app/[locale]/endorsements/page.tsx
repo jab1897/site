@@ -32,16 +32,21 @@ export default async function EndorsementsPage({ params }: { params: Promise<{ l
         <h1 className="text-3xl font-extrabold tracking-tight text-navy">{isEs ? "Respaldos" : "Endorsements"}</h1>
         <p className="mt-2 text-base text-neutral-700">
           {isEs
-            ? "Agradecido por el apoyo de líderes conservadores y organizaciones de confianza."
-            : "Grateful for support from trusted conservative leaders and organizations."}
+            ? "Agradecido por el apoyo de líderes Republicanos y organizaciones de confianza."
+            : "Grateful for support from trusted Republican leaders and organizations."}
         </p>
       </div>
 
       <section className="rounded-2xl border bg-white p-6 shadow-sm">
         <h2 className="text-xl font-extrabold text-navy">{isEs ? "Gobernador Abbott" : "Governor Abbott"}</h2>
-        <p className="mt-1 text-neutral-700">{isEs ? "Respaldo destacado" : `Governor Abbott proudly endorsed Jorge Borrego for House District 118! "Jorge Borrego is a determined conservative who will work to make South San Antonio safer and more affordable."`}</p>
+        {/* TODO: Replace with revised direct quote only after approval from Governor Abbott's team. */}
+        <p className="mt-1 text-neutral-700">
+          {isEs
+            ? "El Gobernador Greg Abbott ha respaldado a Jorge Borrego, el candidato Republicano para la Cámara de Representantes de Texas, Distrito 118."
+            : "Governor Greg Abbott has endorsed Jorge Borrego, the Republican candidate for Texas House District 118."}
+        </p>
         <div className="mt-5 relative aspect-[16/8] overflow-hidden rounded-xl border">
-          <Image src="/assets/endorsements/abbott.jpg" alt="Governor Greg Abbott endorses Jorge Borrego" fill className="object-cover" priority />
+          <Image src="/images/endorsements/abbott.jpg" alt="Governor Greg Abbott endorses Jorge Borrego" fill className="object-cover" priority />
         </div>
       </section>
 
@@ -49,12 +54,12 @@ export default async function EndorsementsPage({ params }: { params: Promise<{ l
         <h2 className="text-xl font-extrabold text-navy">{isEs ? "Senador Estatal Middleton" : "State Senator Middleton"}</h2>
         <p className="mt-1 font-bold text-neutral-700">
           {isEs
-            ? "El senador estatal conservador Mayes Middleton respalda a Jorge Borrego para el Distrito 118."
-            : "Conservative State Senator Mayes Middleton endorses Jorge Borrego for House District 118."}
+            ? "El senador estatal Mayes Middleton respalda a Jorge Borrego para el Distrito 118."
+            : "State Senator Mayes Middleton endorses Jorge Borrego for House District 118."}
         </p>
         <div className="mt-5 overflow-hidden rounded-xl border bg-white">
           <div className="relative aspect-[16/8]">
-            <Image src="/assets/endorsements/middleton.jpg" alt="State Senator Mayes Middleton endorsement" fill className="object-contain object-left p-3" />
+            <Image src="/images/endorsements/middleton.jpg" alt="State Senator Mayes Middleton endorsement" fill className="object-contain object-left p-3" />
           </div>
         </div>
       </section>
@@ -76,11 +81,11 @@ export default async function EndorsementsPage({ params }: { params: Promise<{ l
         <h2 className="text-lg font-extrabold text-navy">{isEs ? "Comités y organizaciones" : "PACs and organizations"}</h2>
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           {[
-            ["/assets/endorsements/sa-voter-guide.png", "San Antonio Family Association PAC endorsement"],
-            ["/assets/endorsements/trepac.png", "TREPAC endorsement"],
-            ["/assets/endorsements/thsc.png", "Texas Home School Coalition endorsement"],
-            ["/assets/endorsements/tlr.jpg", "Texans for Lawsuit Reform PAC endorsement"],
-            ["/assets/endorsements/afc.jpg", "AFC Victory Fund endorsement"]
+            ["/images/endorsements/sa-voter-guide.png", "San Antonio Family Association PAC endorsement"],
+            ["/images/endorsements/trepac.png", "TREPAC endorsement"],
+            ["/images/endorsements/thsc.png", "Texas Home School Coalition endorsement"],
+            ["/images/endorsements/tlr.jpg", "Texans for Lawsuit Reform PAC endorsement"],
+            ["/images/endorsements/afc.jpg", "AFC Victory Fund endorsement"]
           ].map(([src, alt]) => (
             <div key={src} className="overflow-hidden rounded-xl border bg-white">
               <div className="relative aspect-[1/1]">

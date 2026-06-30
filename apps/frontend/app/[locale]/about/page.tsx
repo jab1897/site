@@ -15,7 +15,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
       </h1>
 
       <section className="space-y-6 text-lg leading-8">
-        <p>{c.intro}</p>
+        <p>{c.para1}</p>
 
         <figure className="space-y-3">
           <Image
@@ -27,8 +27,6 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
           />
           <figcaption className="text-sm text-slate-600">{c.caption1}</figcaption>
         </figure>
-
-        <p>{c.para1}</p>
 
         <p>{c.para2}</p>
 
@@ -58,17 +56,13 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
 
         <p>{c.para4}</p>
 
-        <p>{c.faith}</p>
-
-        <p>{c.tppf}</p>
-
         <figure className="space-y-3">
           <Image
             src="/images/about/school-choice.jpg"
             alt={
               locale === "es"
-                ? "Jorge Borrego defendiendo la elección de escuelas en Texas"
-                : "Jorge Borrego advocating for school choice in Texas"
+                ? "Jorge Borrego luchando por escuelas más fuertes para las familias de Texas"
+                : "Jorge Borrego fighting for stronger schools for Texas families"
             }
             width={1500}
             height={1000}
@@ -77,17 +71,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
           <figcaption className="text-sm text-slate-600">{c.caption4}</figcaption>
         </figure>
 
-        <p>{c.schoolsPara}</p>
-
-        <p>{c.accountabilityPara}</p>
-
-        <p>{c.policyPara}</p>
-
-        <p>{c.valuesPara}</p>
-
-        <p>{c.motivationPara}</p>
-
-        <p>{c.leadershippara}</p>
+        <p>{c.para5}</p>
 
         <div className="relative overflow-hidden rounded-3xl border border-navy/10">
           <Image
@@ -100,10 +84,6 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
           <div className="absolute inset-0 bg-gradient-to-t from-navy/60 via-navy/10 to-transparent" />
           <div className="absolute bottom-0 p-6 text-lg font-medium text-white">{c.overlayText}</div>
         </div>
-
-        <p>{c.callPara}</p>
-
-        <p>{c.closingLine}</p>
       </section>
 
       <div className="flex flex-wrap gap-3">

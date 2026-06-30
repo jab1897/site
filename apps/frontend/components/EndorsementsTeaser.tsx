@@ -3,16 +3,22 @@ import Link from "next/link";
 import { Locale } from "@/lib/i18n";
 
 const ORG_LOGOS = [
-  { src: "/assets/endorsements/sa-voter-guide.png", alt: "San Antonio Family Association PAC endorsement" },
-  { src: "/assets/endorsements/trepac.png", alt: "TREPAC endorsement" },
-  { src: "/assets/endorsements/thsc.png", alt: "Texas Home School Coalition endorsement" },
-  { src: "/assets/endorsements/tlr.jpg", alt: "Texans for Lawsuit Reform endorsement" },
-  { src: "/assets/endorsements/afc.jpg", alt: "AFC Victory Fund endorsement" },
+  { src: "/images/endorsements/sa-voter-guide.png", alt: "San Antonio Family Association PAC endorsement" },
+  { src: "/images/endorsements/trepac.png", alt: "TREPAC endorsement" },
+  { src: "/images/endorsements/thsc.png", alt: "Texas Home School Coalition endorsement" },
+  { src: "/images/endorsements/tlr.jpg", alt: "Texans for Lawsuit Reform endorsement" },
+  { src: "/images/endorsements/afc.jpg", alt: "AFC Victory Fund endorsement" },
 ] as const;
 
 const HEADING = { en: "Endorsements", es: "Respaldos" } as const;
 const QUOTE_ATTR = { en: "Governor Greg Abbott", es: "Gobernador Greg Abbott" } as const;
 const SEE_ALL = { en: "See all endorsements", es: "Ver todos los respaldos" } as const;
+// Campaign-authored endorsement text used in place of the prior live quote.
+// TODO: Replace with revised direct quote only after approval from Governor Abbott's team.
+const ABBOTT_ENDORSEMENT = {
+  en: "Governor Greg Abbott has endorsed Jorge Borrego, the Republican candidate for Texas House District 118.",
+  es: "El Gobernador Greg Abbott ha respaldado a Jorge Borrego, el candidato Republicano para la Cámara de Representantes de Texas, Distrito 118.",
+} as const;
 
 export function EndorsementsTeaser({ locale }: { locale: Locale }) {
   return (
@@ -23,16 +29,15 @@ export function EndorsementsTeaser({ locale }: { locale: Locale }) {
         </h2>
 
         <figure className="mx-auto mt-8 max-w-3xl rounded-3xl border border-navy/10 bg-white p-8 text-center shadow-sm">
-          <blockquote className="text-xl font-semibold italic leading-relaxed text-slate-700 md:text-2xl">
-            "Jorge Borrego is a determined conservative who will work to make South San Antonio safer
-            and more affordable."
+          <blockquote className="text-xl font-semibold leading-relaxed text-slate-700 md:text-2xl">
+            {ABBOTT_ENDORSEMENT[locale]}
           </blockquote>
           <figcaption className="mt-4 text-base font-bold text-red">
             {QUOTE_ATTR[locale]}
           </figcaption>
           <div className="mt-5 flex justify-center">
             <Image
-              src="/assets/endorsements/abbott.jpg"
+              src="/images/endorsements/abbott.jpg"
               alt="Governor Greg Abbott endorses Jorge Borrego"
               width={480}
               height={240}

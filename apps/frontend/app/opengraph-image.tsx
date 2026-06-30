@@ -51,7 +51,7 @@ export default function Image() {
             textAlign: "center",
           }}
         >
-          Texas House District 118
+          Republican for Texas House District 118
         </div>
         <div
           style={{
@@ -61,7 +61,7 @@ export default function Image() {
             textAlign: "center",
           }}
         >
-          ★ A Conservative Fighter for San Antonio ★
+          ★ Lower Costs · Safer Neighborhoods · Stronger Schools ★
         </div>
         <div
           style={{

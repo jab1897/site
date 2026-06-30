@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { priorities } from "@/lib/content";
-import { Locale } from "@/lib/i18n";
+import { Locale, labels } from "@/lib/i18n";
 import { LeadForm } from "@/components/LeadForm";
 import { DonateButtons } from "@/components/DonateButtons";
 import { EndorsementsTeaser } from "@/components/EndorsementsTeaser";
@@ -11,6 +11,7 @@ import { VideoWithSoundToggle } from "@/components/VideoWithSoundToggle";
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: rawLocale } = await params;
   const locale = (rawLocale === "es" ? "es" : "en") as Locale;
+  const t = labels[locale].home;
 
   return (
     <div>
@@ -21,8 +22,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <section className="texas-panel py-10">
         <div className="container grid items-start gap-8 lg:grid-cols-[1.25fr_1fr]">
           <div>
-            <h2 className="text-4xl font-black uppercase tracking-tight text-red">Meet Jorge Borrego</h2>
-            <p className="mt-3 text-2xl font-semibold uppercase text-navy">For Texas House District 118</p>
+            <h2 className="text-4xl font-black uppercase tracking-tight text-red">{t.meetHeading}</h2>
+            <p className="mt-3 text-2xl font-semibold uppercase text-navy">{t.meetSubhead}</p>
           </div>
 
           <VideoWithSoundToggle
@@ -33,23 +34,13 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           />
 
           <div>
-            <p className="mt-6 max-w-3xl text-lg leading-relaxed text-slate-700">
-              Jorge Borrego is a conservative Republican running to represent Texas House District 118 in San Antonio.
-            </p>
-            <p className="mt-4 max-w-3xl text-lg leading-relaxed text-slate-700">
-              Raised in difficult circumstances, Jorge understands firsthand what it means to fight for opportunity and earn everything through hard work. Through faith, discipline, and personal responsibility, he became the first in his family to graduate from college and built a career advancing strong conservative policy in Texas.
-            </p>
-            <p className="mt-4 max-w-3xl text-lg leading-relaxed text-slate-700">
-              Jorge has worked at the Texas Public Policy Foundation, where he helped pass historic school choice legislation and strengthen accountability in public education. He has been a consistent voice for parental rights, educational freedom, fiscal responsibility, and government transparency. He believes families, not bureaucrats, should shape the future of their children.
-            </p>
-            <p className="mt-4 max-w-3xl text-lg leading-relaxed text-slate-700">
-              A husband and father, Jorge believes faith, family, and service are the foundation of strong communities. He is committed to safe neighborhoods, fully funding and backing law enforcement, securing the border, defending Texas values, and building an economy that rewards hard work and protects taxpayers.
-            </p>
-            <p className="mt-4 max-w-3xl text-lg leading-relaxed text-slate-700">
-              Jorge Borrego is running to serve the people of San Antonio. Not special interests, not Austin insiders, and not career politicians.
-            </p>
+            {t.meetBody.map((paragraph, idx) => (
+              <p key={idx} className={`${idx === 0 ? "mt-6" : "mt-4"} max-w-3xl text-lg leading-relaxed text-slate-700`}>
+                {paragraph}
+              </p>
+            ))}
             <Link href={`/${locale}/about`} className="mt-8 inline-block text-3xl font-semibold uppercase text-red underline underline-offset-4 transition hover:text-red/80">
-              Learn More
+              {t.learnMore}
             </Link>
           </div>
         </div>
@@ -57,7 +48,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
       {/* 3. Priorities */}
       <section className="container py-10">
-        <h2 className="text-4xl font-black uppercase tracking-tight text-navy">Priorities</h2>
+        <h2 className="text-4xl font-black uppercase tracking-tight text-navy">{t.prioritiesHeading}</h2>
         <div className="mt-6 grid gap-6 lg:grid-cols-2">
           {priorities[locale].map((priority, idx) => (
             <a
@@ -79,7 +70,19 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </div>
       </section>
 
-      {/* 4. Donation block */}
+      {/* 4. The Choice in This Race */}
+      <section className="texas-panel py-10">
+        <div className="container max-w-4xl">
+          <h2 className="text-4xl font-black uppercase tracking-tight text-navy">{t.choiceHeading}</h2>
+          {t.choiceBody.map((paragraph, idx) => (
+            <p key={idx} className="mt-4 text-lg leading-relaxed text-slate-700">
+              {paragraph}
+            </p>
+          ))}
+        </div>
+      </section>
+
+      {/* 5. Donation block */}
       <DonateButtons locale={locale} path="home" />
 
       {/* 5. Endorsements teaser */}

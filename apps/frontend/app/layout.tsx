@@ -10,37 +10,37 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.jorgefortexas.
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Jorge Borrego for Texas House District 118",
+    default: "Jorge Borrego for Texas House District 118 | Republican Candidate",
     template: "%s | Jorge Borrego for Texas HD118",
   },
   description:
-    "Jorge Borrego is a conservative Republican fighting for safe neighborhoods, school choice, lower property taxes, and Texas values in San Antonio's House District 118.",
+    "Jorge Borrego is the Republican candidate for Texas House District 118, fighting to lower costs, cut property taxes, keep families safe, strengthen schools, and put Texans first.",
   keywords: [
     "Jorge Borrego",
     "Texas House District 118",
     "HD118",
-    "conservative",
     "Republican",
-    "San Antonio",
-    "school choice",
+    "Republican candidate",
+    "cost of living",
     "property taxes",
-    "law enforcement",
+    "public safety",
+    "public schools",
     "Texas 2026",
   ],
   openGraph: {
     type: "website",
     url: SITE_URL,
     siteName: "Jorge Borrego for Texas House District 118",
-    title: "Jorge Borrego for Texas House District 118",
+    title: "Jorge Borrego for Texas House District 118 | Republican Candidate",
     description:
-      "A conservative fighter for San Antonio. Fighting for safe neighborhoods, school choice, lower property taxes, and Texas values.",
+      "Republican for Texas House District 118. Fighting to lower costs, cut property taxes, keep families safe, and strengthen schools.",
     images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Jorge Borrego for Texas House District 118" }],
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Jorge Borrego for Texas House District 118",
-    description: "A conservative fighter for San Antonio — safe neighborhoods, school choice, lower property taxes.",
+    title: "Jorge Borrego for Texas House District 118 | Republican Candidate",
+    description: "Republican for Texas House District 118 — lower costs, lower property taxes, safer neighborhoods, stronger schools.",
     images: ["/opengraph-image"],
   },
   robots: {
@@ -68,7 +68,7 @@ const jsonLd = {
   "@type": "Person",
   name: "Jorge Borrego",
   description:
-    "Conservative Republican candidate for Texas House of Representatives, District 118, representing South San Antonio.",
+    "Republican candidate for Texas House of Representatives, District 118, fighting to lower costs, cut property taxes, keep families safe, and strengthen schools.",
   jobTitle: "Candidate for Texas House District 118",
   url: SITE_URL,
   homeLocation: {
