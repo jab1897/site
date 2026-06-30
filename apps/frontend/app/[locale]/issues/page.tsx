@@ -23,6 +23,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
                   fill
                   quality={90}
                   sizes="(max-width: 768px) 100vw, 1000px"
+                  unoptimized={item.image.endsWith(".svg")}
                   className="object-cover object-center"
                   priority={false}
                 />

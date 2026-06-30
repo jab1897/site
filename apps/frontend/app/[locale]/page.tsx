@@ -56,7 +56,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               href={`/${locale}/issues#issue-${idx + 1}`}
               className="overflow-hidden rounded-3xl border border-navy/10 bg-white transition hover:-translate-y-1 hover:border-red/30 hover:shadow-lg"
             >
-              <Image src={priority.image} alt={priority.imageAlt} width={1200} height={675} className="h-52 w-full object-cover" />
+              <Image src={priority.image} alt={priority.imageAlt} width={1200} height={675} unoptimized={priority.image.endsWith(".svg")} className="h-52 w-full object-cover" />
               <div className="space-y-4 p-6">
                 <h3 className="text-2xl font-black uppercase leading-tight text-red">{priority.title}</h3>
                 <ul className="list-disc space-y-2 pl-6 text-lg text-slate-700">

@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" role="img" aria-label="Texas border security wall under a clear sky">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#aacbe6"/>
+      <stop offset="45%" stop-color="#d6e6f2"/>
+      <stop offset="78%" stop-color="#f4ecd9"/>
+      <stop offset="100%" stop-color="#f6e2c4"/>
+    </linearGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#cdb487"/>
+      <stop offset="55%" stop-color="#b89a68"/>
+      <stop offset="100%" stop-color="#9a7f51"/>
+    </linearGradient>
+    <linearGradient id="steel" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0D1B3D"/>
+      <stop offset="50%" stop-color="#3a4d7d"/>
+      <stop offset="100%" stop-color="#0D1B3D"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff6e0" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#fff6e0" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect x="0" y="0" width="1200" height="445" fill="url(#sky)"/>
+  <circle cx="300" cy="250" r="170" fill="url(#sun)"/>
+  <path d="M0,445 L0,392 C160,360 360,372 560,402 C760,432 980,388 1200,404 L1200,445 Z" fill="#b9c4cf" opacity="0.55"/>
+  <path d="M0,445 L0,415 C220,398 470,418 700,420 C920,422 1060,408 1200,420 L1200,445 Z" fill="#a9b2bd" opacity="0.5"/>
+  <rect x="0" y="438" width="1200" height="237" fill="url(#ground)"/>
+  <path d="M0,470 C300,455 700,478 1200,460 L1200,520 C700,535 300,512 0,528 Z" fill="#a98a5b" opacity="0.35"/>
+  <g fill="#7e6c43" opacity="0.6">
+    <ellipse cx="120" cy="610" rx="46" ry="13"/>
+    <ellipse cx="980" cy="585" rx="34" ry="10"/>
+    <ellipse cx="640" cy="630" rx="40" ry="11"/>
+  </g>
+  <g>
+    <polygon points="-40,251 1185,431 1185,433 -40,265" fill="#27365e"/><polygon points="-40,394 1185,431 1185,433 -40,406" fill="#27365e"/>
+    <polygon points="-47.5,250.0 -32.5,250.0 -32.5,632.0 -47.5,632.0" fill="url(#steel)"/>
+    <polygon points="-12.5,255.2 2.1,255.2 2.1,626.3 -12.5,626.3" fill="url(#steel)"/>
+    <polygon points="18.7,259.8 32.9,259.8 32.9,621.3 18.7,621.3" fill="url(#steel)"/>
+    <polygon points="48.6,264.2 62.5,264.2 62.5,616.4 48.6,616.4" fill="url(#steel)"/>
+    <polygon points="77.7,268.5 91.3,268.5 91.3,611.7 77.7,611.7" fill="url(#steel)"/>
+    <polygon points="106.3,272.7 119.6,272.7 119.6,607.0 106.3,607.0" fill="url(#steel)"/>
+    <polygon points="134.4,276.9 147.3,276.9 147.3,602.5 134.4,602.5" fill="url(#steel)"/>
+    <polygon points="162.1,281.0 174.7,281.0 174.7,598.0 162.1,598.0" fill="url(#steel)"/>
+    <polygon points="189.5,285.0 201.8,285.0 201.8,593.5 189.5,593.5" fill="url(#steel)"/>
+    <polygon points="216.6,289.0 228.6,289.0 228.6,589.1 216.6,589.1" fill="url(#steel)"/>
+    <polygon points="243.5,293.0 255.2,293.0 255.2,584.8 243.5,584.8" fill="url(#steel)"/>
+    <polygon points="270.1,296.9 281.6,296.9 281.6,580.4 270.1,580.4" fill="url(#steel)"/>
+    <polygon points="296.6,300.8 307.7,300.8 307.7,576.1 296.6,576.1" fill="url(#steel)"/>
+    <polygon points="322.9,304.7 333.7,304.7 333.7,571.9 322.9,571.9" fill="url(#steel)"/>
+    <polygon points="349.0,308.6 359.6,308.6 359.6,567.6 349.0,567.6" fill="url(#steel)"/>
+    <polygon points="375.0,312.4 385.3,312.4 385.3,563.4 375.0,563.4" fill="url(#steel)"/>
+    <polygon points="400.9,316.2 410.8,316.2 410.8,559.2 400.9,559.2" fill="url(#steel)"/>
+    <polygon points="426.6,320.0 436.3,320.0 436.3,555.0 426.6,555.0" fill="url(#steel)"/>
+    <polygon points="452.2,323.8 461.6,323.8 461.6,550.9 452.2,550.9" fill="url(#steel)"/>
+    <polygon points="477.7,327.6 486.8,327.6 486.8,546.7 477.7,546.7" fill="url(#steel)"/>
+    <polygon points="503.0,331.3 511.9,331.3 511.9,542.6 503.0,542.6" fill="url(#steel)"/>
+    <polygon points="528.3,335.1 536.9,335.1 536.9,538.5 528.3,538.5" fill="url(#steel)"/>
+    <polygon points="553.5,338.8 561.8,338.8 561.8,534.4 553.5,534.4" fill="url(#steel)"/>
+    <polygon points="578.6,342.5 586.6,342.5 586.6,530.4 578.6,530.4" fill="url(#steel)"/>
+    <polygon points="603.6,346.2 611.3,346.2 611.3,526.3 603.6,526.3" fill="url(#steel)"/>
+    <polygon points="628.5,349.9 635.9,349.9 635.9,522.3 628.5,522.3" fill="url(#steel)"/>
+    <polygon points="653.3,353.5 660.5,353.5 660.5,518.2 653.3,518.2" fill="url(#steel)"/>
+    <polygon points="678.1,357.2 685.0,357.2 685.0,514.2 678.1,514.2" fill="url(#steel)"/>
+    <polygon points="702.8,360.8 709.4,360.8 709.4,510.2 702.8,510.2" fill="url(#steel)"/>
+    <polygon points="727.4,364.5 733.7,364.5 733.7,506.2 727.4,506.2" fill="url(#steel)"/>
+    <polygon points="751.9,368.1 758.0,368.1 758.0,502.2 751.9,502.2" fill="url(#steel)"/>
+    <polygon points="776.4,371.7 782.2,371.7 782.2,498.2 776.4,498.2" fill="url(#steel)"/>
+    <polygon points="800.8,375.3 806.3,375.3 806.3,494.3 800.8,494.3" fill="url(#steel)"/>
+    <polygon points="825.2,378.9 830.4,378.9 830.4,490.3 825.2,490.3" fill="url(#steel)"/>
+    <polygon points="849.5,382.5 854.5,382.5 854.5,486.4 849.5,486.4" fill="url(#steel)"/>
+    <polygon points="873.7,386.1 878.4,386.1 878.4,482.4 873.7,482.4" fill="url(#steel)"/>
+    <polygon points="897.9,389.7 902.3,389.7 902.3,478.5 897.9,478.5" fill="url(#steel)"/>
+    <polygon points="922.1,393.2 926.2,393.2 926.2,474.6 922.1,474.6" fill="url(#steel)"/>
+    <polygon points="946.2,396.8 950.0,396.8 950.0,470.7 946.2,470.7" fill="url(#steel)"/>
+    <polygon points="970.2,400.4 973.8,400.4 973.8,466.8 970.2,466.8" fill="url(#steel)"/>
+    <polygon points="994.2,403.9 997.5,403.9 997.5,462.9 994.2,462.9" fill="url(#steel)"/>
+    <polygon points="1018.1,407.4 1021.2,407.4 1021.2,459.0 1018.1,459.0" fill="url(#steel)"/>
+    <polygon points="1042.0,411.0 1044.8,411.0 1044.8,455.1 1042.0,455.1" fill="url(#steel)"/>
+    <polygon points="1065.8,414.5 1068.4,414.5 1068.4,451.2 1065.8,451.2" fill="url(#steel)"/>
+    <polygon points="1089.6,418.0 1091.9,418.0 1091.9,447.4 1089.6,447.4" fill="url(#steel)"/>
+    <polygon points="1113.4,421.5 1115.4,421.5 1115.4,443.5 1113.4,443.5" fill="url(#steel)"/>
+    <polygon points="1137.1,425.0 1138.8,425.0 1138.8,439.7 1137.1,439.7" fill="url(#steel)"/>
+    <polygon points="1160.8,428.5 1162.2,428.5 1162.2,435.8 1160.8,435.8" fill="url(#steel)"/>
+    <polygon points="1184.4,432.0 1185.6,432.0 1185.6,432.0 1184.4,432.0" fill="url(#steel)"/>
+  </g>
+  <path d="M-40,640 L1185,436 L1185,452 C800,470 300,560 -40,664 Z" fill="#000000" opacity="0.10"/>
+</svg>

@@ -30,6 +30,8 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
 
         <p>{c.para2}</p>
 
+        <p>{c.para3}</p>
+
         <figure className="space-y-3">
           <Image
             src="/images/about/utsa.jpg"
@@ -41,7 +43,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
           <figcaption className="text-sm text-slate-600">{c.caption2}</figcaption>
         </figure>
 
-        <p>{c.para3}</p>
+        <p>{c.para4}</p>
 
         <figure className="space-y-3">
           <Image
@@ -54,7 +56,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
           <figcaption className="text-sm text-slate-600">{c.caption3}</figcaption>
         </figure>
 
-        <p>{c.para4}</p>
+        <p>{c.para5}</p>
 
         <figure className="space-y-3">
           <Image
@@ -71,7 +73,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
           <figcaption className="text-sm text-slate-600">{c.caption4}</figcaption>
         </figure>
 
-        <p>{c.para5}</p>
+        <p>{c.para6}</p>
 
         <div className="relative overflow-hidden rounded-3xl border border-navy/10">
           <Image
