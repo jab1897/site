@@ -28,10 +28,10 @@ export const labels = {
       meetHeading: "Meet Jorge Borrego",
       meetSubhead: "For Texas House District 118",
       meetBody: [
-        "Jorge Borrego is the Republican candidate for Texas House District 118, running to give every family a fair shot to get ahead.",
-        "Raised in a working-class family that knew hard times firsthand, Jorge understands what it means to fight for opportunity and earn everything through hard work. Through faith, discipline, and personal responsibility, he became the first in his family to graduate from college and built a career fighting for stronger schools, lower taxes, and more accountable government across Texas.",
-        "A husband, father, and small business owner, Jorge believes faith, family, and service are the foundation of strong communities. He is focused on lowering the cost of living, cutting property taxes, keeping neighborhoods safe, funding public schools, and protecting children.",
-        "Jorge Borrego is running to serve the families of House District 118 — not Austin insiders, not taxpayer-funded lobbyists, and not career politicians."
+        "Jorge Borrego is the Republican candidate for Texas House District 118, running to keep the promise of Texas alive for every family willing to work for a better life.",
+        "Jorge's story is the story of the American Dream. He was raised in a working-class family that knew hardship, instability, and sacrifice firsthand. When life got difficult, his family did not have power, privilege, or political connections to fall back on — they had faith, hard work, and each other. Jorge watched his mother sacrifice so her children could have a better chance, and he carried that lesson with him every step of the way.",
+        "Through faith, discipline, and personal responsibility, Jorge became the first in his family to graduate from college. He built a career fighting for stronger schools, lower taxes, better opportunities, and more accountable government across Texas. Now, as a husband, father, small business owner, and candidate for State Representative, Jorge is running to make sure the same promise that changed his life is still within reach for the families of House District 118.",
+        "Jorge believes Texas should be a place where hard work is rewarded, families are safe, schools are strong, and government answers to the people who pay the bills. He will fight to lower the cost of living, cut property taxes, keep repeat violent criminals off our streets, fund public schools, protect children, and make sure state government listens to real Texans — not Austin insiders, taxpayer-funded lobbyists, or career politicians."
       ],
       learnMore: "Learn More",
       prioritiesHeading: "Priorities",
@@ -133,10 +133,10 @@ export const labels = {
       meetHeading: "Conoce a Jorge Borrego",
       meetSubhead: "Para la Cámara de Representantes de Texas, Distrito 118",
       meetBody: [
-        "Jorge Borrego es el candidato Republicano para la Cámara de Representantes de Texas, Distrito 118, y se postula para que cada familia tenga una oportunidad justa de salir adelante.",
-        "Criado en una familia trabajadora que conoció tiempos difíciles de cerca, Jorge entiende lo que significa luchar por una oportunidad y ganarse todo con trabajo duro. A través de la fe, la disciplina y la responsabilidad personal, fue el primero de su familia en graduarse de la universidad y construyó una carrera luchando por escuelas más fuertes, impuestos más bajos y un gobierno más responsable en todo Texas.",
-        "Esposo, padre y dueño de un negocio propio, Jorge cree que la fe, la familia y el servicio son la base de comunidades fuertes. Está enfocado en bajar el costo de vida, reducir los impuestos a la propiedad, mantener seguros los vecindarios, financiar las escuelas públicas y proteger a los niños.",
-        "Jorge Borrego se postula para servir a las familias del Distrito 118, no a los intereses de Austin, los lobbyistas pagados con nuestros impuestos ni los políticos de carrera."
+        "Jorge Borrego es el candidato Republicano para la Cámara de Representantes de Texas, Distrito 118, y se postula para mantener viva la promesa de Texas para cada familia dispuesta a trabajar por una vida mejor.",
+        "La historia de Jorge es la historia del Sueño Americano. Creció en una familia trabajadora que conoció de cerca las dificultades, la inestabilidad y el sacrificio. Cuando la vida se puso difícil, su familia no tenía poder, privilegios ni conexiones políticas en qué apoyarse — tenían la fe, el trabajo duro y el uno al otro. Jorge vio a su madre sacrificarse para que sus hijos tuvieran una mejor oportunidad, y llevó esa lección consigo en cada paso del camino.",
+        "A través de la fe, la disciplina y la responsabilidad personal, Jorge fue el primero de su familia en graduarse de la universidad. Construyó una carrera luchando por escuelas más fuertes, impuestos más bajos, mejores oportunidades y un gobierno más responsable en todo Texas. Hoy, como esposo, padre, dueño de un negocio propio y candidato para Representante Estatal, Jorge se postula para asegurar que la misma promesa que cambió su vida siga al alcance de las familias del Distrito 118.",
+        "Jorge cree que Texas debe ser un lugar donde el trabajo duro se recompensa, las familias están seguras, las escuelas son fuertes y el gobierno le responde a la gente que paga la cuenta. Luchará para bajar el costo de vida, reducir los impuestos a la propiedad, mantener a los criminales violentos reincidentes fuera de nuestras calles, financiar las escuelas públicas, proteger a los niños y asegurar que el gobierno estatal escuche a los texanos de verdad — no a los intereses de Austin, los lobbyistas pagados con nuestros impuestos ni los políticos de carrera."
       ],
       learnMore: "Conoce Más",
       prioritiesHeading: "Prioridades",
