@@ -10,111 +10,168 @@ export type PriorityItem = {
 export const priorities: Record<Locale, PriorityItem[]> = {
   en: [
     {
-      title: "Ban taxpayer funded lobbyists",
+      title: "Lower the Cost of Living for Families Across District 118",
       bullets: [
-        "End the practice of forcing taxpayers to subsidize influence peddling.",
-        "Increase transparency so public dollars serve families, not insiders."
+        "Fight rising prices on groceries, gas, utilities, insurance, and everyday essentials.",
+        "Keep Texas the strongest economy in America so working families can get ahead.",
+        "Support policies that create good jobs and protect the paychecks families work hard to earn."
       ],
-      image: "/images/priorities/lobbyists.jpg",
-      imageAlt: "Capitol dome and document representing government accountability",
+      image: "/images/family/walking-away.jpg",
+      imageAlt: "A Texas family walking together, representing working families getting ahead",
     },
     {
-      title: "Protect our second amendment rights",
+      title: "Cut Your Property Taxes for Good",
       bullets: [
-        "Defend law-abiding Texans' right to keep and bear arms.",
-        "Oppose new burdens that punish responsible gun owners."
-      ],
-      image: "/images/priorities/second-amendment.jpg",
-      imageAlt: "Constitution and star imagery representing second amendment rights",
-    },
-    {
-      title: "Fight to permanently lower property taxes",
-      bullets: [
-        "Push for lasting tax relief so families can keep more of what they earn.",
-        "Hold local governments accountable for runaway spending."
+        "Increase the homestead exemption so more of your home's value is protected from taxation.",
+        "Cap runaway appraisal increases so families are not taxed out of homes they already own.",
+        "Hold local governments accountable when their spending drives tax bills higher."
       ],
       image: "/images/priorities/property-taxes.jpg",
       imageAlt: "Texas home and tax tag graphic for lower property taxes",
     },
     {
-      title: "Defend our conservative values that make Texas strong and safe, and fight for San Antonio families",
+      title: "Keep Repeat Violent Criminals Off Our Streets",
       bullets: [
-        "Protect faith, family, freedom, and personal responsibility.",
-        "Champion policies that keep neighborhoods safe and prosperous."
-      ],
-      image: "/images/priorities/faith-family.jpg",
-      imageAlt: "Texas flag inspired graphic representing conservative values",
-    },
-    {
-      title: "Oppose the radical, woke indoctrination of our children and fight the liberal takeover of our education system",
-      bullets: [
-        "Put parents in charge of what their children learn.",
-        "Focus schools on academics, discipline, and opportunity."
-      ],
-      image: "/images/priorities/classroom.jpg",
-      imageAlt: "Teacher reading to students at desks in a classroom with an American flag",
-    },
-    {
-      title: "Stand with local law enforcement and fight any efforts to defund the police",
-      bullets: [
-        "Back officers with resources, training, and public support.",
-        "Reject policies that weaken public safety in our communities."
+        "Keep repeat violent offenders behind bars, not back on the street to commit more crimes.",
+        "Back law enforcement with the resources, training, and public support they need.",
+        "Put victims, families, and neighborhood safety ahead of soft-on-crime politics."
       ],
       image: "/images/priorities/law-enforcement.jpg",
       imageAlt: "Smiling police officer talking with a family in a neighborhood",
     },
     {
-      title: "Ban sexually explicit school materials and drag show performances in front of children",
+      title: "Fund Public Schools, Reward Great Teachers, and Expand Career Training",
       bullets: [
-        "Keep age-inappropriate content out of schools and children's spaces.",
-        "Defend parents' rights to protect their kids and set standards."
+        "Reward great teachers with higher pay and make sure education dollars reach the classroom.",
+        "Expand career training and apprenticeship programs so students graduate ready for good jobs with less debt.",
+        "Support strong public schools while giving parents more options when their child needs something different.",
+        "Keep age-inappropriate content out of classrooms and defend parents' right to set standards for their children."
+      ],
+      image: "/images/priorities/classroom.jpg",
+      imageAlt: "Teacher reading to students at desks in a classroom with an American flag",
+    },
+    {
+      title: "Protect Children Online",
+      bullets: [
+        "Limit children's access to harmful social media content.",
+        "Increase penalties for online predators who target Texas kids.",
+        "Support school safety upgrades so students can learn in secure classrooms."
       ],
       image: "/images/priorities/protect-children.jpg",
       imageAlt: "Two young students with backpacks walking to school holding hands",
+    },
+    {
+      title: "Secure the Border and Keep Texas Communities Safe",
+      bullets: [
+        "Support technology and resources that help secure the Texas border.",
+        "Remove criminals who have no legal right to be here.",
+        "Treat border security as part of protecting families, neighborhoods, and taxpayers."
+      ],
+      image: "/images/issues/border-wall.jpg",
+      imageAlt: "Steel border wall stretching across the Texas desert toward the horizon at sunset",
+    },
+    {
+      title: "Make Government Listen to Texans, Not Taxpayer-Funded Lobbyists",
+      bullets: [
+        "End the practice of forcing taxpayers to fund lobbyists who lobby against the people paying the bills.",
+        "Make public dollars serve families first, not Austin insiders.",
+        "Increase transparency so taxpayers know who is influencing their government."
+      ],
+      image: "/images/priorities/lobbyists.jpg",
+      imageAlt: "Capitol dome and document representing government accountability",
+    },
+    {
+      title: "Faith, Family, and Texas Values",
+      bullets: [
+        "Protect faith, family, personal responsibility, and the values that hold strong communities together.",
+        "Defend the right of law-abiding Texans to keep and bear arms.",
+        "Stand with parents, taxpayers, law enforcement, and working families across District 118."
+      ],
+      image: "/images/priorities/faith-family.jpg",
+      imageAlt: "Texas flag inspired graphic representing faith, family, and Texas values",
     }
   ],
   es: [
     {
-      title: "Prohibir cabilderos financiados por contribuyentes",
-      bullets: ["Terminar con el uso de dinero público para beneficiar intereses especiales.", "Aumentar la transparencia para que los recursos sirvan a las familias."],
-      image: "/images/priorities/lobbyists.jpg",
-      imageAlt: "Cúpula del capitolio y documento que representan rendición de cuentas",
+      title: "Bajar el Costo de Vida para las Familias del Distrito 118",
+      bullets: [
+        "Luchar contra el alza de precios en la despensa, la gasolina, los servicios, el seguro y los gastos diarios.",
+        "Mantener a Texas como la economía más fuerte del país para que las familias trabajadoras salgan adelante.",
+        "Apoyar políticas que generen buenos empleos y protejan el cheque que tanto cuesta ganar."
+      ],
+      image: "/images/family/walking-away.jpg",
+      imageAlt: "Una familia de Texas caminando junta, que representa a las familias trabajadoras saliendo adelante",
     },
     {
-      title: "Proteger nuestros derechos de la segunda enmienda",
-      bullets: ["Defender el derecho de los texanos respetuosos de la ley a portar armas.", "Oponerse a cargas injustas para propietarios responsables."],
-      image: "/images/priorities/second-amendment.jpg",
-      imageAlt: "Constitución y estrella que representan derechos de la segunda enmienda",
-    },
-    {
-      title: "Luchar para bajar permanentemente los impuestos a la propiedad",
-      bullets: ["Impulsar alivio fiscal permanente para las familias.", "Exigir responsabilidad al gasto gubernamental local."],
+      title: "Reducir los Impuestos a la Propiedad de Forma Permanente",
+      bullets: [
+        "Aumentar la exención de vivienda familiar para proteger más el valor de su casa.",
+        "Limitar los aumentos desmedidos en las valuaciones para que las familias no pierdan la casa que ya tienen.",
+        "Hacer responsables a los gobiernos locales cuando su gasto excesivo sube la factura de impuestos."
+      ],
       image: "/images/priorities/property-taxes.jpg",
       imageAlt: "Casa de Texas y etiqueta fiscal",
     },
     {
-      title: "Defender nuestros valores conservadores que mantienen a Texas fuerte y seguro, y luchar por las familias de San Antonio",
-      bullets: ["Proteger fe, familia, libertad y responsabilidad personal.", "Impulsar políticas para vecindarios seguros y prósperos."],
-      image: "/images/priorities/faith-family.jpg",
-      imageAlt: "Gráfico inspirado en la bandera de Texas",
-    },
-    {
-      title: "Oponerse al adoctrinamiento radical de nuestros hijos y frenar la toma liberal del sistema educativo",
-      bullets: ["Poner a los padres al mando de la educación de sus hijos.", "Enfocar escuelas en aprendizaje y disciplina."],
-      image: "/images/priorities/classroom.jpg",
-      imageAlt: "Maestra leyendo a estudiantes en un salón de clases con bandera estadounidense",
-    },
-    {
-      title: "Respaldar a la policía local y oponerse a cualquier intento de quitarle fondos",
-      bullets: ["Apoyar a los oficiales con recursos y entrenamiento.", "Rechazar políticas que debiliten la seguridad pública."],
+      title: "Mantener a los Criminales Violentos Reincidentes Fuera de Nuestras Calles",
+      bullets: [
+        "Mantener tras las rejas a los delincuentes violentos reincidentes, no de vuelta en la calle.",
+        "Respaldar a la policía con los recursos, la capacitación y el apoyo que merece.",
+        "Poner a las víctimas, las familias y la seguridad del vecindario antes que la política blanda contra el crimen."
+      ],
       image: "/images/priorities/law-enforcement.jpg",
       imageAlt: "Oficial de policía sonriendo mientras conversa con una familia",
     },
     {
-      title: "Prohibir material sexualmente explícito en escuelas y espectáculos para adultos frente a menores",
-      bullets: ["Mantener contenido inapropiado fuera de los espacios infantiles.", "Defender el derecho de los padres a proteger a sus hijos."],
+      title: "Financiar Nuestras Escuelas Públicas, Premiar a los Buenos Maestros y Expandir la Capacitación Laboral",
+      bullets: [
+        "Premiar a los mejores maestros con mejor salario y asegurar que el dinero llegue al salón de clases.",
+        "Expandir los programas de capacitación laboral y aprendizaje para que los estudiantes se gradúen listos para un buen trabajo, con menos deuda.",
+        "Apoyar escuelas públicas fuertes y, al mismo tiempo, dar a los padres más opciones cuando su hijo necesite algo diferente.",
+        "Mantener fuera de las aulas el contenido inapropiado para la edad y defender el derecho de los padres a poner las normas para sus hijos."
+      ],
+      image: "/images/priorities/classroom.jpg",
+      imageAlt: "Maestra leyendo a estudiantes en un salón de clases con bandera estadounidense",
+    },
+    {
+      title: "Proteger a Nuestros Hijos en Internet",
+      bullets: [
+        "Limitar el acceso de los niños a contenido dañino en las redes sociales.",
+        "Aumentar las penas para los depredadores en línea que buscan dañar a los niños de Texas.",
+        "Apoyar mejoras de seguridad escolar para que los estudiantes aprendan en aulas seguras."
+      ],
       image: "/images/priorities/protect-children.jpg",
       imageAlt: "Dos estudiantes con mochilas caminando a la escuela tomados de la mano",
+    },
+    {
+      title: "Asegurar la Frontera y Mantener Seguras a las Comunidades de Texas",
+      bullets: [
+        "Apoyar la tecnología y los recursos que ayudan a asegurar la frontera de Texas.",
+        "Sacar de nuestras calles a los criminales que no tienen derecho legal a estar aquí.",
+        "Tratar la seguridad fronteriza como parte de proteger a las familias, los vecindarios y a los contribuyentes."
+      ],
+      image: "/images/issues/border-wall.jpg",
+      imageAlt: "Muro fronterizo de acero extendiéndose por el desierto de Texas hacia el horizonte al atardecer",
+    },
+    {
+      title: "Hacer que el Gobierno Escuche a los Texanos, No a los Lobbyistas Pagados con Nuestros Impuestos",
+      bullets: [
+        "Terminar con la práctica de obligar a los contribuyentes a pagar lobbyistas que trabajan en contra de quienes pagan la cuenta.",
+        "Asegurar que el dinero público sirva primero a las familias, no a los intereses de Austin.",
+        "Aumentar la transparencia para que los contribuyentes sepan quién influye en su gobierno."
+      ],
+      image: "/images/priorities/lobbyists.jpg",
+      imageAlt: "Cúpula del capitolio y documento que representan rendición de cuentas",
+    },
+    {
+      title: "Fe, Familia y Valores de Texas",
+      bullets: [
+        "Proteger la fe, la familia, la responsabilidad personal y los valores que mantienen unidas a nuestras comunidades.",
+        "Defender el derecho de los texanos que respetan la ley a poseer y portar armas.",
+        "Respaldar a los padres, los contribuyentes, la policía y las familias trabajadoras en todo el Distrito 118."
+      ],
+      image: "/images/priorities/faith-family.jpg",
+      imageAlt: "Gráfico inspirado en la bandera de Texas que representa la fe, la familia y los valores de Texas",
     }
   ]
 };
