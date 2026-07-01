@@ -67,8 +67,8 @@ export const priorities: Record<Locale, PriorityItem[]> = {
         "Remove criminals who have no legal right to be here.",
         "Treat border security as part of protecting families, neighborhoods, and taxpayers."
       ],
-      image: "/images/issues/border-wall.svg",
-      imageAlt: "Texas border security wall stretching toward the horizon under a clear sky",
+      image: "/images/issues/border-wall.jpg",
+      imageAlt: "Steel border wall stretching across the Texas desert toward the horizon at sunset",
     },
     {
       title: "Make Government Listen to Texans, Not Taxpayer-Funded Lobbyists",
@@ -150,8 +150,8 @@ export const priorities: Record<Locale, PriorityItem[]> = {
         "Sacar de nuestras calles a los criminales que no tienen derecho legal a estar aquí.",
         "Tratar la seguridad fronteriza como parte de proteger a las familias, los vecindarios y a los contribuyentes."
       ],
-      image: "/images/issues/border-wall.svg",
-      imageAlt: "Muro de seguridad fronteriza de Texas extendiéndose hacia el horizonte bajo un cielo despejado",
+      image: "/images/issues/border-wall.jpg",
+      imageAlt: "Muro fronterizo de acero extendiéndose por el desierto de Texas hacia el horizonte al atardecer",
     },
     {
       title: "Hacer que el Gobierno Escuche a los Texanos, No a los Lobbyistas Pagados con Nuestros Impuestos",
