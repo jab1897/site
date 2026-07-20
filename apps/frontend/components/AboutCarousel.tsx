@@ -15,7 +15,7 @@ export function AboutCarousel({ slides }: { slides: Slide[] }) {
   const slide = slides[index];
 
   return (
-    <div className="mx-auto w-full max-w-sm">
+    <div className="w-full max-w-sm">
       <div className="relative overflow-hidden rounded-2xl border border-navy/10 shadow-md">
         <div className="relative aspect-[4/3]">
           <Image

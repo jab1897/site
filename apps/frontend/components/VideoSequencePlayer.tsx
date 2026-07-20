@@ -42,7 +42,7 @@ export function VideoSequencePlayer({ commercialMp4, commercialWebm, commercialP
   };
 
   return (
-    <div className={`relative overflow-hidden rounded-2xl border border-navy/10 shadow ${className ?? ""}`}>
+    <div className={`relative lg:col-start-2 lg:row-span-2 lg:row-start-1 overflow-hidden rounded-2xl border border-navy/10 shadow ${className ?? ""}`}>
       {/* Intro video */}
       <video
         ref={introRef}

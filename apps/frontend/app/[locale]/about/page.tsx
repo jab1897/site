@@ -45,23 +45,21 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
         {locale === "es" ? "Para la Cámara de Texas, Distrito 118" : "For Texas House District 118"}
       </p>
 
-      {/* Carousel */}
-      <div className="mt-6">
+      {/* Carousel + body text share the same max-width column */}
+      <div className="mt-6 max-w-3xl space-y-8">
         <AboutCarousel slides={slides} />
-      </div>
 
-      {/* Body text */}
-      <div className="mt-8 space-y-5 text-lg leading-8 text-slate-700 max-w-3xl">
-        <p>{c.para1}</p>
-        <p>{c.para2}</p>
-        <p>{c.para3}</p>
-        <p>{c.para4}</p>
-        <p>{c.para5}</p>
-        <p>{c.para6}</p>
-      </div>
+        <div className="space-y-5 text-lg leading-8 text-slate-700">
+          <p>{c.para1}</p>
+          <p>{c.para2}</p>
+          <p>{c.para3}</p>
+          <p>{c.para4}</p>
+          <p>{c.para5}</p>
+          <p>{c.para6}</p>
+        </div>
 
-      {/* Family photo banner */}
-      <div className="relative mt-10 overflow-hidden rounded-3xl border border-navy/10 max-w-3xl">
+        {/* Family photo banner */}
+        <div className="relative overflow-hidden rounded-3xl border border-navy/10">
         <Image
           src="/images/family/walking-away.jpg"
           alt={locale === "es" ? "La familia Borrego caminando juntos" : "Borrego family walking together"}
@@ -69,24 +67,25 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
           height={700}
           className="w-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-navy/60 via-navy/10 to-transparent" />
-        <div className="absolute bottom-0 p-6 text-lg font-medium text-white">{c.overlayText}</div>
-      </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-navy/60 via-navy/10 to-transparent" />
+          <div className="absolute bottom-0 p-6 text-lg font-medium text-white">{c.overlayText}</div>
+        </div>
 
-      {/* CTAs */}
-      <div className="mt-8 flex flex-wrap gap-3">
-        <a
-          href={`/${locale}/donate`}
-          className="inline-flex items-center justify-center rounded-md bg-red px-5 py-3 font-semibold text-white transition hover:brightness-95"
-        >
-          {t.donate}
-        </a>
-        <a
-          href={`/${locale}/get-involved`}
-          className="inline-flex items-center justify-center rounded-md border-2 border-navy px-5 py-3 font-semibold text-navy transition hover:bg-navy hover:text-white"
-        >
-          {t.volunteer}
-        </a>
+        {/* CTAs */}
+        <div className="flex flex-wrap gap-3">
+          <a
+            href={`/${locale}/donate`}
+            className="inline-flex items-center justify-center rounded-md bg-red px-5 py-3 font-semibold text-white transition hover:brightness-95"
+          >
+            {t.donate}
+          </a>
+          <a
+            href={`/${locale}/get-involved`}
+            className="inline-flex items-center justify-center rounded-md border-2 border-navy px-5 py-3 font-semibold text-navy transition hover:bg-navy hover:text-white"
+          >
+            {t.volunteer}
+          </a>
+        </div>
       </div>
     </div>
   );
