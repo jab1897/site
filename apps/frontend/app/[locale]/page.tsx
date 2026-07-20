@@ -6,7 +6,7 @@ import { LeadForm } from "@/components/LeadForm";
 import { DonateButtons } from "@/components/DonateButtons";
 import { EndorsementsTeaser } from "@/components/EndorsementsTeaser";
 import { Hero } from "@/components/Hero";
-import { VideoWithSoundToggle } from "@/components/VideoWithSoundToggle";
+import { VideoSequencePlayer } from "@/components/VideoSequencePlayer";
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: rawLocale } = await params;
@@ -26,11 +26,10 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             <p className="mt-3 text-2xl font-semibold uppercase text-navy">{t.meetSubhead}</p>
           </div>
 
-          <VideoWithSoundToggle
-            poster="/images/candidate/speaking-flag.jpg"
-            mp4="/video/hero.mp4"
-            webm="/video/hero.webm"
-            className="w-full rounded-2xl border border-navy/10 shadow"
+          <VideoSequencePlayer
+            commercialMp4="/video/hero.mp4"
+            commercialWebm="/video/hero.webm"
+            commercialPoster="/images/candidate/speaking-flag.jpg"
           />
 
           <div>
