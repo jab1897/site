@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { SiteShell } from "@/components/SiteShell";
 import { Locale, locales } from "@/lib/i18n";
+import { CANONICAL_ORIGIN } from "@/lib/canonical-host";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.jorgefortexas.com";
+const SITE_URL = CANONICAL_ORIGIN;
 
 export async function generateStaticParams() { return locales.map((locale) => ({ locale })); }
 
