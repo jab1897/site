@@ -4,8 +4,9 @@ import { Suspense } from "react";
 import { headers } from "next/headers";
 import { Analytics } from "@vercel/analytics/next";
 import AnalyticsTracker from "@/components/AnalyticsTracker";
+import { CANONICAL_ORIGIN } from "@/lib/canonical-host";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.jorgefortexas.com";
+const SITE_URL = CANONICAL_ORIGIN;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

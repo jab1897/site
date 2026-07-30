@@ -1,6 +1,5 @@
 import { MetadataRoute } from "next";
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.jorgefortexas.com";
+import { CANONICAL_ORIGIN } from "@/lib/canonical-host";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes = [
@@ -16,14 +15,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return ["en", "es"].flatMap((locale) =>
     routes.map((r) => ({
-      url: `${SITE_URL}/${locale}${r.path}`,
+      url: `${CANONICAL_ORIGIN}/${locale}${r.path}`,
       lastModified: new Date(),
       changeFrequency: r.changeFreq,
       priority: r.priority,
       alternates: {
         languages: {
-          en: `${SITE_URL}/en${r.path}`,
-          es: `${SITE_URL}/es${r.path}`,
+          en: `${CANONICAL_ORIGIN}/en${r.path}`,
+          es: `${CANONICAL_ORIGIN}/es${r.path}`,
         },
       },
     }))
