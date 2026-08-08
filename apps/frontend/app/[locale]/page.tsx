@@ -6,7 +6,7 @@ import { LeadForm } from "@/components/LeadForm";
 import { DonateButtons } from "@/components/DonateButtons";
 import { EndorsementsTeaser } from "@/components/EndorsementsTeaser";
 import { Hero } from "@/components/Hero";
-import { VideoSequencePlayer } from "@/components/VideoSequencePlayer";
+import { HomeVideoPlayer } from "@/components/HomeVideoPlayer";
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: rawLocale } = await params;
@@ -26,11 +26,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             <p className="mt-3 text-2xl font-semibold uppercase text-navy">{t.meetSubhead}</p>
           </div>
 
-          <VideoSequencePlayer
-            commercialMp4="/video/hero.mp4"
-            commercialWebm="/video/hero.webm"
-            commercialPoster="/images/candidate/speaking-flag.jpg"
-          />
+          <HomeVideoPlayer poster="/images/candidate/speaking-flag.jpg" />
 
           <div>
             {t.meetBody.map((paragraph, idx) => (
