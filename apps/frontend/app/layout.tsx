@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     template: "%s | Jorge Borrego for Texas HD118",
   },
   description:
-    "Jorge Borrego is the Republican candidate for Texas House District 118, fighting to lower costs, cut property taxes, keep families safe, strengthen schools, and put Texans first.",
+    "Jorge Borrego is the Republican candidate for Texas House District 118, fighting to lower costs, cut property taxes, keep violent criminals off the streets, protect kids from fentanyl, protect girls' sports, and raise teacher pay.",
   keywords: [
     "Jorge Borrego",
     "Texas House District 118",
@@ -25,7 +25,9 @@ export const metadata: Metadata = {
     "cost of living",
     "property taxes",
     "public safety",
-    "public schools",
+    "fentanyl",
+    "girls sports",
+    "teacher pay",
     "Texas 2026",
   ],
   openGraph: {
@@ -34,14 +36,14 @@ export const metadata: Metadata = {
     siteName: "Jorge Borrego for Texas House District 118",
     title: "Jorge Borrego for Texas House District 118 | Republican Candidate",
     description:
-      "Republican for Texas House District 118. Fighting to lower costs, cut property taxes, keep families safe, and strengthen schools.",
+      "Republican for Texas House District 118. Fighting to lower costs, cut property taxes, keep violent criminals off the streets, and protect kids from fentanyl.",
     images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Jorge Borrego for Texas House District 118" }],
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
     title: "Jorge Borrego for Texas House District 118 | Republican Candidate",
-    description: "Republican for Texas House District 118 — lower costs, lower property taxes, safer neighborhoods, stronger schools.",
+    description: "Lower costs. Cut property taxes. Safer streets. Protect kids from fentanyl. Protect girls' sports. Raise teacher pay.",
     images: ["/opengraph-image"],
   },
   robots: {
@@ -69,7 +71,7 @@ const jsonLd = {
   "@type": "Person",
   name: "Jorge Borrego",
   description:
-    "Republican candidate for Texas House of Representatives, District 118, fighting to lower costs, cut property taxes, keep families safe, and strengthen schools.",
+    "Republican candidate for Texas House of Representatives, District 118, fighting to lower costs, cut property taxes, keep violent criminals off the streets, protect kids from fentanyl, protect girls' sports, and raise teacher pay.",
   jobTitle: "Candidate for Texas House District 118",
   url: SITE_URL,
   homeLocation: {
