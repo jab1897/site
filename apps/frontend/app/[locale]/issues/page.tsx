@@ -11,11 +11,24 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
   return (
     <div className="container py-12">
       <h1 className="text-3xl font-bold">{t.nav.issues}</h1>
-      <div className="mt-6 space-y-5">
+      <div className="mt-6 space-y-4 sm:space-y-5">
         {items.map((item, i) => (
-          <details key={item.title} id={`issue-${i + 1}`} className="overflow-hidden rounded-2xl border border-navy/10 bg-white">
-            <summary className="cursor-pointer p-4 text-xl font-semibold text-navy">{item.title}</summary>
-            <div className="px-4">
+          <details
+            key={item.title}
+            id={`issue-${i + 1}`}
+            className="group overflow-hidden rounded-2xl border border-navy/10 bg-white"
+          >
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 sm:p-6 [&::-webkit-details-marker]:hidden">
+              <span className="text-xl font-semibold leading-snug text-navy sm:text-2xl">{item.title}</span>
+              <span
+                aria-hidden="true"
+                className="shrink-0 text-2xl font-light leading-none text-red transition-transform duration-200 group-open:rotate-45"
+              >
+                +
+              </span>
+            </summary>
+
+            <div className="px-5 pb-6 sm:px-6 sm:pb-7">
               <div className="relative w-full aspect-[16/9] overflow-hidden rounded-2xl shadow-md ring-1 ring-black/5">
                 <Image
                   src={item.image}
@@ -28,15 +41,16 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
                   priority={false}
                 />
               </div>
-            </div>
-            <div className="p-4">
-              <div className="mt-6 space-y-3">
-                <ul className="list-disc pl-5 space-y-2 text-slate-700 leading-relaxed">
-                {item.bullets.map((bullet) => (
-                  <li key={bullet}>{bullet}</li>
+
+              <div className="mt-6 h-1 w-16 rounded-full bg-red" />
+
+              <ul className="mt-5 list-disc space-y-4 pl-5 text-base leading-7 text-slate-700 marker:text-red sm:space-y-4 sm:text-lg sm:leading-8">
+                {item.issuesBullets.map((bullet) => (
+                  <li key={bullet} className="pl-1 text-pretty">
+                    {bullet}
+                  </li>
                 ))}
-                </ul>
-              </div>
+              </ul>
             </div>
           </details>
         ))}
