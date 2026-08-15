@@ -29,8 +29,8 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
       src: "/images/about/school-choice.jpg",
       alt:
         locale === "es"
-          ? "Jorge Borrego luchando por escuelas más fuertes"
-          : "Jorge Borrego fighting for stronger schools",
+          ? "Jorge Borrego en un evento sobre educación"
+          : "Jorge Borrego at an education event",
       caption: c.caption4,
     },
   ];
