@@ -89,8 +89,8 @@ export const priorities: Record<Locale, PriorityItem[]> = {
         "Protect the right of girls to compete on a level playing field.",
         "Stand for common-sense policies that keep girls' sports for girls."
       ],
-      image: "/images/priorities/faith-family.jpg",
-      imageAlt: "Texas flag inspired graphic representing Texas values",
+      image: "/images/priorities/girls-basketball.jpg",
+      imageAlt: "High school girls' basketball players competing during a game in a packed school gym",
     },
     {
       title: "Teacher Pay Raises",
@@ -187,8 +187,8 @@ export const priorities: Record<Locale, PriorityItem[]> = {
         "Proteger el derecho de las niñas y jóvenes a competir en igualdad de condiciones.",
         "Defender políticas de sentido común que mantengan los deportes femeninos para las mujeres y las niñas."
       ],
-      image: "/images/priorities/faith-family.jpg",
-      imageAlt: "Gráfico inspirado en la bandera de Texas que representa los valores de Texas",
+      image: "/images/priorities/girls-basketball.jpg",
+      imageAlt: "Jugadoras de baloncesto de preparatoria compitiendo durante un partido en un gimnasio lleno",
     },
     {
       title: "Aumentar el Sueldo de los Maestros",

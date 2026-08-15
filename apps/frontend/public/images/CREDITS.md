@@ -47,6 +47,7 @@ image listed below.
 | `priorities/property-taxes.jpg` | Free stock photo |
 | `priorities/protect-children.jpg` | Free stock photo |
 | `priorities/second-amendment.jpg` | Free stock photo |
+| `priorities/girls-basketball.jpg` | Supplied by the campaign |
 
 ## Video
 
