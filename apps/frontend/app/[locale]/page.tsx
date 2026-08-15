@@ -55,7 +55,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               <div className="space-y-4 p-6">
                 <h3 className="text-2xl font-black uppercase leading-tight text-red">{priority.title}</h3>
                 <ul className="list-disc space-y-2 pl-6 text-lg text-slate-700">
-                  {priority.bullets.map((bullet) => (
+                  {priority.homepageBullets.map((bullet) => (
                     <li key={bullet}>{bullet}</li>
                   ))}
                 </ul>

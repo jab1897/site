@@ -29,9 +29,9 @@ const content: Record<Locale, AboutContent> = {
     caption3: "Faith, family, and Texas values are at the root of Jorge and Lexie's marriage.",
     para5:
       "Today, Jorge is a husband, father, small business owner, licensed real estate professional, and Republican candidate for Texas House District 118. He is running because he believes the promise that changed his life should still be alive for every family in Texas: if you work hard, play by the rules, and keep faith with your family, you should have a real chance to get ahead.",
-    caption4: "Jorge is fighting for stronger schools and more opportunity for every family.",
+    caption4: "Jorge believes the educators who serve our students deserve respect and better pay.",
     para6:
-      "Jorge will carry that promise with him to Austin. He will fight to lower costs, cut property taxes, keep neighborhoods safe, strengthen schools, and make sure state government listens to real Texans — not Austin insiders, taxpayer-funded lobbyists, or political operatives.",
+      "Jorge will carry that promise with him to Austin. He will fight to lower costs, cut property taxes, keep violent criminals off our streets, protect children from fentanyl, protect girls' sports, and raise pay for public school teachers and support staff.",
     overlayText: "Faith, family, and work define our mission."
   },
 
@@ -49,9 +49,9 @@ const content: Record<Locale, AboutContent> = {
     caption3: "La fe, la familia y los valores de Texas son la base del matrimonio de Jorge y Lexie.",
     para5:
       "Hoy, Jorge es esposo, padre, dueño de un negocio propio, profesional de bienes raíces con licencia y candidato Republicano para la Cámara de Representantes de Texas, Distrito 118. Se postula porque cree que la promesa que cambió su vida debe seguir viva para cada familia de Texas: que si trabajas duro, haces las cosas bien y mantienes la fe en tu familia, debes tener una oportunidad real de salir adelante.",
-    caption4: "Jorge lucha por escuelas más fuertes y más oportunidades para cada familia.",
+    caption4: "Jorge cree que los educadores que sirven a nuestros estudiantes merecen respeto y mejor sueldo.",
     para6:
-      "Jorge llevará esa promesa con él a Austin. Luchará para bajar los costos, reducir los impuestos a la propiedad, mantener seguros nuestros vecindarios, fortalecer nuestras escuelas y asegurar que el gobierno estatal escuche a los texanos de verdad — no a los intereses de Austin, los lobbyistas pagados con nuestros impuestos ni los operadores políticos.",
+      "Jorge llevará esa promesa con él a Austin. Luchará para bajar los costos, reducir los impuestos a la propiedad, sacar a los criminales violentos de nuestras calles, proteger a nuestros hijos del fentanilo, proteger los deportes femeninos y aumentar el sueldo de maestros y personal de apoyo de las escuelas públicas.",
     overlayText: "La fe, la familia y el trabajo definen nuestra misión."
   }
 };

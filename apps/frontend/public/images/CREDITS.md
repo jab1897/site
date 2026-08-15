@@ -48,6 +48,20 @@ image listed below.
 | `priorities/protect-children.jpg` | Free stock photo |
 | `priorities/second-amendment.jpg` | Free stock photo |
 
+## Original Campaign Illustrations (created for this site)
+
+| File | Description |
+|------|-------------|
+| `priorities/girls-basketball.svg` | Original vector illustration: girls' high school basketball team huddled on the court. Used on the "Banning Men from Competing Against Girls" issue card. |
+
+> **Replaceable asset.** `priorities/girls-basketball.svg` is an original
+> illustration drawn for this site so the girls' sports card ships with correct
+> artwork today. If the campaign licenses a photograph of a girls' high school
+> basketball team (huddle preferred, then game action, then warmup line-up), drop
+> it in as `priorities/girls-basketball.jpg` and update the `image` field for that
+> issue in `apps/frontend/lib/content.ts` (both `en` and `es`). The existing alt
+> text already describes a real team photo, so no other change is required.
+
 ## Video
 
 | File | Description |

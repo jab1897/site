@@ -61,7 +61,7 @@ export default function Image() {
             textAlign: "center",
           }}
         >
-          ★ Lower Costs · Safer Neighborhoods · Stronger Schools ★
+          ★ Lower Costs · Safer Streets · Protect Kids · Reward Teachers ★
         </div>
         <div
           style={{
