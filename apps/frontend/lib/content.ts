@@ -20,75 +20,54 @@ export const priorities: Record<Locale, PriorityItem[]> = {
       imageAlt: "A Texas family walking together, representing working families getting ahead",
     },
     {
-      title: "Cut Your Property Taxes for Good",
+      title: "Criminals Off the Street",
       bullets: [
-        "Increase the homestead exemption so more of your home's value is protected from taxation.",
-        "Cap runaway appraisal increases so families are not taxed out of homes they already own.",
-        "Hold local governments accountable when their spending drives tax bills higher."
-      ],
-      image: "/images/priorities/property-taxes.jpg",
-      imageAlt: "Texas home and tax tag graphic for lower property taxes",
-    },
-    {
-      title: "Keep Repeat Violent Criminals Off Our Streets",
-      bullets: [
-        "Keep repeat violent offenders behind bars, not back on the street to commit more crimes.",
-        "Back law enforcement with the resources, training, and public support they need.",
-        "Put victims, families, and neighborhood safety ahead of soft-on-crime politics."
+        "Keep violent criminals off our streets and out of our communities.",
+        "Back law enforcement with the resources and support needed to stop dangerous offenders.",
+        "Put victims, families, and neighborhood safety first."
       ],
       image: "/images/priorities/law-enforcement.jpg",
       imageAlt: "Smiling police officer talking with a family in a neighborhood",
     },
     {
-      title: "Fund Public Schools, Reward Great Teachers, and Expand Career Training",
+      title: "Protecting Kids from Fentanyl",
       bullets: [
-        "Reward great teachers with higher pay and make sure education dollars reach the classroom.",
-        "Expand career training and apprenticeship programs so students graduate ready for good jobs with less debt.",
-        "Support strong public schools while giving parents more options when their child needs something different.",
-        "Keep age-inappropriate content out of classrooms and defend parents' right to set standards for their children."
-      ],
-      image: "/images/priorities/classroom.jpg",
-      imageAlt: "Teacher reading to students at desks in a classroom with an American flag",
-    },
-    {
-      title: "Protect Children Online",
-      bullets: [
-        "Limit children's access to harmful social media content.",
-        "Increase penalties for online predators who target Texas kids.",
-        "Support school safety upgrades so students can learn in secure classrooms."
+        "Lead the fight to get deadly fentanyl off our streets and away from our children.",
+        "Give law enforcement the tools to target fentanyl dealers and traffickers.",
+        "Expand prevention and awareness so families understand the danger before tragedy strikes."
       ],
       image: "/images/priorities/protect-children.jpg",
       imageAlt: "Two young students with backpacks walking to school holding hands",
     },
     {
-      title: "Secure the Border and Keep Texas Communities Safe",
+      title: "Cutting Property Taxes",
       bullets: [
-        "Support technology and resources that help secure the Texas border.",
-        "Remove criminals who have no legal right to be here.",
-        "Treat border security as part of protecting families, neighborhoods, and taxpayers."
+        "Stop local bureaucrats from driving property taxes higher year after year.",
+        "Bring down property tax rates so families can keep more of what they earn.",
+        "Protect homeowners from being taxed out of the homes they already own."
       ],
-      image: "/images/issues/border-wall.jpg",
-      imageAlt: "Steel border wall stretching across the Texas desert toward the horizon at sunset",
+      image: "/images/priorities/property-taxes.jpg",
+      imageAlt: "Texas home and tax tag graphic for lower property taxes",
     },
     {
-      title: "Make Government Listen to Texans, Not Taxpayer-Funded Lobbyists",
+      title: "Banning Men from Competing Against Girls",
       bullets: [
-        "End the practice of forcing taxpayers to fund lobbyists who lobby against the people paying the bills.",
-        "Make public dollars serve families first, not Austin insiders.",
-        "Increase transparency so taxpayers know who is influencing their government."
-      ],
-      image: "/images/priorities/lobbyists.jpg",
-      imageAlt: "Capitol dome and document representing government accountability",
-    },
-    {
-      title: "Faith, Family, and Texas Values",
-      bullets: [
-        "Protect faith, family, personal responsibility, and the values that hold strong communities together.",
-        "Defend the right of law-abiding Texans to keep and bear arms.",
-        "Stand with parents, taxpayers, law enforcement, and working families across District 118."
+        "Ban men from competing in girls' sports.",
+        "Protect fair competition and athletic opportunities for girls.",
+        "Keep girls' sports for girls."
       ],
       image: "/images/priorities/faith-family.jpg",
-      imageAlt: "Texas flag inspired graphic representing faith, family, and Texas values",
+      imageAlt: "Texas flag inspired graphic representing Texas values",
+    },
+    {
+      title: "Teacher Pay Raises",
+      bullets: [
+        "Raise pay for public school librarians, counselors, nurses, and teachers.",
+        "Put more education dollars into the people who work directly with students.",
+        "Make Texas a place where great educators can build a career and stay in our schools."
+      ],
+      image: "/images/priorities/classroom.jpg",
+      imageAlt: "Teacher reading to students at desks in a classroom with an American flag",
     }
   ],
   es: [
@@ -103,75 +82,54 @@ export const priorities: Record<Locale, PriorityItem[]> = {
       imageAlt: "Una familia de Texas caminando junta, que representa a las familias trabajadoras saliendo adelante",
     },
     {
-      title: "Reducir los Impuestos a la Propiedad de Forma Permanente",
+      title: "Sacar a los Criminales de Nuestras Calles",
       bullets: [
-        "Aumentar la exención de vivienda familiar para proteger más el valor de su casa.",
-        "Limitar los aumentos desmedidos en las valuaciones para que las familias no pierdan la casa que ya tienen.",
-        "Hacer responsables a los gobiernos locales cuando su gasto excesivo sube la factura de impuestos."
-      ],
-      image: "/images/priorities/property-taxes.jpg",
-      imageAlt: "Casa de Texas y etiqueta fiscal",
-    },
-    {
-      title: "Mantener a los Criminales Violentos Reincidentes Fuera de Nuestras Calles",
-      bullets: [
-        "Mantener tras las rejas a los delincuentes violentos reincidentes, no de vuelta en la calle.",
-        "Respaldar a la policía con los recursos, la capacitación y el apoyo que merece.",
-        "Poner a las víctimas, las familias y la seguridad del vecindario antes que la política blanda contra el crimen."
+        "Mantener a los criminales violentos fuera de nuestras calles y comunidades.",
+        "Respaldar a la policía con los recursos y el apoyo que necesita para detener a delincuentes peligrosos.",
+        "Poner primero a las víctimas, las familias y la seguridad de nuestros vecindarios."
       ],
       image: "/images/priorities/law-enforcement.jpg",
       imageAlt: "Oficial de policía sonriendo mientras conversa con una familia",
     },
     {
-      title: "Financiar Nuestras Escuelas Públicas, Premiar a los Buenos Maestros y Expandir la Capacitación Laboral",
+      title: "Proteger a Nuestros Hijos del Fentanilo",
       bullets: [
-        "Premiar a los mejores maestros con mejor salario y asegurar que el dinero llegue al salón de clases.",
-        "Expandir los programas de capacitación laboral y aprendizaje para que los estudiantes se gradúen listos para un buen trabajo, con menos deuda.",
-        "Apoyar escuelas públicas fuertes y, al mismo tiempo, dar a los padres más opciones cuando su hijo necesite algo diferente.",
-        "Mantener fuera de las aulas el contenido inapropiado para la edad y defender el derecho de los padres a poner las normas para sus hijos."
-      ],
-      image: "/images/priorities/classroom.jpg",
-      imageAlt: "Maestra leyendo a estudiantes en un salón de clases con bandera estadounidense",
-    },
-    {
-      title: "Proteger a Nuestros Hijos en Internet",
-      bullets: [
-        "Limitar el acceso de los niños a contenido dañino en las redes sociales.",
-        "Aumentar las penas para los depredadores en línea que buscan dañar a los niños de Texas.",
-        "Apoyar mejoras de seguridad escolar para que los estudiantes aprendan en aulas seguras."
+        "Liderar la lucha para sacar el fentanilo mortal de nuestras calles y mantenerlo lejos de nuestros hijos.",
+        "Dar a la policía las herramientas para perseguir a quienes venden y trafican fentanilo.",
+        "Ampliar la prevención y la información para que las familias conozcan el peligro antes de que ocurra una tragedia."
       ],
       image: "/images/priorities/protect-children.jpg",
       imageAlt: "Dos estudiantes con mochilas caminando a la escuela tomados de la mano",
     },
     {
-      title: "Asegurar la Frontera y Mantener Seguras a las Comunidades de Texas",
+      title: "Reducir los Impuestos a la Propiedad",
       bullets: [
-        "Apoyar la tecnología y los recursos que ayudan a asegurar la frontera de Texas.",
-        "Sacar de nuestras calles a los criminales que no tienen derecho legal a estar aquí.",
-        "Tratar la seguridad fronteriza como parte de proteger a las familias, los vecindarios y a los contribuyentes."
+        "Detener a los burócratas locales que año tras año hacen subir los impuestos a la propiedad.",
+        "Reducir las tasas de impuestos a la propiedad para que las familias conserven más de lo que ganan.",
+        "Proteger a los propietarios para que los impuestos no los obliguen a perder la casa que ya tienen."
       ],
-      image: "/images/issues/border-wall.jpg",
-      imageAlt: "Muro fronterizo de acero extendiéndose por el desierto de Texas hacia el horizonte al atardecer",
+      image: "/images/priorities/property-taxes.jpg",
+      imageAlt: "Casa de Texas y etiqueta fiscal",
     },
     {
-      title: "Hacer que el Gobierno Escuche a los Texanos, No a los Lobbyistas Pagados con Nuestros Impuestos",
+      title: "Prohibir que los Hombres Compitan en Deportes Femeninos",
       bullets: [
-        "Terminar con la práctica de obligar a los contribuyentes a pagar lobbyistas que trabajan en contra de quienes pagan la cuenta.",
-        "Asegurar que el dinero público sirva primero a las familias, no a los intereses de Austin.",
-        "Aumentar la transparencia para que los contribuyentes sepan quién influye en su gobierno."
-      ],
-      image: "/images/priorities/lobbyists.jpg",
-      imageAlt: "Cúpula del capitolio y documento que representan rendición de cuentas",
-    },
-    {
-      title: "Fe, Familia y Valores de Texas",
-      bullets: [
-        "Proteger la fe, la familia, la responsabilidad personal y los valores que mantienen unidas a nuestras comunidades.",
-        "Defender el derecho de los texanos que respetan la ley a poseer y portar armas.",
-        "Respaldar a los padres, los contribuyentes, la policía y las familias trabajadoras en todo el Distrito 118."
+        "Prohibir que los hombres compitan en deportes femeninos.",
+        "Proteger la competencia justa y las oportunidades deportivas para las niñas y jóvenes.",
+        "Mantener los deportes femeninos para las mujeres y las niñas."
       ],
       image: "/images/priorities/faith-family.jpg",
-      imageAlt: "Gráfico inspirado en la bandera de Texas que representa la fe, la familia y los valores de Texas",
+      imageAlt: "Gráfico inspirado en la bandera de Texas que representa los valores de Texas",
+    },
+    {
+      title: "Aumentar el Sueldo de los Maestros",
+      bullets: [
+        "Aumentar el sueldo de maestros, bibliotecarios, consejeros y enfermeras de las escuelas públicas.",
+        "Poner más recursos educativos en las personas que trabajan directamente con los estudiantes.",
+        "Hacer de Texas un estado donde los buenos educadores puedan hacer carrera y quedarse en nuestras escuelas."
+      ],
+      image: "/images/priorities/classroom.jpg",
+      imageAlt: "Maestra leyendo a estudiantes en un salón de clases con bandera estadounidense",
     }
   ]
 };
