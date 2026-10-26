@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import { Play, RotateCcw, Share2 } from "lucide-react";
+import { RotateCcw, Share2 } from "lucide-react";
 import { Locale } from "@/lib/i18n";
 import { ELECTION_INFO_URL, VideoEndorsement as Endorsement, voteCopy, votingPhase, VotingPhase } from "@/lib/endorsements";
 
@@ -28,7 +27,8 @@ type Props = {
 export function VideoEndorsement({ endorsement: e, locale, next, className }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const captionsSet = useRef(false);
-  const [phase, setPhase] = useState<"poster" | "playing" | "ended" | "error">("poster");
+  // Driven only by media events, so the UI never claims "playing" before playback has started.
+  const [phase, setPhase] = useState<"idle" | "playing" | "ended" | "error">("idle");
   const [copied, setCopied] = useState(false);
   const [vote, setVote] = useState<VotingPhase>("early");
 
@@ -39,21 +39,6 @@ export function VideoEndorsement({ endorsement: e, locale, next, className }: Pr
     window.addEventListener(VIDEO_PLAY_EVENT, onOtherPlay);
     return () => window.removeEventListener(VIDEO_PLAY_EVENT, onOtherPlay);
   }, [e.id]);
-
-  // play() must run inside the tap itself: iOS Safari and in-app browsers block sound playback started later.
-  // If the browser refuses, native controls and a direct link stay visible so the viewer can still watch.
-  const start = () => {
-    const video = videoRef.current;
-    if (video) {
-      if (video.ended) video.currentTime = 0;
-      video.play()?.catch((err: DOMException) => {
-        console.warn("[VideoEndorsement] play() rejected", e.id, err?.name, err?.message);
-        if (err?.name !== "AbortError") setPhase("error");
-      });
-    }
-    setVote(votingPhase());
-    setPhase("playing");
-  };
 
   // Captions are switched on once playback has started rather than with a `default` track:
   // iOS Safari can stall starting a video while it loads a default caption track.
@@ -67,6 +52,17 @@ export function VideoEndorsement({ endorsement: e, locale, next, className }: Pr
         track.mode = "showing";
       }
     }
+  };
+
+  const replay = () => {
+    const video = videoRef.current;
+    setPhase("idle");
+    if (!video) return;
+    video.currentTime = 0;
+    video.play()?.catch((err: DOMException) => {
+      // The native controls stay visible, so the viewer can still start it by hand.
+      console.warn("[VideoEndorsement] replay play() rejected", e.id, err?.name, err?.message);
+    });
   };
 
   const share = async () => {
@@ -85,19 +81,26 @@ export function VideoEndorsement({ endorsement: e, locale, next, className }: Pr
       className={`relative w-full overflow-hidden rounded-2xl bg-navy shadow-xl ${className ?? ""}`}
       style={{ aspectRatio: e.aspect }}
     >
+      {/* Native controls are always on: the viewer taps the browser's own play button, which is the
+          one start-up path iOS Safari and in-app browsers reliably allow. Nothing is layered over it. */}
       <video
         ref={videoRef}
         className="absolute inset-0 h-full w-full bg-black object-contain"
         src={e.video}
         poster={e.poster}
-        controls={phase === "playing" || phase === "error"}
+        controls
         playsInline
-        preload="none"
-        onPlay={() => window.dispatchEvent(new CustomEvent(VIDEO_PLAY_EVENT, { detail: e.id }))}
+        preload="metadata"
+        aria-label={`${PLAY_LABEL[locale]} ${e.name}`}
+        onPlay={() => {
+          setVote(votingPhase());
+          setPhase("playing");
+          window.dispatchEvent(new CustomEvent(VIDEO_PLAY_EVENT, { detail: e.id }));
+        }}
         onPlaying={showCaptions}
         onEnded={() => setPhase("ended")}
         onError={() => {
-          console.warn("[VideoEndorsement] media error", e.id, videoRef.current?.error?.code);
+          console.warn("[VideoEndorsement] media error", e.id, videoRef.current?.error?.code, videoRef.current?.error?.message);
           setPhase("error");
         }}
       >
@@ -112,21 +115,11 @@ export function VideoEndorsement({ endorsement: e, locale, next, className }: Pr
         ))}
       </video>
 
-      {phase === "poster" && (
-        <button type="button" onClick={start} className="group absolute inset-0 focus-visible:outline focus-visible:outline-4 focus-visible:-outline-offset-4 focus-visible:outline-red">
-          <Image src={e.poster} alt="" fill sizes="(max-width: 768px) 90vw, 360px" className="object-cover" />
-          <span className="sr-only">{`${PLAY_LABEL[locale]} ${e.name}`}</span>
-          <span aria-hidden="true" className="absolute left-1/2 top-[42%] flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-[3px] border-white bg-red shadow-lg transition group-hover:scale-105">
-            <Play size={26} className="ml-1 fill-white text-white" />
-          </span>
-          <span aria-hidden="true" className="absolute bottom-[12%] left-0 max-w-[85%] border-l-4 border-red bg-navy px-3 py-1.5 text-left text-white">
-            <span className="block text-base font-black uppercase leading-tight tracking-wide">{e.name}</span>
-            <span className="block text-xs font-semibold text-slate-300">{e.title[locale]}</span>
-          </span>
-          <span aria-hidden="true" className="absolute bottom-2 right-2 rounded bg-black/60 px-1.5 py-0.5 text-xs font-bold text-white">
-            {e.durationLabel}
-          </span>
-        </button>
+      {phase === "idle" && (
+        <span aria-hidden="true" className="pointer-events-none absolute left-0 top-[8%] max-w-[85%] border-l-4 border-red bg-navy px-3 py-1.5 text-left text-white">
+          <span className="block text-base font-black uppercase leading-tight tracking-wide">{e.name}</span>
+          <span className="block text-xs font-semibold text-slate-300">{e.title[locale]}</span>
+        </span>
       )}
 
       {phase === "error" && (
@@ -158,7 +151,7 @@ export function VideoEndorsement({ endorsement: e, locale, next, className }: Pr
             </a>
           )}
           <div className="mt-1 flex gap-4 text-xs text-slate-300">
-            <button type="button" onClick={start} className="inline-flex items-center gap-1 underline underline-offset-2">
+            <button type="button" onClick={replay} className="inline-flex items-center gap-1 underline underline-offset-2">
               <RotateCcw size={12} aria-hidden="true" /> {REPLAY[locale]}
             </button>
             <button type="button" onClick={share} className="inline-flex items-center gap-1 underline underline-offset-2">
