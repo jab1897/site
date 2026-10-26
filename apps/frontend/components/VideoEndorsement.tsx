@@ -38,9 +38,14 @@ export function VideoEndorsement({ endorsement: e, locale, next, className }: Pr
     return () => window.removeEventListener(VIDEO_PLAY_EVENT, onOtherPlay);
   }, [e.id]);
 
+  // play() must run inside the tap itself: iOS Safari and in-app browsers block sound playback started later.
   const start = () => {
     setVote(votingPhase());
     setPhase("playing");
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.ended) video.currentTime = 0;
+    video.play().catch(() => {});
   };
 
   const share = async () => {
@@ -59,6 +64,29 @@ export function VideoEndorsement({ endorsement: e, locale, next, className }: Pr
       className={`relative w-full overflow-hidden rounded-2xl bg-navy shadow-xl ${className ?? ""}`}
       style={{ aspectRatio: e.aspect }}
     >
+      <video
+        ref={videoRef}
+        className="absolute inset-0 h-full w-full bg-black object-contain"
+        src={e.video}
+        poster={e.poster}
+        controls={phase === "playing"}
+        playsInline
+        preload="none"
+        onPlay={() => window.dispatchEvent(new CustomEvent(VIDEO_PLAY_EVENT, { detail: e.id }))}
+        onEnded={() => setPhase("ended")}
+      >
+        {(["en", "es"] as const).map((lang) => (
+          <track
+            key={lang}
+            kind="captions"
+            src={e.captions[lang]}
+            srcLang={lang}
+            label={lang === "en" ? "English" : "Español"}
+            default={lang === locale && e.burnedInCaptions !== lang}
+          />
+        ))}
+      </video>
+
       {phase === "poster" && (
         <button type="button" onClick={start} className="group absolute inset-0 focus-visible:outline focus-visible:outline-4 focus-visible:-outline-offset-4 focus-visible:outline-red">
           <Image src={e.poster} alt="" fill sizes="(max-width: 768px) 90vw, 360px" className="object-cover" />
@@ -74,32 +102,6 @@ export function VideoEndorsement({ endorsement: e, locale, next, className }: Pr
             {e.durationLabel}
           </span>
         </button>
-      )}
-
-      {phase === "playing" && (
-        <video
-          ref={videoRef}
-          className="absolute inset-0 h-full w-full bg-black object-contain"
-          src={e.video}
-          poster={e.poster}
-          controls
-          autoPlay
-          playsInline
-          preload="auto"
-          onPlay={() => window.dispatchEvent(new CustomEvent(VIDEO_PLAY_EVENT, { detail: e.id }))}
-          onEnded={() => setPhase("ended")}
-        >
-          {(["en", "es"] as const).map((lang) => (
-            <track
-              key={lang}
-              kind="captions"
-              src={e.captions[lang]}
-              srcLang={lang}
-              label={lang === "en" ? "English" : "Español"}
-              default={lang === locale && e.burnedInCaptions !== lang}
-            />
-          ))}
-        </video>
       )}
 
       {phase === "ended" && (
