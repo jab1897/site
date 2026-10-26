@@ -99,7 +99,7 @@ export function SiteShell({ locale, children }: { locale: Locale; children: Reac
           <div className="flex items-center gap-3">
             <LanguageToggle
               locale={locale}
-              className="hidden text-sm font-semibold text-white/80 underline underline-offset-2 transition hover:text-white md:inline-block"
+              className="inline-flex min-h-[44px] items-center rounded-md border border-white/40 px-3 text-sm font-semibold text-white transition hover:bg-white hover:text-navy md:min-h-0 md:py-2"
             />
             <a
               href={WINRED_DONATE_URL}
