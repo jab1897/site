@@ -11,6 +11,7 @@ export const VIDEO_PLAY_EVENT = "campaign-video:play";
 
 const PLAY_LABEL = { en: "Play video: endorsement from", es: "Reproducir video: respaldo de" } as const;
 const REPLAY = { en: "Replay", es: "Repetir" } as const;
+const OPEN_DIRECT = { en: "Video not playing? Open it directly", es: "¿No se reproduce? Abra el video aquí" } as const;
 const SHARE = { en: "Share", es: "Compartir" } as const;
 const COPIED = { en: "Link copied", es: "Enlace copiado" } as const;
 const VOTE_FOR = { en: "Vote Jorge Borrego", es: "Vote por Jorge Borrego" } as const;
@@ -27,7 +28,7 @@ type Props = {
 export function VideoEndorsement({ endorsement: e, locale, next, className }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const captionsSet = useRef(false);
-  const [phase, setPhase] = useState<"poster" | "playing" | "ended">("poster");
+  const [phase, setPhase] = useState<"poster" | "playing" | "ended" | "error">("poster");
   const [copied, setCopied] = useState(false);
   const [vote, setVote] = useState<VotingPhase>("early");
 
@@ -40,13 +41,18 @@ export function VideoEndorsement({ endorsement: e, locale, next, className }: Pr
   }, [e.id]);
 
   // play() must run inside the tap itself: iOS Safari and in-app browsers block sound playback started later.
+  // If the browser refuses, native controls and a direct link stay visible so the viewer can still watch.
   const start = () => {
+    const video = videoRef.current;
+    if (video) {
+      if (video.ended) video.currentTime = 0;
+      video.play()?.catch((err: DOMException) => {
+        console.warn("[VideoEndorsement] play() rejected", e.id, err?.name, err?.message);
+        if (err?.name !== "AbortError") setPhase("error");
+      });
+    }
     setVote(votingPhase());
     setPhase("playing");
-    const video = videoRef.current;
-    if (!video) return;
-    if (video.ended) video.currentTime = 0;
-    video.play().catch(() => {});
   };
 
   // Captions are switched on once playback has started rather than with a `default` track:
@@ -84,12 +90,16 @@ export function VideoEndorsement({ endorsement: e, locale, next, className }: Pr
         className="absolute inset-0 h-full w-full bg-black object-contain"
         src={e.video}
         poster={e.poster}
-        controls={phase === "playing"}
+        controls={phase === "playing" || phase === "error"}
         playsInline
         preload="none"
         onPlay={() => window.dispatchEvent(new CustomEvent(VIDEO_PLAY_EVENT, { detail: e.id }))}
         onPlaying={showCaptions}
         onEnded={() => setPhase("ended")}
+        onError={() => {
+          console.warn("[VideoEndorsement] media error", e.id, videoRef.current?.error?.code);
+          setPhase("error");
+        }}
       >
         {(["en", "es"] as const).map((lang) => (
           <track
@@ -117,6 +127,17 @@ export function VideoEndorsement({ endorsement: e, locale, next, className }: Pr
             {e.durationLabel}
           </span>
         </button>
+      )}
+
+      {phase === "error" && (
+        <a
+          href={e.video}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute inset-x-0 top-0 z-10 bg-navy/90 px-3 py-2 text-center text-sm font-semibold text-white underline"
+        >
+          {OPEN_DIRECT[locale]}
+        </a>
       )}
 
       {phase === "ended" && (

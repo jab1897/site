@@ -33,8 +33,8 @@ export const videoEndorsements: Record<VideoEndorsement["id"], VideoEndorsement>
       en: "“Our district in good hands would be Jorge Borrego.”",
       es: "“Nuestro distrito estaría en buenas manos con Jorge Borrego.” (traducido)",
     },
-    video: "/video/endorsements/lujan.mp4",
-    poster: "/images/endorsements/lujan-poster.jpg",
+    video: "/video/endorsements/lujan-v2.mp4",
+    poster: "/images/endorsements/lujan-poster-v2.jpg",
     aspect: "720 / 982",
     captions: {
       en: "/video/endorsements/lujan.en.vtt",
@@ -69,8 +69,8 @@ export const videoEndorsements: Record<VideoEndorsement["id"], VideoEndorsement>
       en: "“Jorge has assured me that he is going to continue with the programs for the future growth of Universal City.”",
       es: "“Jorge me ha asegurado que va a continuar con los programas para el crecimiento futuro de Universal City.” (traducido)",
     },
-    video: "/video/endorsements/maxwell.mp4",
-    poster: "/images/endorsements/maxwell-poster.jpg",
+    video: "/video/endorsements/maxwell-v2.mp4",
+    poster: "/images/endorsements/maxwell-poster-v2.jpg",
     aspect: "720 / 1280",
     captions: {
       en: "/video/endorsements/maxwell.en.vtt",
