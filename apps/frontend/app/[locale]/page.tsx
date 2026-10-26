@@ -7,6 +7,7 @@ import { DonateButtons } from "@/components/DonateButtons";
 import { EndorsementsTeaser } from "@/components/EndorsementsTeaser";
 import { Hero } from "@/components/Hero";
 import { HomeVideoPlayer } from "@/components/HomeVideoPlayer";
+import { FeaturedEndorsement } from "@/components/FeaturedEndorsement";
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: rawLocale } = await params;
@@ -17,6 +18,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     <div>
       {/* 1. Hero */}
       <Hero locale={locale} />
+
+      {/* 1b. Featured video endorsement */}
+      <FeaturedEndorsement locale={locale} />
 
       {/* 2. Meet Jorge */}
       <section className="texas-panel py-10">
