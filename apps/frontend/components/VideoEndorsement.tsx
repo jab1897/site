@@ -26,6 +26,7 @@ type Props = {
 
 export function VideoEndorsement({ endorsement: e, locale, next, className }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const captionsSet = useRef(false);
   const [phase, setPhase] = useState<"poster" | "playing" | "ended">("poster");
   const [copied, setCopied] = useState(false);
   const [vote, setVote] = useState<VotingPhase>("early");
@@ -46,6 +47,20 @@ export function VideoEndorsement({ endorsement: e, locale, next, className }: Pr
     if (!video) return;
     if (video.ended) video.currentTime = 0;
     video.play().catch(() => {});
+  };
+
+  // Captions are switched on once playback has started rather than with a `default` track:
+  // iOS Safari can stall starting a video while it loads a default caption track.
+  const showCaptions = () => {
+    const tracks = videoRef.current?.textTracks;
+    if (!tracks || captionsSet.current) return;
+    captionsSet.current = true;
+    for (let i = 0; i < tracks.length; i++) {
+      const track = tracks[i];
+      if (track.language === locale && e.burnedInCaptions !== locale) {
+        track.mode = "showing";
+      }
+    }
   };
 
   const share = async () => {
@@ -73,6 +88,7 @@ export function VideoEndorsement({ endorsement: e, locale, next, className }: Pr
         playsInline
         preload="none"
         onPlay={() => window.dispatchEvent(new CustomEvent(VIDEO_PLAY_EVENT, { detail: e.id }))}
+        onPlaying={showCaptions}
         onEnded={() => setPhase("ended")}
       >
         {(["en", "es"] as const).map((lang) => (
@@ -82,7 +98,6 @@ export function VideoEndorsement({ endorsement: e, locale, next, className }: Pr
             src={e.captions[lang]}
             srcLang={lang}
             label={lang === "en" ? "English" : "Español"}
-            default={lang === locale && e.burnedInCaptions !== lang}
           />
         ))}
       </video>
