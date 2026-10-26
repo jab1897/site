@@ -77,6 +77,22 @@ export const priorities: Record<Locale, PriorityItem[]> = {
       imageAlt: "Texas home and tax tag graphic for lower property taxes",
     },
     {
+      title: "Ending Political Corruption",
+      homepageBullets: [
+        "Ban lawmakers from becoming lobbyists or paid consultants for at least five years after leaving office.",
+        "Award state contracts on merit and value, never as a reward for campaign checks.",
+        "Make Austin work for taxpayers, not insiders."
+      ],
+      issuesBullets: [
+        "Close the revolving door with a ban of at least five years on future lawmakers, myself included, lobbying or consulting after they leave office.",
+        "Ensure state contracts are awarded on merit, price, and performance, never as a reward for political contributions.",
+        "Strengthen transparency so Texans can see who is seeking state business and who decides.",
+        "Restore trust that public office is about service, not a path to private profit."
+      ],
+      image: "/images/priorities/capitol.jpg",
+      imageAlt: "The Texas State Capitol in Austin at sunset",
+    },
+    {
       title: "Banning Men from Competing Against Girls",
       homepageBullets: [
         "Ban men from competing in girls' sports.",
@@ -107,6 +123,22 @@ export const priorities: Record<Locale, PriorityItem[]> = {
       ],
       image: "/images/priorities/classroom.jpg",
       imageAlt: "Teacher reading to students at desks in a classroom with an American flag",
+    },
+    {
+      title: "Protecting Texans from AI",
+      homepageBullets: [
+        "Make Big Tech data centers pay their own way, not raise our electric bills or strain our grid and water.",
+        "Put strong safeguards in place to protect children from harmful AI.",
+        "Put Texas workers first as AI changes our economy."
+      ],
+      issuesBullets: [
+        "Make sure large data centers cover their own energy and infrastructure costs so families don't pay higher utility bills for Big Tech's growth.",
+        "Protect the Texas grid and our water supply by holding data centers to responsible standards.",
+        "Hold AI companies accountable for protecting children from harmful content and predatory chatbots.",
+        "Support job training and policies that keep good Texas jobs in Texas as technology changes."
+      ],
+      image: "/images/priorities/ai-family.jpg",
+      imageAlt: "A father watching over his daughter as she uses a tablet at the kitchen table",
     }
   ],
   es: [
@@ -175,6 +207,22 @@ export const priorities: Record<Locale, PriorityItem[]> = {
       imageAlt: "Casa de Texas y etiqueta fiscal",
     },
     {
+      title: "Acabar con la Corrupción Política",
+      homepageBullets: [
+        "Prohibir que los legisladores se conviertan en cabilderos o consultores pagados durante al menos cinco años después de dejar su cargo.",
+        "Otorgar los contratos del estado por mérito y valor, nunca como recompensa por donaciones de campaña.",
+        "Hacer que Austin trabaje para los contribuyentes, no para los de adentro."
+      ],
+      issuesBullets: [
+        "Cerrar la puerta giratoria con una prohibición de al menos cinco años para que los futuros legisladores, incluido yo, no trabajen como cabilderos o consultores después de dejar su cargo.",
+        "Asegurar que los contratos del estado se otorguen por mérito, precio y desempeño, nunca como recompensa por contribuciones políticas.",
+        "Fortalecer la transparencia para que los texanos sepan quién busca negocios con el estado y quién decide.",
+        "Recuperar la confianza de que el cargo público es para servir, no un camino hacia la ganancia personal."
+      ],
+      image: "/images/priorities/capitol.jpg",
+      imageAlt: "El Capitolio de Texas en Austin al atardecer",
+    },
+    {
       title: "Prohibir que los Hombres Compitan en Deportes Femeninos",
       homepageBullets: [
         "Prohibir que los hombres compitan en deportes femeninos.",
@@ -205,6 +253,22 @@ export const priorities: Record<Locale, PriorityItem[]> = {
       ],
       image: "/images/priorities/classroom.jpg",
       imageAlt: "Maestra leyendo a estudiantes en un salón de clases con bandera estadounidense",
+    },
+    {
+      title: "Proteger a los Texanos de la IA",
+      homepageBullets: [
+        "Exigir que los centros de datos de las grandes tecnológicas paguen lo suyo, sin subir nuestra factura de luz ni poner en riesgo la red eléctrica y el agua.",
+        "Establecer protecciones firmes para proteger a los niños de la inteligencia artificial dañina.",
+        "Poner primero a los trabajadores de Texas mientras la IA transforma nuestra economía."
+      ],
+      issuesBullets: [
+        "Asegurar que los grandes centros de datos cubran sus propios costos de energía e infraestructura para que las familias no paguen facturas más altas por el crecimiento de las grandes tecnológicas.",
+        "Proteger la red eléctrica de Texas y nuestro suministro de agua exigiendo normas responsables a los centros de datos.",
+        "Hacer responsables a las empresas de IA de proteger a los niños del contenido dañino y de los chatbots abusivos.",
+        "Apoyar la capacitación laboral y políticas que mantengan los buenos empleos de Texas en Texas mientras cambia la tecnología."
+      ],
+      image: "/images/priorities/ai-family.jpg",
+      imageAlt: "Un padre cuida a su hija mientras ella usa una tableta en la mesa de la cocina",
     }
   ]
 };
