@@ -50,7 +50,9 @@ export function ElectionCountdown() {
   return (
     <div className="bg-red px-4 py-2 text-center text-xs font-bold uppercase tracking-[0.2em] text-white md:text-sm">
       General Election Countdown{" "}
-      <span className="ml-2 tracking-[0.08em]">
+      {/* The server and the browser render different seconds; without this React discards the page's
+          server HTML on load and taps are dropped until it re-renders. */}
+      <span className="ml-2 tracking-[0.08em]" suppressHydrationWarning>
         {formatRemaining(ELECTION_POLLS_CLOSE_MS - nowMs)}
       </span>
     </div>
