@@ -1,10 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Volume2, VolumeX } from "lucide-react";
+import { VIDEO_PLAY_EVENT } from "@/components/VideoEndorsement";
 
-const VIDEO_SRC =
-  "https://www.dropbox.com/scl/fi/3ga1vxe0ihwu32rk7ehh1/General-Elect-Raw.mp4?rlkey=4t8prt4g586rrtykzh0sa00au&st=ayutewxo&raw=1";
+const VIDEO_SRC = "/video/meet-jorge.mp4";
 
 type Props = {
   poster: string;
@@ -14,6 +14,20 @@ type Props = {
 export function HomeVideoPlayer({ poster, className }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
+
+  useEffect(() => {
+    const vid = videoRef.current;
+    if (vid && window.matchMedia("(prefers-reduced-motion: reduce)").matches) vid.pause();
+
+    // Keep this background video quiet while an endorsement video is playing.
+    const onEndorsementPlay = () => {
+      if (!videoRef.current) return;
+      videoRef.current.muted = true;
+      setMuted(true);
+    };
+    window.addEventListener(VIDEO_PLAY_EVENT, onEndorsementPlay);
+    return () => window.removeEventListener(VIDEO_PLAY_EVENT, onEndorsementPlay);
+  }, []);
 
   const toggleMute = () => {
     const vid = videoRef.current;
@@ -30,7 +44,7 @@ export function HomeVideoPlayer({ poster, className }: Props) {
         muted
         loop
         playsInline
-        preload="auto"
+        preload="metadata"
         poster={poster}
         className="w-full"
         onClick={toggleMute}

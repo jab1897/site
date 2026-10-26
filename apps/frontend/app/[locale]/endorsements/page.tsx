@@ -1,8 +1,36 @@
 import Image from "next/image";
+import { Locale } from "@/lib/i18n";
+import { VideoEndorsement as Endorsement, videoEndorsements } from "@/lib/endorsements";
+import { VideoEndorsement } from "@/components/VideoEndorsement";
+
+const TRANSCRIPT = { en: "Read the transcript", es: "Leer la transcripción" } as const;
+
+function VideoEndorsementSection({ e, locale, next }: { e: Endorsement; locale: Locale; next: { label: string; href: string } }) {
+  return (
+    <section id={e.id} className="mt-8 scroll-mt-24 rounded-2xl border bg-white p-6 shadow-sm">
+      <div className="grid items-start gap-6 md:grid-cols-[minmax(0,300px)_1fr]">
+        <VideoEndorsement endorsement={e} locale={locale} next={next} className="mx-auto max-w-[300px]" />
+        <div>
+          <h2 className="text-xl font-extrabold text-navy">{e.name}</h2>
+          <p className="mt-0.5 text-sm font-bold text-red">{e.title[locale]}</p>
+          <blockquote className="mt-4 text-lg font-semibold leading-snug text-neutral-800">{e.quote[locale]}</blockquote>
+          <details className="mt-5 text-neutral-700">
+            <summary className="cursor-pointer font-bold text-navy">{TRANSCRIPT[locale]}</summary>
+            <div className="mt-3 space-y-3 text-sm leading-relaxed">
+              {e.transcript[locale].map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export default async function EndorsementsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: rawLocale } = await params;
-  const locale = rawLocale || "en";
+  const locale: Locale = rawLocale === "es" ? "es" : "en";
   const isEs = locale === "es";
   const electedOfficials = [
     { name: "Helen Kerwin", title: "State Representative", descriptor: "Texas House District 58" },
@@ -37,7 +65,13 @@ export default async function EndorsementsPage({ params }: { params: Promise<{ l
         </p>
       </div>
 
-      <section className="rounded-2xl border bg-white p-6 shadow-sm">
+      <VideoEndorsementSection
+        e={videoEndorsements.lujan}
+        locale={locale}
+        next={{ label: isEs ? "Alcalde Maxwell" : "Mayor Maxwell", href: "#maxwell" }}
+      />
+
+      <section className="mt-8 rounded-2xl border bg-white p-6 shadow-sm">
         <h2 className="text-xl font-extrabold text-navy">{isEs ? "Gobernador Abbott" : "Governor Abbott"}</h2>
         {/* TODO: Replace with revised direct quote only after approval from Governor Abbott's team. */}
         <p className="mt-1 text-neutral-700">
@@ -49,6 +83,12 @@ export default async function EndorsementsPage({ params }: { params: Promise<{ l
           <Image src="/images/endorsements/abbott.jpg" alt="Governor Greg Abbott endorses Jorge Borrego" fill className="object-cover" priority />
         </div>
       </section>
+
+      <VideoEndorsementSection
+        e={videoEndorsements.maxwell}
+        locale={locale}
+        next={{ label: "Rep. Lujan", href: "#lujan" }}
+      />
 
       <section className="mt-8 rounded-2xl border bg-white p-6 shadow-sm">
         <h2 className="text-xl font-extrabold text-navy">{isEs ? "Senador Estatal Middleton" : "State Senator Middleton"}</h2>
