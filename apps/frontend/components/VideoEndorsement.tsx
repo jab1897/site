@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { RotateCcw, Share2 } from "lucide-react";
+import Image from "next/image";
+import { Play, RotateCcw, Share2 } from "lucide-react";
 import { Locale } from "@/lib/i18n";
 import { ELECTION_INFO_URL, VideoEndorsement as Endorsement, voteCopy, votingPhase, VotingPhase } from "@/lib/endorsements";
 
@@ -81,16 +82,37 @@ export function VideoEndorsement({ endorsement: e, locale, next, className }: Pr
       className={`relative w-full overflow-hidden rounded-2xl bg-navy shadow-xl ${className ?? ""}`}
       style={{ aspectRatio: e.aspect }}
     >
-      {/* Native controls are always on: the viewer taps the browser's own play button, which is the
-          one start-up path iOS Safari and in-app browsers reliably allow. Nothing is layered over it. */}
+      {/* Touch devices: the inline player would not start on the candidate's iPhone, while opening the
+          MP4 itself plays in iOS's own full-screen player. So phones and tablets get a poster that links
+          straight to the file; mouse-driven browsers keep the inline player below. */}
+      <a
+        href={e.video}
+        aria-label={`${PLAY_LABEL[locale]} ${e.name}`}
+        className="group absolute inset-0 z-10 hidden [@media(pointer:coarse)]:block"
+        onClick={() => window.dispatchEvent(new CustomEvent(VIDEO_PLAY_EVENT, { detail: e.id }))}
+      >
+        <Image src={e.poster} alt="" fill sizes="(max-width: 768px) 90vw, 360px" className="object-cover" />
+        <span aria-hidden="true" className="absolute left-1/2 top-[42%] flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-[3px] border-white bg-red shadow-lg">
+          <Play size={26} className="ml-1 fill-white text-white" />
+        </span>
+        <span aria-hidden="true" className="absolute bottom-[12%] left-0 max-w-[85%] border-l-4 border-red bg-navy px-3 py-1.5 text-left text-white">
+          <span className="block text-base font-black uppercase leading-tight tracking-wide">{e.name}</span>
+          <span className="block text-xs font-semibold text-slate-300">{e.title[locale]}</span>
+        </span>
+        <span aria-hidden="true" className="absolute bottom-2 right-2 rounded bg-black/60 px-1.5 py-0.5 text-xs font-bold text-white">
+          {e.durationLabel}
+        </span>
+      </a>
+
+      {/* Native controls are always on: the viewer uses the browser's own play button. */}
       <video
         ref={videoRef}
-        className="absolute inset-0 h-full w-full bg-black object-contain"
+        className="absolute inset-0 h-full w-full bg-black object-contain [@media(pointer:coarse)]:hidden"
         src={e.video}
         poster={e.poster}
         controls
         playsInline
-        preload="metadata"
+        preload="none"
         aria-label={`${PLAY_LABEL[locale]} ${e.name}`}
         onPlay={() => {
           setVote(votingPhase());
@@ -116,7 +138,7 @@ export function VideoEndorsement({ endorsement: e, locale, next, className }: Pr
       </video>
 
       {phase === "idle" && (
-        <span aria-hidden="true" className="pointer-events-none absolute left-0 top-[8%] max-w-[85%] border-l-4 border-red bg-navy px-3 py-1.5 text-left text-white">
+        <span aria-hidden="true" className="pointer-events-none absolute [@media(pointer:coarse)]:hidden left-0 top-[8%] max-w-[85%] border-l-4 border-red bg-navy px-3 py-1.5 text-left text-white">
           <span className="block text-base font-black uppercase leading-tight tracking-wide">{e.name}</span>
           <span className="block text-xs font-semibold text-slate-300">{e.title[locale]}</span>
         </span>
